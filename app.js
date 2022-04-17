@@ -15,7 +15,7 @@ const route = require('./routes');
 
 var app = express();
 
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -62,7 +62,21 @@ app.use(function(err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error', {msg: `${err.status || 500} ${err.message}` });
+
+	if(err.status === 404){
+		res.render('404', {
+			layout:false,
+		});
+	}
+	else if(err.status === 500){
+		res.render('500', {
+			layout:false,
+		});
+	}
+	else{
+		res.render('error', {msg: `${err.status || 500} ${err.message}` });
+	}
+	
 });
 
 module.exports = app;

@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     {{{_sections.head}}}
-    <link rel="stylesheet" href="/stylesheets/global.css">
+    <link rel="stylesheet" href="/css/my-css.css">
 </head>
 <body>
-    {{{body}}}
+    {{> sidebar}}
+    <div class="all-content-wrapper my-wrapper">
+       
+        {{> header}}
+        <div class="my-main">
+            {{{body}}}
+        </div>
+        {{> footer}}
+    </div>
     {{{_sections.script}}}
 </body>
 </html>
