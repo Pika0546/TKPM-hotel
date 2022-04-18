@@ -1,7 +1,7 @@
-class HomeController{
+class SiteController{
     getHomePage = async (req, res, next) => {
         res.render('home');
     }
 }
 
-module.exports = new HomeController();
+module.exports = new SiteController();
