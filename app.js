@@ -11,7 +11,10 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const passport = require('./auth/passport');
 const flash = require('connect-flash');
+const numeral = require('numeral');
+const favicon = require('serve-favicon')
 const route = require('./routes');
+
 
 var app = express();
 
@@ -21,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(session({ secret: process.env.SECRET_SESSION, resave: true, saveUninitialized: true }));
@@ -42,6 +46,26 @@ app.engine('.hbs', hbs.engine({
 			this._sections[name] = options.fn(this);
 			return null;
 		},
+		isBigger: function(v1, v2, options) {
+			if(v1 > v2) {
+			  return options.fn(this);
+			}
+			return options.inverse(this);
+		},
+		isEqual: function(v1, v2, options) {
+			if(v1 === v2) {
+			  return options.fn(this);
+			}	
+			return options.inverse(this);
+		},
+		select: function( selected, options ){
+			return options.fn(this).replace(
+				new RegExp(' value=\"' + selected + '\"'),
+				'$& selected="selected"');
+		},
+		currentcy: function(value, options){
+			return numeral(value).format('0,0') + " VND"
+		}
 }
 }));
 app.set('views', path.join(__dirname, 'views'));
