@@ -40,7 +40,9 @@ passport.deserializeUser(function(id, done) {
         done(err);
     })
 });
-function validPassword(admin, password){
+async function validPassword(admin, password){
+    const p = await bcrypt.hash("123456", SALT_BCRYPT)
+    console.log(p);
     return bcrypt.compare(password, admin.password);
 }
 
