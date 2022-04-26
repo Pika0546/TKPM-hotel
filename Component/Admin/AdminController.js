@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const AdminService = require("./AdminService");
 
 class AdminController{
@@ -9,6 +10,7 @@ class AdminController{
         });
     }
 
+    //[POST] /logout
     logout(req, res, next){
         req.logout();
         res.redirect('/');
@@ -41,7 +43,7 @@ class AdminController{
         }
         catch(err){
             console.log(err);
-            res.status(500).json({msg: "Bad request"});
+            next(createError(500));
         }
     }
 

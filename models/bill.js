@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    guest: {
+    guestId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -31,10 +31,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "guest",
+        name: "guestId",
         using: "BTREE",
         fields: [
-          { name: "guest" },
+          { name: "guestId" },
         ]
       },
     ]

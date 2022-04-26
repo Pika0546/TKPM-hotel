@@ -30,6 +30,7 @@ app.use(methodOverride('_method'));
 app.use(session({ secret: process.env.SECRET_SESSION, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(passport.authenticate('remember-me'));
 app.use(function (req, res, next) {
 	res.locals.user = req.user
 	next();
