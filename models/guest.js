@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    type: {
+    typeId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -43,10 +43,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "type",
+        name: "typeId",
         using: "BTREE",
         fields: [
-          { name: "type" },
+          { name: "typeId" },
         ]
       },
     ]

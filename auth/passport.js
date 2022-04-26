@@ -1,4 +1,7 @@
-const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport'), 
+LocalStrategy = require('passport-local').Strategy;
+// RememberMeStrategy = require('passport-remember-me').Strategy;
+
 const bcrypt = require('bcrypt');
 const AdminService = require('../Component/Admin/AdminService');
 const { SALT_BCRYPT } = require("../config");
@@ -22,11 +25,20 @@ const validateAccount = async (username, password, done) => {
     }
 }
 
+// const rememberMeToken = (token, done) => {
+
+// }
+
 passport.use(new LocalStrategy(
     {
         usernameField: 'username',
         passwordField: 'password'
-    },validateAccount));
+    },validateAccount
+));
+
+// passport.use(new RememberMeStrategy());
+
+
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });

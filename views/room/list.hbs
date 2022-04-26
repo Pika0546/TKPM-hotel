@@ -134,62 +134,19 @@
 								</tr>
 							</thead>
                             <tbody id="table-body">
-                                <tr>
-                                    <td>101</td>
-                                    <td>A</td>
-                                    <td>{{currentcy 200000}}</td>
-                                    <td>Trống</td>
-                                    <td>
-                                        <a href="/room/rent/101" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-                                        <a href="/room/edit/101" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                        <button data-id="101" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>101</td>
-                                    <td>A</td>
-                                    <td>{{currentcy 200000}}</td>
-                                    <td>Trống</td>
-                                    <td>
-                                        <a href="/room/rent/101" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-                                        <a href="/room/edit/101" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                        <button data-id="101" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>101</td>
-                                    <td>A</td>
-                                    <td>{{currentcy 200000}}</td>
-                                    <td>Trống</td>
-                                    <td>
-                                        <a href="/room/rent/101" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-                                        <a href="/room/edit/101" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                        <button data-id="101" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>101</td>
-                                    <td>A</td>
-                                    <td>{{currentcy 200000}}</td>
-                                    <td>Trống</td>
-                                    <td>
-                                        <a href="/room/rent/101" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-                                        <a href="/room/edit/101" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                        <button data-id="101" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>101</td>
-                                    <td>A</td>
-                                    <td>{{currentcy 200000}}</td>
-                                    <td>Trống</td>
-                                    <td>
-                                        <a href="/room/rent/101" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-                                        <a href="/room/edit/101" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                        <button data-id="101" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-
+								{{#each room}}
+									<tr>
+										<td>{{this.roomId}}</td>
+										<td>{{this.roomtype.typeName}}</td>
+										<td>{{currentcy this.roomtype.price}}</td>
+										<td>{{this.status}}</td>
+										<td>
+											<a href="/room/rent/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
+											<a href="/room/edit/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+											<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>
+								{{/each}}
 							</tbody>
                         </table>
                     </div>
@@ -212,41 +169,36 @@
                             </div>
                         </div>
                     </div>
-                    <form 	
-                        method="get"
-                        action="/room"
-                                >
-                        <ul class="my-pagination" id="my-pagination">
-                            <li class="my-page-item">
-                                <input style="display: none;" id="page-prev" value="0" type="radio" name="page"/>
-                                <label for="page-prev"  class="my-page-button">Trang trước</label>
-                            </li>
-                            <li class="my-page-item">
-                                <input  style="display: none;" id="page-1" value="1" type="radio" name="page"/>
-                                <label for="page1"  class="my-page-link my-current-page">1</label>
-                            </li>
-                             <li class="my-page-item">
-                                <input  style="display: none;" id="page-2" value="2" type="radio" name="page"/>
-                                <label for="page-2"  class="my-page-link">2</label>
-                            </li>
-                             <li class="my-page-item">
-                                <input  style="display: none;" id="page-3" value="3" type="radio" name="page"/>
-                                <label for="page-3"  class="my-page-link">3</label>
-                            </li>
-                             <li class="my-page-item">
-                                <input  style="display: none;" id="page-4" value="4" type="radio" name="page"/>
-                                <label for="page-4"  class="my-page-link">4</label>
-                            </li>
-                            <li class="my-page-item">
-                                <input  style="display: none;" id="page-5" value="5" type="radio" name="page"/>
-                                <label for="page-5"  class="my-page-link">5</label>
-                            </li>
-                            <li class="my-page-item">
-                                <input  style="display: none;" id="page-next" value="6" type="radio" name="page"/>
-                                <label for="page-next"  class="my-page-button">Trang sau</label>
-                            </li>
-                        </ul>
-                    </form>
+                    {{#if paginationArray}}
+						<form 	
+							method="get"
+							action="/room"
+						>
+							<ul class="my-pagination" id="my-pagination">
+								<li class="my-page-item">
+									<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
+									<label for="page-prev"  class="my-page-button">Trang trước</label>
+								</li>
+								{{#each paginationArray}}
+									{{#if this.isCurrent}}
+										<li class="my-page-item">
+											<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+											<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
+										</li>
+									{{else}}
+										<li class="my-page-item">
+											<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+											<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
+										</li>
+									{{/if}}
+								{{/each}}
+								<li class="my-page-item">
+									<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
+									<label for="page-next"  class="my-page-button">Trang sau</label>
+								</li>
+							</ul>
+						</form>
+					{{/if}}
                 </div>
             </div>
         </div>
@@ -340,7 +292,72 @@
     <!-- tawk chat JS
 		============================================ -->
     <!-- <script src="/js/tawk-chat.js"></script> -->
+	
+	<script src="/js/numeral.js"></script>
+
+	<script src="/js/util/generatePager.js"></script>
 	<script>
 
+		function generateRoom(roomList){
+			return roomList.map(room=>{
+				return `
+					<tr>
+						<td>${room.roomId}</td>
+						<td>${room.roomtype.typeName}</td>
+						<td>${numeral(room.roomtype.price).format('0,0') + " VND"}</td>
+						<td>${room.status}</td>
+						<td>
+							<a href="/room/rent/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
+							<a href="/room/edit/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+							<button data-id="${room.roomId}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+						</td>
+					</tr>
+				`
+			})
+		}
+
+		function submitQuery(ele){
+			const data = {};
+			data.page = $("input[name='page']:checked").val();
+
+			let queryString = "";
+			if(!data.page){
+				data.page = '1';
+			}
+			if(ele.getAttribute("name") !== "page"){
+				data.page = '1';
+			}
+			if(data.page.length > 0){
+				queryString += ("page=" + data.page);
+			}
+
+			const newRelativePathQuery = window.location.pathname + '?' + queryString;
+			history.pushState(null, '', newRelativePathQuery);
+			$.ajax({
+				method: 'get',
+				url: '/room/api',
+				data: data,
+				success: function(data){
+					console.log(data);
+					$("#my-pagination").empty();
+					if(data.paginationArray && data.paginationArray.length > 0){
+						const pageView = generatePager(data.paginationArray, data.prevPage, data.nextPage, "submitQuery(this)");
+						pageView.forEach(page=>{
+							$("#my-pagination").append(page);
+						});
+					
+					}
+					const roomList = generateRoom(data.room);
+					$("#table-body").empty();
+					roomList.forEach(room=>{
+						$("#table-body").append(room);
+					});
+				},
+				error: function(error){
+					console.log(err);
+					alert("An error has occurred, please try again");
+				}
+			})
+		}
 	</script>
 {{/section}}

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('roomrentdetail', {
-    roomRent: {
+    roomRentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    guest: {
+    guestId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
@@ -31,15 +31,15 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "roomRent" },
-          { name: "guest" },
+          { name: "roomRentId" },
+          { name: "guestId" },
         ]
       },
       {
-        name: "guest",
+        name: "guestId",
         using: "BTREE",
         fields: [
-          { name: "guest" },
+          { name: "guestId" },
         ]
       },
     ]

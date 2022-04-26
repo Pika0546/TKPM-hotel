@@ -7,16 +7,17 @@ router.get('/login', AdminController.getLoginPage);
 router.post("/login",  
     passport.authenticate('local',
     { 
-        successRedirect: '/',
         failureRedirect: '/account/login',
         failureFlash: true 
     }),
     function(req, res) {
-        if(req.user){
+        console.log(req.body)
+        if(req.user){   
             res.redirect("/");
         }else{
             res.redirect("/account/login");
         }
     });
+router.post('/logout', AdminController.logout);
 router.get('/forgot-password', AdminController.getPasswordRecoveryPage);
 module.exports = router;
