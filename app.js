@@ -54,7 +54,7 @@ app.engine('.hbs', hbs.engine({
 			return options.inverse(this);
 		},
 		isEqual: function(v1, v2, options) {
-			if(v1 === v2) {
+			if(v1 == v2) {
 			  return options.fn(this);
 			}	
 			return options.inverse(this);
@@ -66,6 +66,15 @@ app.engine('.hbs', hbs.engine({
 		},
 		currentcy: function(value, options){
 			return numeral(value).format('0,0') + " VND"
+		},
+		isEmptyRoom: function(status, options){
+			if(status === "Trống"){
+				return options.fn(this);
+			}
+			return options.inverse(this);
+		},
+		json: function(obj) {
+			return JSON.stringify(obj);
 		}
 }
 }));
