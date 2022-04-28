@@ -102,7 +102,7 @@
 								<textarea required="" maxlength="255" name="note" class="form-control"></textarea>
 							</div>
                             <div class="payment-adress">
-                                <button type="submit" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
+                                <button type="button" onclick="validateRoom()" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
                             </div>
                         </form>
                     </div>
@@ -194,6 +194,27 @@
 					$("input[name='price']").val(type.price);
 				}
 			})
+		}
+
+		function successCallback(data){
+			console.log(data);
+			if(data.found){
+				alert("Phòng đã tồn tại!")
+			}
+			else{
+				document.getElementById("add-room").submit();
+			}
+			
+		}
+
+		function errorCallback(error){
+			console.log(error);
+			alert("Có lỗi xảy ra, vui lòng thử lại!");
+		}
+
+		function validateRoom(){
+			const roomId = $("input[name='roomId']").val();
+			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback)
 		}
 		$(document).ready(function(){
 			$("input[name='price']").val(roomTypes[0].price);

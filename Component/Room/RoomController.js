@@ -66,14 +66,27 @@ class RoomController{
 
     validateRoomIdAPI = async (req, res, next) => {
         try {
-            const roomId = req.query.roomId || null;
-            const room = await getRoomByRoomId(roomId);
+            const roomId = req.body.roomId || null;
+            const room = await RoomService.getRoomByRoomId(roomId);
+            console.log(room, roomId);
             if(room){
                 res.status(200).json({found: true});
             }
             else{
                 res.status(200).json({found: false});
             }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+    }
+
+    createRoom = async (req, res, next) => {
+        const {roomId, typeId, note} = req.body;
+        console.log(req.body);
+        try {
+            const room = await RoomService.createRoom(roomId, typeId, note);
+            res.redirect(`/room/edit/${room.id}`);
         } catch (error) {
             console.log(error);
             res.status(500).json(error);

@@ -71,6 +71,15 @@ class RoomService{
             }
         })
     }
+
+    createRoom = async (roomId, type, note) => {
+        return models.room.create({
+            roomId: roomId,
+            typeId: type,
+            note: note,
+            status: "Trống"
+        })
+    }
 }
 
 module.exports = new RoomService();
