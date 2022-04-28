@@ -68,7 +68,13 @@ class RoomService{
             raw:true,
             where:{
                 roomId: roomId
-            }
+            },
+            include: [
+                {
+                    model: models.roomtype,
+                    require: true
+                },
+            ]
         })
     }
 
@@ -79,6 +85,19 @@ class RoomService{
             note: note,
             status: "Trống"
         })
+    }
+
+    updateRoom = async (id, roomId, typeId, note) => {
+        return models.room.update(
+            {
+                roomId, typeId, note
+            },
+            {
+                where:{
+                    id: id
+                }
+            }
+        )
     }
 }
 

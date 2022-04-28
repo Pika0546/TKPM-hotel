@@ -77,29 +77,36 @@
             <div id="myTabContent" class="tab-content custom-product-edit">
                 <div class="product-tab-list tab-pane fade active in" id="description">
                     <div class="review-content-section">
-                        <form id="add-room" method="post" action="/room/add" class="add-professors">
-                            <label>Phòng:</label>
+                        <form id="edit-room" method="post" action="/room/edit/{{room.roomId}}" class="edit-professors">
                             <div class="form-group">
-                                <input name="roomId" type="text" class="form-control" placeholder="Mã phòng" value="101">
+								<label>Phòng:</label>
+                                <input required="" name="roomId" type="text" class="form-control" placeholder="Mã phòng" value="{{room.roomId}}">
                             </div>
                            
-                            <label>Loại phòng: </label>
-                            <select id="room-type-select" class="form-control" name="roomType">
-                                <option value="">Tất cả</option>
-                                <option value="A" selected>A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                            </select>
-                            <label>Đơn giá:</label>
+                           <div class="form-group">
+							    <label>Loại phòng: </label>
+								<select required="" onchange="changeType(this)" id="room-type-select" class="form-control" name="typeId">
+									{{#each roomTypes}}
+										{{#isEqual this.id ../room.roomtype.id}}
+											<option value="{{this.id}}" selected="">{{this.typeName}}</option>
+										{{else}}
+											<option value="{{this.id}}">{{this.typeName}}</option>
+										{{/isEqual}}
+									{{/each}}
+								</select>
+						   </div>
+                            
                             <div class="form-group">
-                                <input name="price" type="text" class="form-control" placeholder="Đơn giá" readonly value="150.000VND">
+								<label>Đơn giá:</label>
+                                <input name="price" type="text" class="form-control" placeholder="Đơn giá" readonly value="{{room.roomtype.price}}">
                             </div>
-                            <label>Ghi chú:</label>
+                           
                             <div class="form-group edit-ta-resize">
-                                <textarea maxlength="255" name="note" class="form-control">Phòng này vip pro</textarea>
+								<label>Ghi chú:</label>
+                                <textarea required="" maxlength="255" name="note" class="form-control">{{room.note}}</textarea>
                             </div>
                             <div class="payment-adress">
-                                <button type="submit" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
+                                <button type="button" onclick="validateRoom()" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
                             </div>
                         </form>
                     </div>
@@ -176,4 +183,43 @@
 		============================================ -->
     <!-- <script src="/js/tawk-chat.js"></script> -->
 
+	<!-- MY JAVASCRIPT
+		============================================ -->
+	<script src="/js/numeral.js"></script>
+	<script src="/js/util/generatePager.js"></script>
+	<script src="/js/util/ajaxAPI.js"></script>
+	<script src="/js/util/queryString.js"></script>
+	<script>
+		const room = {{{json room}}};
+		const roomTypes = {{{json roomTypes}}}
+
+		function changeType(ele){
+			const typeId = $("select[name='typeId'").val();
+			roomTypes.forEach(type=>{
+				if(type.id == parseInt(typeId)){
+					$("input[name='price']").val(type.price);
+				}
+			})
+		}
+		function successCallback(data){
+			console.log(data);
+			if(data.found && data.room.id != room.id){
+				alert("Phòng đã tồn tại!")
+			}
+			else{
+				document.getElementById("edit-room").submit();
+			}
+			
+		}
+
+		function errorCallback(error){
+			console.log(error);
+			alert("Có lỗi xảy ra, vui lòng thử lại!");
+		}
+
+		function validateRoom(){
+			const roomId = $("input[name='roomId']").val();
+			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback)
+		}
+	</script>
 {{/section}}

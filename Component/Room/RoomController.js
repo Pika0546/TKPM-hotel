@@ -61,16 +61,32 @@ class RoomController{
     }
 
     getEditRoom = async (req, res, next) => {
-        res.render('room/edit');
+        const {id: roomId} = req.params;
+        try {
+            const room = await RoomService.getRoomByRoomId(roomId);
+            const roomTypes = await RoomService.getRoomTypeList();
+            if(room){
+                res.render('room/edit', {
+                    room: ObjectUtil.getObject(room),
+                    roomTypes
+                });
+            }
+            else{
+                next(createError(404));
+            }
+          
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
     }
 
     validateRoomIdAPI = async (req, res, next) => {
         try {
             const roomId = req.body.roomId || null;
             const room = await RoomService.getRoomByRoomId(roomId);
-            console.log(room, roomId);
             if(room){
-                res.status(200).json({found: true});
+                res.status(200).json({found: true, room});
             }
             else{
                 res.status(200).json({found: false});
@@ -86,11 +102,31 @@ class RoomController{
         console.log(req.body);
         try {
             const room = await RoomService.createRoom(roomId, typeId, note);
-            res.redirect(`/room/edit/${room.id}`);
+            res.redirect(`/room/edit/${room.roomId}`);
         } catch (error) {
             console.log(error);
             res.status(500).json(error);
         }
+    }
+
+    updateRoom = async (req, res ,next) => {
+        try {
+            const roomId = req.params.id;
+            const room = await RoomService.getRoomByRoomId(roomId);
+            if(room){
+                const {roomId: newRoomId, typeId, note} = req.body; 
+                const newRoom = await RoomService.updateRoom(room.id, newRoomId, typeId, note);
+                console.log(newRoom);
+                res.redirect(`/room/edit/${newRoomId}`);
+            }
+        else{
+            res.status(500).json(error);
+        }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+        
     }
 }
 
