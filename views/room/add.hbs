@@ -188,7 +188,6 @@
 		const roomTypes = {{{json roomTypes}}}
 		function changeType(ele){
 			const typeId = $("select[name='typeId'").val();
-			console.log(typeId)
 			roomTypes.forEach(type=>{
 				if(type.id == parseInt(typeId)){
 					$("input[name='price']").val(type.price);
@@ -197,7 +196,6 @@
 		}
 
 		function successCallback(data){
-			console.log(data);
 			if(data.found){
 				alert("Phòng đã tồn tại!")
 			}

@@ -6,7 +6,6 @@ const statusConverter = require('../../utils/RoomStatusConverter');
 
 class RoomService{
     getRoomList = async (limit, page, roomId, typeId, status) => {
-        console.log(status && status.length && {status: statusConverter[status]});
         const roomList = await models.room.findAll({
             raw: true,
             offset: (page - 1)*limit, 
@@ -98,6 +97,14 @@ class RoomService{
                 }
             }
         )
+    }
+
+    deleteRoomByRoomId = async (roomId) => {
+        return models.room.destroy({
+            where: {
+                roomId: roomId
+            },
+        });
     }
 }
 

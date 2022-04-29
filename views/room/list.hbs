@@ -71,27 +71,21 @@
     <link rel="stylesheet" href="/css/my-css.css">  
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
 {{/section}}
-
- <div class="product-status mg-b-15">
-    <div class="container-fluid">
+    <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column; width: 100%">
 		<div id="search-form" class="sr-input-func" style="width: 100%;">
-			<div class="row">
-				<div class="col-lg-12 col-12">
-					<div class="breadcome-heading my-search-row">
-						<div class="my-search-group">
-							<input 
-                                type="text" 
-                                name="roomId"
-							    placeholder="Nhập mã phòng" 
-                                id="search-input"
-                                class="search-int form-control"
-								{{#if queryRoom}}
-									value="{{queryRoom}}"
-								{{/if}}		
-                            >
-							<button type="button" onclick="submitQuery(this)"><i class="fa fa-search"></i></button>
-						</div>
-					</div>
+			<div class="breadcome-heading my-search-row">
+				<div class="my-search-group">
+					<input 
+						type="text" 
+						name="roomId"
+						placeholder="Nhập mã phòng" 
+						id="search-input"
+						class="search-int form-control"
+						{{#if queryRoom}}
+							value="{{queryRoom}}"
+						{{/if}}		
+					>
+					<button type="button" onclick="submitQuery(this)"><i class="fa fa-search"></i></button>
 				</div>
 			</div>
 		</div>
@@ -140,96 +134,90 @@
 				<a href="/room/add">Thêm phòng</a>
 			</div>
 		</div>
-      {{!-- </form> --}}
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="product-status-wrap">
-                    <div class="asset-inner">
-                        <table>
-                            <thead>
-								<tr>
-									<th>Phòng</th>
-									<th>Loại</th>
-									<th>Đơn giá</th>
-									<th>Tình trạng</th>
-									<th>Hành động</th>
-								</tr>
-							</thead>
-                            <tbody id="table-body">
-								{{#each room}}
-									<tr>
-										<td>{{this.roomId}}</td>
-										<td>{{this.roomtype.typeName}}</td>
-										<td>{{currentcy this.roomtype.price}}</td>
-										<td>{{this.status}}</td>
-										<td>
-											{{#isEmptyRoom this.status}}
-												<a href="/rent/create?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-												<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-											{{else}}
-												<a href="/rent/{{this.roomRentId}}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-											{{/isEmptyRoom}}
-											<a href="/room/edit/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-										</td>
-									</tr>
-								{{/each}}
-							</tbody>
-                        </table>
-                    </div>
-                    <div  id="deleteProductModal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-close-area modal-close-df">
-                                    <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                                </div>
-                                <div class="modal-body">
-                                    <span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-                                    <h2>Xóa phòng này</h2>
-                                    <!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
-                                </div>
-                                <div class="modal-footer danger-md">
-                                    <button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-                                    <form method="post" style="display: none;" id="delete-product-form"></form>
-									<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{#if paginationArray}}
-						<form 	
-							method="get"
-							action="/room"
-						>
-							<ul class="my-pagination" id="my-pagination">
-								<li class="my-page-item">
-									<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
-									<label for="page-prev"  class="my-page-button">Trang trước</label>
-								</li>
-								{{#each paginationArray}}
-									{{#if this.isCurrent}}
-										<li class="my-page-item">
-											<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-											<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
-										</li>
+		<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column">
+			<div class="asset-inner" style="flex: 1 1 auto;">
+				<table>
+					<thead>
+						<tr>
+							<th>Phòng</th>
+							<th>Loại</th>
+							<th>Đơn giá</th>
+							<th>Tình trạng</th>
+							<th>Hành động</th>
+						</tr>
+					</thead>
+					<tbody id="table-body">
+						{{#each room}}
+							<tr>
+								<td>{{this.roomId}}</td>
+								<td>{{this.roomtype.typeName}}</td>
+								<td>{{currentcy this.roomtype.price}}</td>
+								<td>{{this.status}}</td>
+								<td>
+									{{#isEmptyRoom this.status}}
+										<a href="/rent/create?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
+										<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 									{{else}}
-										<li class="my-page-item">
-											<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-											<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
-										</li>
-									{{/if}}
-								{{/each}}
+										<a href="/rent/{{this.roomRentId}}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
+									{{/isEmptyRoom}}
+									<a href="/room/edit/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+								</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+			<div  id="delete-room-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-close-area modal-close-df">
+							<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+						</div>
+						<div class="modal-body">
+							<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
+							<h2 id="modal-text">Xóa phòng này</h2>
+							<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
+						</div>
+						<div class="modal-footer danger-md">
+							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
+							<form method="post" style="display: none;" id="delete-room-form"></form>
+							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{#if paginationArray}}
+				<form 	
+					method="get"
+					action="/room"
+				>
+					<ul class="my-pagination" id="my-pagination">
+						<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
+							<label for="page-prev"  class="my-page-button">Trang trước</label>
+						</li>
+						{{#each paginationArray}}
+							{{#if this.isCurrent}}
 								<li class="my-page-item">
-									<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
-									<label for="page-next"  class="my-page-button">Trang sau</label>
+									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
 								</li>
-							</ul>
-						</form>
-					{{/if}}
-                </div>
-            </div>
-        </div>
+							{{else}}
+								<li class="my-page-item">
+									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
+								</li>
+							{{/if}}
+						{{/each}}
+						<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
+							<label for="page-next"  class="my-page-button">Trang sau</label>
+						</li>
+					</ul>
+				</form>
+			{{/if}}
+		</div>
     </div>
-</div>
 {{#section 'script'}}
       <!-- jquery
 		============================================ -->
@@ -337,9 +325,9 @@
 						<td>${room.status}</td>
 						<td>
 							${room.status === "Trống" ? 
-								`<a href="/rent/create?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
-								<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>` : 
-								`<a href="/rent/{{this.roomRentId}}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>`
+								`<a href="/rent/create?room=${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>
+								<button data-id="${room.roomId}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>` : 
+								`<a href="/rent/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro admin-check-pro" aria-hidden="true"></i></button></a>`
 							}
 							<a href="/room/edit/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 						</td>
@@ -349,7 +337,6 @@
 		}
 
 		const successCallback = (data) => {
-			console.log(data);
 			$("#my-pagination").empty();
 			if(data.paginationArray && data.paginationArray.length > 0){
 				const pageView = generatePager(data.paginationArray, data.prevPage, data.nextPage, "submitQuery(this)");
@@ -379,12 +366,40 @@
 			if(!data.page){
 				data.page = '1';
 			}
-			if(ele.getAttribute("name") !== "page"){
+			if(ele && ele.getAttribute("name") !== "page"){
 				data.page = '1';
 			}
 			const newRelativePathQuery = window.location.pathname + '?' + queryString(data);
 			history.pushState(null, '', newRelativePathQuery);
 			fetchData('get', data, '/room/api', successCallback, errorCallback);
 		}
+	
+		const deleteSuccessCallback = (data) => {
+			if(data.success){
+				alert("Xóa thành công !");
+				submitQuery();
+			}
+			else{
+				alert(data.message);
+			}
+		}
+
+		$(document).ready(()=>{
+			let modalRoomId = null;
+			const deleteForm = document.getElementById("delete-room-form");
+			document.getElementById("submit-delete-form").addEventListener('click', function(e){
+				if(modalRoomId){
+					fetchData('post', {modalRoomId}, `/room/api/delete/${modalRoomId}`, deleteSuccessCallback, errorCallback);
+				}
+				$('#delete-room-modal').modal('hide')
+			});
+			$('#delete-room-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				modalRoomId = id;
+				modal.find('#modal-text').text(`Xóa phòng ${id} ?`);
+			})
+		})
 	</script>
 {{/section}}

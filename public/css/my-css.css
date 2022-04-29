@@ -17,6 +17,7 @@
 .my-main{
     flex-grow: 1;
     flex-shrink: 0;
+    display: flex;
 }
 
 .my-status-option{

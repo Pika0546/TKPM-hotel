@@ -10,7 +10,7 @@ function generatePager(paginationArray, prevPage, nextPage, callback){
         if(page.isCurrent){
             result.push(`
                 <li class="my-page-item">
-                    <input onchange='${callback}' style="display: none;" id="page-${page.page}" value="${page.page}" type="radio" name="page"/>
+                    <input checked onchange='${callback}' style="display: none;" id="page-${page.page}" value="${page.page}" type="radio" name="page"/>
                     <label for="page-${page.page}"  class="my-page-link my-current-page">${page.page}</label>
                 </li>
             `)

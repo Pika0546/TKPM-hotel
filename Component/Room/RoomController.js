@@ -31,7 +31,9 @@ class RoomController{
             roomTypes,
             queryRoom:roomId,
             queryType: typeId,
-            queryStatus: status
+            queryStatus: status,
+            prevPage: (currentPage > 1) ? currentPage - 1 : 1,
+            nextPage: (currentPage < totalPage) ? currentPage + 1 : totalPage,
         }
     }
 
@@ -77,7 +79,7 @@ class RoomController{
           
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            next(createError(500));
         }
     }
 
@@ -99,13 +101,12 @@ class RoomController{
 
     createRoom = async (req, res, next) => {
         const {roomId, typeId, note} = req.body;
-        console.log(req.body);
         try {
             const room = await RoomService.createRoom(roomId, typeId, note);
             res.redirect(`/room/edit/${room.roomId}`);
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            next(createError(500));
         }
     }
 
@@ -116,17 +117,50 @@ class RoomController{
             if(room){
                 const {roomId: newRoomId, typeId, note} = req.body; 
                 const newRoom = await RoomService.updateRoom(room.id, newRoomId, typeId, note);
-                console.log(newRoom);
                 res.redirect(`/room/edit/${newRoomId}`);
             }
-        else{
-            res.status(500).json(error);
+            else{
+                console.log("Room not found");
+                next(createError(500));
+            }
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
         }
+        
+    }
+
+    deleteRoomAPI = async (req, res, next) => {
+        try {
+            const roomId = req.params.id;
+        
+            const room = await RoomService.getRoomByRoomId(roomId);
+            if(room){
+                if(room.status === "Trống"){
+                    const deletedRoom = await RoomService.deleteRoomByRoomId(roomId);
+                    res.status(200).json({
+                        success: true,
+                        room: deletedRoom
+                    })
+                }
+                else{
+                    res.status(200).json({
+                        success: false,
+                        message: "Xóa thất bại, phòng đang được thuê."
+                    })
+                }
+            }
+            else{
+                console.log("Room not found");
+                res.status(200).json({
+                    success: false,
+                    message: "Không tìm thấy phòng!"
+                })
+            }
         } catch (error) {
             console.log(error);
             res.status(500).json(error);
         }
-        
     }
 }
 
