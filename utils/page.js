@@ -8,7 +8,7 @@ class PageUtil {
     }
     
     getPaginationArray = (page, totalPage, maximumPagination) => {
-        const paginationArray = [];
+        let paginationArray = [];
         let pageDisplace = Math.min(totalPage - page + 2, maximumPagination);
         if(page === 1){
             pageDisplace -= 1;

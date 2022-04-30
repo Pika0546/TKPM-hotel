@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'public', 'img/logosn.png')))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(session({ secret: process.env.SECRET_SESSION, resave: true, saveUninitialized: true }));
@@ -54,7 +54,7 @@ app.engine('.hbs', hbs.engine({
 			return options.inverse(this);
 		},
 		isEqual: function(v1, v2, options) {
-			if(v1 === v2) {
+			if(v1 == v2) {
 			  return options.fn(this);
 			}	
 			return options.inverse(this);
@@ -66,6 +66,15 @@ app.engine('.hbs', hbs.engine({
 		},
 		currentcy: function(value, options){
 			return numeral(value).format('0,0') + " VND"
+		},
+		isEmptyRoom: function(status, options){
+			if(status === "Trống"){
+				return options.fn(this);
+			}
+			return options.inverse(this);
+		},
+		json: function(obj) {
+			return JSON.stringify(obj);
 		}
 }
 }));
@@ -99,7 +108,7 @@ app.use(function(err, req, res, next) {
 		});
 	}
 	else{
-		res.render('error', {msg: `${err.status || 500} ${err.message}` });
+		res.render('error', {msg: `${err.status || 500} ${err.message}`, layout:false });
 	}
 	
 });

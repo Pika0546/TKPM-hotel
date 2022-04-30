@@ -53,8 +53,6 @@ passport.deserializeUser(function(id, done) {
     })
 });
 async function validPassword(admin, password){
-    const p = await bcrypt.hash("123456", SALT_BCRYPT)
-    console.log(p);
     return bcrypt.compare(password, admin.password);
 }
 

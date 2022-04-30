@@ -11,7 +11,6 @@ router.post("/login",
         failureFlash: true 
     }),
     function(req, res) {
-        console.log(req.body)
         if(req.user){   
             res.redirect("/");
         }else{
