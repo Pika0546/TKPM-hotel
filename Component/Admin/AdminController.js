@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const AdminService = require("./AdminService");
+const passport = require('passport');
 
 class AdminController{
     //[GET] /login
@@ -12,6 +13,7 @@ class AdminController{
 
     //[POST] /logout
     logout(req, res, next){
+        res.clearCookie('remember_me');
         req.logout();
         res.redirect('/');
     }
@@ -46,6 +48,25 @@ class AdminController{
             res.status(500).json(error);
         }
     }
+
+    // async login(req, res,next){
+    //     passport.authenticate('local',
+    //     { 
+    //         failureRedirect: '/account/login',
+    //         failureFlash: true 
+    //     }),
+    //     function(req, res,next){
+    //         if (!req.body.remember_me) { return next(); }
+    //     },
+    //     function(req, res) {
+    
+    //         if(req.user){   
+    //             res.redirect("/");
+    //         }else{
+    //             res.redirect("/account/login");
+    //         }
+    //     };
+    // }
 
 }
 

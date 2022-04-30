@@ -1,7 +1,7 @@
 const {models} = require('../../models')
 
 class AdminService  {
-    findAccountByUsername = (username) => {
+    findAccountByUsername = async (username) => {
         return models.admin.findOne({
             raw: true,
             where:{
@@ -10,9 +10,28 @@ class AdminService  {
         })
     }
 
-    findAccountById = (id) => {
+    findAccountById = async (id) => {
         return models.admin.findOne({
             raw:true,
+            where:{
+                id:id
+            }
+        })
+    }
+
+    findAccountByToken = async (token) => {
+        return models.admin.findOne({
+            raw:true,
+            where:{
+                token:token
+            }
+        })
+    }
+
+    updateAccountToken = async (id, token) => {
+        return models.admin.update({
+            token: token
+        }, {
             where:{
                 id:id
             }

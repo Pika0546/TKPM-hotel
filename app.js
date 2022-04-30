@@ -30,8 +30,9 @@ app.use(methodOverride('_method'));
 app.use(session({ secret: process.env.SECRET_SESSION, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(passport.authenticate('remember-me'));
+app.use(passport.authenticate('remember-me'));
 app.use(function (req, res, next) {
+	console.log(res.locals);
 	res.locals.user = req.user
 	next();
 })
@@ -93,7 +94,7 @@ app.use(function(err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+	console.log(err);
 	// render the error page
 	res.status(err.status || 500);
 

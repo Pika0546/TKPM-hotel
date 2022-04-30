@@ -11,6 +11,7 @@ CREATE TABLE IF not EXISTS Admin (
     fullname varchar(100),
     identityNumber varchar(20),
 	address varchar(255),
+    token varchar(255),
     createdAt datetime DEFAULT CURRENT_TIMESTAMP,
 	updatedAt datetime DEFAULT CURRENT_TIMESTAMP,
   	deletedAt datetime DEFAULT NULL,
