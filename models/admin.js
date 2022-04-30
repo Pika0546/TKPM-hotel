@@ -18,6 +18,14 @@ module.exports = function(sequelize, DataTypes) {
     fullname: {
       type: DataTypes.STRING(100),
       allowNull: true
+    },
+    identityNumber: {
+      type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    address: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

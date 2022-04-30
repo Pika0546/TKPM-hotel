@@ -26,6 +26,14 @@ module.exports = function(sequelize, DataTypes) {
         model: 'guesttype',
         key: 'id'
       }
+    },
+    roomRentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'roomrent',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -40,6 +48,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "roomRentId",
+        using: "BTREE",
+        fields: [
+          { name: "roomRentId" },
         ]
       },
       {

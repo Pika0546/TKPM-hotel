@@ -65,6 +65,7 @@ CREATE TABLE IF not EXISTS Guest (
     identityNumber varchar(20),
     address varchar(255),
     typeId integer,
+    roomRentId integer,
     createdAt datetime DEFAULT CURRENT_TIMESTAMP,
 	updatedAt datetime DEFAULT CURRENT_TIMESTAMP,
   	deletedAt datetime DEFAULT NULL,
@@ -81,14 +82,6 @@ CREATE TABLE IF not EXISTS GuestType (
     PRIMARY KEY (id)
 ) ;
 
-CREATE TABLE IF not EXISTS RoomRentDetail (
-	roomRentId integer,
-    guestId integer,
-    createdAt datetime DEFAULT CURRENT_TIMESTAMP,
-	updatedAt datetime DEFAULT CURRENT_TIMESTAMP,
-  	deletedAt datetime DEFAULT NULL,
-    PRIMARY KEY (roomRentId, guestId)
-) ;
 
 CREATE TABLE IF not EXISTS Rule (
 	id integer auto_increment,
@@ -112,10 +105,7 @@ add foreign key (billId) references Bill(id);
 alter table Bill
 add foreign key (guestId) references Guest(id);
 
-alter table RoomRentDetail
-add foreign key (guestId) references Guest(id);
-
-alter table RoomRentDetail
+alter table Guest
 add foreign key (roomRentId) references RoomRent(id);
 
 alter table Guest
@@ -154,26 +144,25 @@ VALUES
 	('foreigner', '1.5'), 
     ('local', '0');
     
-INSERT INTO Guest(fullname, identityNumber, address, typeId)
-VALUES 
-	("Nguyễn Văn A", "123456789012", "Thành phố HCM", 1),
-    ("Lê Thị B", "123456789123", "Vũng Tàu", 1),
-    ("Arslan Audley", "52137865312", "Newyork, America", 2);
 
-INSERT INTO bill(guestID)
-VALUES
-	(3);
 
 INSERT INTO roomrent(roomId, billId)
 VALUES
 	(6, NULL),
-    (6, 1),
+    (6, NULL),
     (5, NULL);
+    
+INSERT INTO Guest(fullname, identityNumber, address, typeId, roomRentId)
+VALUES 
+	("Nguyễn Văn A", "123456789012", "Thành phố HCM", 1, 1),
+    ("Lê Thị B", "123456789123", "Vũng Tàu", 1, 1),
+    ("Trần Thị C", "123456789456", "Đồng Nai", 1, 3),
+    ("Arslan Audley", "52137865312", "Newyork, America", 2, 2);
 
-INSERT INTO roomrentdetail(roomRentId, guestID)
+INSERT INTO bill(guestID)
 VALUES
-	(1, 1),
-    (1, 2),
-    (3, 1),
-    (2, 3);
+	(4);
+
+UPDATE roomrent set billId = 1 where id = 2
+
 	
