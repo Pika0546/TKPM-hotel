@@ -102,6 +102,12 @@ class RoomController{
     createRoom = async (req, res, next) => {
         const {roomId, typeId, note} = req.body;
         try {
+            const otherRoom = await RoomService.getRoomByRoomId(roomId);
+            const type = await RoomService.getRoomTypeById(typeId);
+            if(!otherRoom && !type && !note){
+                console.log("Đầu vào không hợp lệ!");
+                next(createError(400));
+            }
             const room = await RoomService.createRoom(roomId, typeId, note);
             res.redirect(`/room/edit/${room.roomId}`);
         } catch (error) {
@@ -113,15 +119,16 @@ class RoomController{
     updateRoom = async (req, res ,next) => {
         try {
             const roomId = req.params.id;
+            const {roomId: newRoomId, typeId, note} = req.body; 
             const room = await RoomService.getRoomByRoomId(roomId);
-            if(room){
-                const {roomId: newRoomId, typeId, note} = req.body; 
+            const type = await RoomService.getRoomTypeById(typeId);
+            if(room && type && note){
                 const newRoom = await RoomService.updateRoom(room.id, newRoomId, typeId, note);
                 res.redirect(`/room/edit/${newRoomId}`);
             }
             else{
-                console.log("Room not found");
-                next(createError(500));
+                console.log("Đầu vào không hợp lệ!");   
+                next(createError(400));
             }
         } catch (error) {
             console.log(error);
@@ -133,7 +140,6 @@ class RoomController{
     deleteRoomAPI = async (req, res, next) => {
         try {
             const roomId = req.params.id;
-        
             const room = await RoomService.getRoomByRoomId(roomId);
             if(room){
                 if(room.status === "Trống"){

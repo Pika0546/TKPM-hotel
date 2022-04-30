@@ -42,8 +42,8 @@ class AdminController{
             }
         }
         catch(err){
-            console.log(err);
-            next(createError(500));
+            onsole.log(error);
+            res.status(500).json(error);
         }
     }
 

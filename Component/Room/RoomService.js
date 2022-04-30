@@ -106,6 +106,14 @@ class RoomService{
             },
         });
     }
+
+    getRoomTypeById = async (id) => {
+        return models.roomtype.findOne({
+            where:{
+                id: id,
+            }
+        })
+    }
 }
 
 module.exports = new RoomService();
