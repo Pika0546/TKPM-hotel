@@ -18,18 +18,18 @@ function initModels(sequelize) {
   var roomtype = _roomtype(sequelize, DataTypes);
   var rule = _rule(sequelize, DataTypes);
 
-  roomrent.belongsTo(bill, { as: "bill", foreignKey: "billId"});
-  bill.hasMany(roomrent, { as: "roomrents", foreignKey: "billId"});
-  bill.belongsTo(guest, { as: "guest", foreignKey: "guestId"});
-  guest.hasMany(bill, { as: "bills", foreignKey: "guestId"});
-  guest.belongsTo(guesttype, { as: "type", foreignKey: "typeId"});
-  guesttype.hasMany(guest, { as: "guests", foreignKey: "typeId"});
-  roomrent.belongsTo(room, { as: "room", foreignKey: "roomId"});
-  room.hasMany(roomrent, { as: "roomrents", foreignKey: "roomId"});
-  guest.belongsTo(roomrent, { as: "roomRent", foreignKey: "roomRentId"});
-  roomrent.hasMany(guest, { as: "guests", foreignKey: "roomRentId"});
-  room.belongsTo(roomtype, { as: "type", foreignKey: "typeId"});
-  roomtype.hasMany(room, { as: "rooms", foreignKey: "typeId"});
+  roomrent.belongsTo(bill, { foreignKey: "billId"});
+  bill.hasMany(roomrent, { foreignKey: "billId"});
+  bill.belongsTo(guest, { foreignKey: "guestId"});
+  guest.hasMany(bill, { foreignKey: "guestId"});
+  guest.belongsTo(guesttype, { foreignKey: "typeId"});
+  guesttype.hasMany(guest, { foreignKey: "typeId"});
+  roomrent.belongsTo(room, { foreignKey: "roomId"});
+  room.hasMany(roomrent, { foreignKey: "roomId"});
+  guest.belongsTo(roomrent, { foreignKey: "roomRentId"});
+  roomrent.hasMany(guest, { foreignKey: "roomRentId"});
+  room.belongsTo(roomtype, { foreignKey: "typeId"});
+  roomtype.hasMany(room, { foreignKey: "typeId"});
 
   return {
     admin,

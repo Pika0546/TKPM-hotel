@@ -227,3 +227,13 @@
     display: none;
     font-family: 'Roboto', sans-serif;
 }
+
+
+#my-alert{
+    position: absolute;
+    z-index: 12132132;
+    top: 20px;
+    right: 20px;
+    min-width: 300px;
+    width: 25%;
+}

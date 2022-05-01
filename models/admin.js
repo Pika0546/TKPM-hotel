@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
     address: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    token: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
