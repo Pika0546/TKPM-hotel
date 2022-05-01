@@ -70,8 +70,9 @@
 		============================================ -->
     <link rel="stylesheet" href="/css/my-css.css">  
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+	<script src="/js/util/alert.js"></script>
 {{/section}}
-    <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column; width: 100%">
+    <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%">
 		<div id="search-form" class="sr-input-func" style="width: 100%;">
 			<div class="breadcome-heading my-search-row">
 				<div class="my-search-group">
@@ -354,7 +355,7 @@
 
 		const errorCallback = (error) => {
 			console.log(error);
-			alert("Có lỗi xảy ra, vui lòng thử lại!");
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
 		}
 
 		function submitQuery(ele){
@@ -376,11 +377,11 @@
 	
 		const deleteSuccessCallback = (data) => {
 			if(data.success){
-				alert("Xóa thành công !");
+				createAlert("success", "Xóa thành công !");
 				submitQuery();
 			}
 			else{
-				alert(data.message);
+				createAlert("error", data.message)
 			}
 		}
 

@@ -59,7 +59,7 @@ class RoomController{
 
     getAddRoom = async (req, res, next) => {
         const roomTypes = await RoomService.getRoomTypeList();
-        res.render('room/add', {roomTypes});
+        res.render('room/add', {roomTypes, message: req.flash('create-room-message')});
     }
 
     getEditRoom = async (req, res, next) => {
@@ -70,7 +70,8 @@ class RoomController{
             if(room){
                 res.render('room/edit', {
                     room: ObjectUtil.getObject(room),
-                    roomTypes
+                    roomTypes,
+                    message: req.flash('edit-room-message'),
                 });
             }
             else{
@@ -104,12 +105,21 @@ class RoomController{
         try {
             const otherRoom = await RoomService.getRoomByRoomId(roomId);
             const type = await RoomService.getRoomTypeById(typeId);
-            if(!otherRoom && !type && !note){
-                console.log("Đầu vào không hợp lệ!");
-                next(createError(400));
+            if(otherRoom){
+                console.log("Phòng đã tồn tại!");
+                req.flash("create-room-message", {success: false, message: "Phòng đã tồn tại!"})
+                res.redirect("/room/add")
             }
-            const room = await RoomService.createRoom(roomId, typeId, note);
-            res.redirect(`/room/edit/${room.roomId}`);
+            else if(!type || !note || !roomId){
+                console.log("Đầu vào không hợp lệ!");
+                req.flash("create-room-message",  {success: false, message:"Đầu vào không hợp lệ!"})
+                res.redirect("/room/add")
+            }
+            else{
+                const room = await RoomService.createRoom(roomId, typeId, note);
+                req.flash("edit-room-message", {success: true, message: "Thêm phòng thành công!"})
+                res.redirect(`/room/edit/${room.roomId}`);
+            }
         } catch (error) {
             console.log(error);
             next(createError(500));
@@ -127,8 +137,9 @@ class RoomController{
                 res.redirect(`/room/edit/${newRoomId}`);
             }
             else{
-                console.log("Đầu vào không hợp lệ!");   
-                next(createError(400));
+                console.log("Đầu vào không hợp lệ!");
+                req.flash("edit-room-message", "Đầu vào không hợp lệ!")
+                res.redirect("/room/edit/" + roomId);
             }
         } catch (error) {
             console.log(error);

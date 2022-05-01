@@ -54,6 +54,7 @@
     <!-- forms CSS
 		============================================ -->
     <link rel="stylesheet" href="/css/form/all-type-forms.css">
+	 <link rel="stylesheet" href="/css/alerts.css">
     <!-- style CSS
 		============================================ -->
     <link rel="stylesheet" href="/style.css">
@@ -68,7 +69,7 @@
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
 {{/section}}
 
-<div class="single-pro-review-area mt-t-30 mg-b-15">
+<div class="single-pro-review-area mt-t-30 mg-b-15" style="width: 100%;">
     <div class="container-fluid">
         <div class="product-payment-inner-st">
             <ul id="myTabedu1" class="tab-review-design">
@@ -184,6 +185,7 @@
 	<script src="/js/util/generatePager.js"></script>
 	<script src="/js/util/ajaxAPI.js"></script>
 	<script src="/js/util/queryString.js"></script>
+	<script src="/js/util/alert.js"></script>
 	<script>
 		const roomTypes = {{{json roomTypes}}}
 		function changeType(ele){
@@ -197,7 +199,7 @@
 
 		function successCallback(data){
 			if(data.found){
-				alert("Phòng đã tồn tại!")
+				createAlert("error", "Phòng đã tồn tại!")
 			}
 			else{
 				document.getElementById("add-room").submit();
@@ -207,15 +209,26 @@
 
 		function errorCallback(error){
 			console.log(error);
-			alert("Có lỗi xảy ra, vui lòng thử lại!");
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
 		}
 
 		function validateRoom(){
-			const roomId = $("input[name='roomId']").val();
-			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback)
+			document.getElementById("add-room").submit();
+			{{!-- const roomId = $("input[name='roomId']").val();
+			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback) --}}
 		}
+		
 		$(document).ready(function(){
 			$("input[name='price']").val(roomTypes[0].price);
+			const message ={{{json message}}};
+			if(message.length > 0){
+				console.log(message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
 		})
 	</script>
 {{/section}}

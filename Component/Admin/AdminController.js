@@ -30,7 +30,7 @@ class AdminController{
         });
     }
 
-    async checkUsername(req,res,next){
+    async checkUsernameAPI(req,res,next){
         const {username} = req.body;
         try{
             const result = await AdminService.findAccountByUsername(username)
