@@ -60,6 +60,7 @@
         ============================================ -->
     <link rel="stylesheet" href="/css/data-table/bootstrap-table.css">
     <link rel="stylesheet" href="/css/data-table/bootstrap-editable.css">
+	<link rel="stylesheet" href="/css/alerts.css">
     <!-- style CSS
 		============================================ -->
     <link rel="stylesheet" href="/style.css">
@@ -152,7 +153,7 @@
 							<tr>
 								<td>{{this.roomId}}</td>
 								<td>{{this.roomtype.typeName}}</td>
-								<td>{{currentcy this.roomtype.price}}</td>
+								<td>{{currency this.roomtype.price}}</td>
 								<td>{{this.status}}</td>
 								<td>
 									{{#isEmptyRoom this.status}}

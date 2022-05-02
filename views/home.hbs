@@ -59,7 +59,9 @@
     <link rel="stylesheet" href="/css/data-table/bootstrap-editable.css">
     <!-- style CSS
 		============================================ -->
+			<link rel="stylesheet" href="/css/alerts.css">
     <link rel="stylesheet" href="/style.css">
+	<link rel="stylesheet" href="/css/my-css.css">
     <!-- responsive CSS
 		============================================ -->
     <link rel="stylesheet" href="/css/responsive.css">
@@ -68,9 +70,112 @@
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
 {{/section}}
 
-<div style="max-width: 1000px; margin: 50px auto">
-    <h1 style="text-align: center;">Welcom to Hotel Transylvania </h1>
-    <img src="/img/hotel.webp"/>
+ <div class="container-fluid mg-b-15 mg-t-30" style="display: flex; flex-direction:column;  width: 100%">
+	<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column">
+		<div class="row mg-b-10">
+			<div class="text-center context-box" style="padding: 0 20px">
+				<h2 class="mg-b-10">Báo cáo Doanh Thu theo loại phòng</h2>
+				<div class="row">
+					<div class="col-12 col-md-6">
+						<div style="display: flex; align-items:center; flex-direction: row">
+							<label style="margin:0; margin-right: 15px">Tháng: </label>
+							<select onchange="roomTypeSubmitQuery(this)" class="form-control custom-select-value" id="month1" name="month1">
+							
+							</select>
+						</div>
+					</div>
+					<div class="col-12 col-md-6">
+						<div style="display: flex; align-items:center; flex-direction: row">
+							<label style="margin:0; margin-right: 15px">Năm: </label>
+							<select onchange="roomTypeSubmitQuery(this)" name="year1" id="year1" class="form-control custom-select-value"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="data-container-1">
+			<div class="col-12 col-md-6">
+				<div id="room-type-chart-container">
+					<canvas id="room-type-chart"></canvas>
+				</div>
+			</div>
+			<div class="col-12 col-md-6">
+				<div class="table-sticky-head">
+					<table >
+						<thead>
+							<th>STT</th>
+							<th>Loại phòng</th>
+							<th>Doanh thu</th>
+							<th>Tỉ lệ</th>
+						</thead>
+						<tbody id="table-body-1">
+							{{#each resultRoomTypeArr}}
+								<tr>
+									<td>{{sum @index 1}}</td>
+									<td>{{this.type}}</td>
+									<td>{{currency this.value}}</td>
+									<td>{{ratio this.ratio}}</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="product-status-wrap mg-t-15" style="flex: 1 1 auto; display:flex; flex-direction:column">
+		<div class="row mg-b-10">
+			<div class="text-center context-box" style="padding: 0 20px">
+				<h2 class="mg-b-10">Báo cáo Mật độ sử dụng phòng</h2>
+				<div class="row">
+					<div class="col-12 col-md-6">
+						<div style="display: flex; align-items:center; flex-direction: row">
+							<label style="margin:0; margin-right: 15px">Tháng: </label>
+							<select onchange="roomDensitySubmitQuery(this)" class="form-control custom-select-value" id="month2" name="month2">
+							
+							</select>
+						</div>
+					</div>
+					<div class="col-12 col-md-6">
+						<div style="display: flex; align-items:center; flex-direction: row">
+							<label style="margin:0; margin-right: 15px">Năm: </label>
+							<select onchange="roomDensitySubmitQuery(this)" name="year2" id="year2" class="form-control custom-select-value"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="data-container-2">
+			<div class="col-12 col-md-6">
+				<div id="room-density-chart-container">
+					<canvas id="room-density-chart"></canvas>
+				</div>
+			</div>
+			<div class="col-12 col-md-6">
+				<div class="table-sticky-head">
+					<table >
+						<thead>
+							<th>STT</th>
+							<th>Phòng</th>
+							<th>Số ngày thuê</th>
+							<th>Tỉ lệ</th>
+						</thead>
+						<tbody id="table-body-2">
+							{{#each resultRoomDensityArr}}
+								<tr>
+									<td>{{sum @index 1}}</td>
+									<td>{{this.room}}</td>
+									<td>{{this.value}}</td>
+									<td>{{ratio this.ratio}}</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 {{#section 'script'}}
@@ -135,8 +240,12 @@
     <script src="/js/editable/xediable-active.js"></script>
     <!-- Chart JS
         ============================================ -->
-    <script src="/js/chart/jquery.peity.min.js"></script>
-    <script src="/js/peity/peity-active.js"></script>
+    {{!-- <script src="/js/chart/jquery.peity.min.js"></script>
+    <script src="/js/peity/peity-active.js"></script> --}}
+     <!-- Charts JS
+		============================================ -->
+    <script src="/js/charts/Chart.js"></script>
+    {{!-- <script src="/js/charts/rounded-chart.js"></script> --}}
     <!-- tab JS
         ============================================ -->
     <script src="/js/tab.js"></script>
@@ -160,5 +269,177 @@
     <script src="/js/plugins.js"></script>
     <!-- main JS
 		============================================ -->
-    <script src="/js/main.js"></script>
+    <script src="/js/numeral.js"></script>
+	<script src="/js/main.js"></script>
+ 	<script src="/js/util/color.js"></script>
+	<script src="/js/util/ajaxAPI.js"></script>
+	<script src="/js/util/alert.js"></script>
+    <script>
+
+		const renderRoomTypeRow = (index,item) => {
+			return `
+				<tr>
+					<td>${index + 1}</td>
+					<td>${item.type}</td>
+					<td>${numeral(item.value).format('0,0') + " VND"}</td>
+					<td>${numeral(item.ratio).format('0%')}</td>
+				</tr>
+			`
+		}
+
+		const renderRoomDensityRow = (index,item) => {
+			return `
+				<tr>
+					<td>${index + 1}</td>
+					<td>${item.room}</td>
+					<td>${item.value}</td>
+					<td>${numeral(item.ratio).format('0%')}</td>
+				</tr>
+			`
+		}
+
+		const renderRoomTypeChart = (roomTypeData) => {
+			const roomTypeChartCtx = document.getElementById("room-type-chart");
+			const roomTypeChart = new Chart(roomTypeChartCtx, {
+				type: 'pie',
+				data: {
+					labels: Object.keys(roomTypeData),
+					datasets: [{
+						label: 'pie Chart',
+						backgroundColor: Object.keys(roomTypeData).map((item)=> "#" + getRandomColor()),
+						data: Object.keys(roomTypeData).map((item)=> roomTypeData[item].value)
+					}]
+				},
+				options: {
+					responsive: true
+				}
+			});
+		}
+
+		const renderRoomDensityChart = (roomDensityData) => {
+			const roomDensityChartCtx = document.getElementById("room-density-chart");
+			const roomDensityChart = new Chart(roomDensityChartCtx, {
+				type: 'pie',
+				data: {
+					labels: Object.keys(roomDensityData),
+					datasets: [{
+						label: 'pie Chart',
+						backgroundColor: Object.keys(roomDensityData).map((item)=> "#" + getRandomColor()),
+						data: Object.keys(roomDensityData).map((item)=> roomDensityData[item].value)
+					}]
+				},
+				options: {
+					responsive: true
+				}
+			});
+		}
+
+
+
+		const roomTypeSuccessCallback = (data) => {
+			if(data.success){
+				const resultRoomType = data.data.resultRoomType;
+				console.log(resultRoomType)
+				let isNotEmpty = 0;
+				Object.keys(resultRoomType).forEach(key=>{
+					isNotEmpty += resultRoomType[key].value;
+				});
+				if(isNotEmpty){
+					console.log(resultRoomType);
+					$("#data-container-1").show();
+					$("#table-body-1").empty();
+					Object.keys(resultRoomType).forEach((key,index)=>{
+						$("#table-body-1").append(renderRoomTypeRow(index, {type:key, ...resultRoomType[key]}))
+					});
+					renderRoomTypeChart(resultRoomType);
+				}
+				else{
+					$("#data-container-1").hide();
+					createAlert("info", "Không có dữ liệu")
+				}
+				
+			}
+			else{
+				createAlert("error", data.message)
+			}
+		}
+
+		const roomDensitySuccessCallback = (data) => {
+			if(data.success){
+				const resultRoomDensity = data.data.resultRoomDensity;
+				console.log(resultRoomDensity)
+				let isNotEmpty = 0;
+				Object.keys(resultRoomDensity).forEach(key=>{
+					isNotEmpty += resultRoomDensity[key].value;
+				});
+				if(isNotEmpty){
+					console.log(resultRoomDensity);
+					$("#data-container-2").show();
+					$("#table-body-2").empty();
+					Object.keys(resultRoomDensity).forEach((key,index)=>{
+						$("#table-body-2").append(renderRoomDensityRow(index, {room:key, ...resultRoomDensity[key]}))
+					});
+					renderRoomTypeChart(resultRoomDensity);
+				}
+				else{
+					$("#data-container-2").hide();
+					createAlert("info", "Không có dữ liệu")
+				}
+				
+			}
+			else{
+				createAlert("error", data.message)
+			}
+		}
+
+		const errorCallback = (error) => {
+			console.log(error);
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+		}
+
+		const  roomTypeSubmitQuery = (ele) => {
+			const data = {};
+			data.month =  $("select[name='month1']").val();
+			data.year =  $("select[name='year1']").val();
+			console.log(data);
+			fetchData('get', data, '/api/room-type', roomTypeSuccessCallback, errorCallback);
+		}
+
+		const  roomDensitySubmitQuery = (ele) => {
+			const data = {};
+			data.month =  $("select[name='month2']").val();
+			data.year =  $("select[name='year2']").val();
+			console.log(data);
+			fetchData('get', data, '/api/room-density', roomDensitySuccessCallback, errorCallback);
+		}
+
+		const roomTypeData = {{{json resultRoomType}}};
+		const roomDensityData = {{{json resultRoomDensity}}};
+		$(document).ready(()=>{
+			renderRoomTypeChart(roomTypeData);
+			renderRoomDensityChart(roomDensityData);
+			const currentYear = new Date().getFullYear();
+			for(i = currentYear; i >= 1970; i--){
+				if(i == currentYear){
+					$("#year1").append(`<option selected value="${i}">${i}</option>`)
+					$("#year2").append(`<option selected value="${i}">${i}</option>`)
+				}
+				else{
+					$("#year1").append(`<option value="${i}">${i}</option>`)
+					$("#year2").append(`<option value="${i}">${i}</option>`)
+				}
+			}
+			const currentMonth = new Date().getMonth() + 1;
+			for(i = 1; i <= 12; i++){
+				if(i === currentMonth){
+					$("#month1").append(`<option selected value="${i}">${i}</option>`)
+					$("#month2").append(`<option selected value="${i}">${i}</option>`)
+				}
+				else{
+					$("#month1").append(`<option value="${i}">${i}</option>`)
+					$("#month2").append(`<option value="${i}">${i}</option>`)
+				}
+			}
+		})
+    </script>
 {{/section}}
