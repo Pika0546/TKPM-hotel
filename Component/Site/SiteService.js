@@ -66,6 +66,12 @@ class SiteService{
             raw:true
         })
     }
+
+    getRoomList = async () => {
+        return models.room.findAll({
+            raw:true
+        })
+    }
 }
 
 module.exports = new SiteService();

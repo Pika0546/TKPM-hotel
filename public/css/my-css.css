@@ -230,7 +230,7 @@
 
 
 #my-alert{
-    position: absolute;
+    position: fixed;
     z-index: 12132132;
     top: 20px;
     right: 20px;
