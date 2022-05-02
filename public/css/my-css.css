@@ -237,3 +237,19 @@
     min-width: 300px;
     width: 25%;
 }
+
+.table-sticky-head{
+    height: 350px;
+    overflow: auto;
+}
+
+.table-sticky-head table{
+    border-collapse: separate;
+}
+
+.table-sticky-head th{
+    position: sticky;
+    top: 0;
+    background-color: white;
+   border-bottom: 1px solid #e9ecef
+}

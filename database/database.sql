@@ -142,7 +142,7 @@ VALUES
 INSERT INTO GuestType(typeName, coefficient) 
 VALUES 
 	('foreigner', '1.5'), 
-    ('local', '0');
+    ('local', '1');
     
 
 
@@ -155,7 +155,7 @@ VALUES
 INSERT INTO Guest(fullname, identityNumber, address, typeId, roomRentId)
 VALUES 
 	("Nguyễn Văn A", "123456789012", "Thành phố HCM", 1, 1),
-    ("Lê Thị B", "123456789123", "Vũng Tàu", 1, 1),
+    ("Lê Thị B", "123456789123", "Vũng Tàu", 1, 2),
     ("Trần Thị C", "123456789456", "Đồng Nai", 1, 3),
     ("Arslan Audley", "52137865312", "Newyork, America", 2, 2);
 

@@ -64,7 +64,7 @@ app.engine('.hbs', hbs.engine({
 				new RegExp(' value=\"' + selected + '\"'),
 				'$& selected="selected"');
 		},
-		currentcy: function(value, options){
+		currency: function(value, options){
 			return numeral(value).format('0,0') + " VND"
 		},
 		isEmptyRoom: function(status, options){
@@ -75,6 +75,12 @@ app.engine('.hbs', hbs.engine({
 		},
 		json: function(obj) {
 			return JSON.stringify(obj);
+		},
+		sum: function(a, b, options){
+			return a + b;
+		},
+		ratio: function(value){
+			return numeral(value).format("0%");
 		}
 }
 }));
