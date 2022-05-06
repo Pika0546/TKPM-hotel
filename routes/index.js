@@ -1,5 +1,9 @@
 const siteRouter = require('../Component/Site/SiteRouter')
 const roomRouter = require('../Component/Room/RoomRouter')
+const ruleRouter = require('../Component/Rule/RuleRouter')
+const adminRouter = require('../Component/Admin/AdminRouter')
+const billRouter = require('../Component/Bill/BillRouter')
+const roomRentRouter = require('../Component/RoomRent/RoomRentRouter')
 const accountRouter = require('./account')
 function route(app){
     app.use('/account', accountRouter);
@@ -11,6 +15,10 @@ function route(app){
     //     }
     // })
     app.use('/room', roomRouter)
+    app.use('/admin', adminRouter)
+    app.use('/rule', ruleRouter)
+    app.use('/rent-room-history', roomRentRouter)
+    app.use('/bill', billRouter)
     app.use('/', siteRouter)
 }
 

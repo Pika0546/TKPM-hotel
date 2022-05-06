@@ -30,6 +30,7 @@ class AdminController{
         });
     }
 
+
     async checkUsernameAPI(req,res,next){
         const {username} = req.body;
         try{
@@ -45,6 +46,11 @@ class AdminController{
             onsole.log(error);
             res.status(500).json(error);
         }
+    }
+
+
+    getAdminList = async (req, res, next) => {
+        res.status(200).json("HELLO")
     }
 
 }
