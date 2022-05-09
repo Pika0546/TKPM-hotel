@@ -1,0 +1,271 @@
+{{#section 'head'}}
+  <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Danh sách Nhân viên</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts
+		============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <!-- owl.carousel CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/owl.carousel.css">
+    <link rel="stylesheet" href="/css/owl.theme.css">
+    <link rel="stylesheet" href="/css/owl.transitions.css">
+    <!-- animate CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/animate.css">
+    <!-- normalize CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <!-- meanmenu icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/meanmenu.min.css">
+    <!-- main CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- educate icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/educate-custon-icon.css">
+    <!-- modals CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/modals.css">
+    {{!-- <!-- morrisjs CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/morrisjs/morris.css"> --}}
+    <!-- mCustomScrollbar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- metisMenu CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/css/metisMenu/metisMenu-vertical.css">
+    <!-- calendar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/calendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/css/calendar/fullcalendar.print.min.css">
+    <!-- x-editor CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/editor/select2.css">
+    <link rel="stylesheet" href="/css/editor/datetimepicker.css">
+    <link rel="stylesheet" href="/css/editor/bootstrap-editable.css">
+    <link rel="stylesheet" href="/css/editor/x-editor-style.css">
+    <!-- normalize CSS
+        ============================================ -->
+    <link rel="stylesheet" href="/css/data-table/bootstrap-table.css">
+    <link rel="stylesheet" href="/css/data-table/bootstrap-editable.css">
+	<link rel="stylesheet" href="/css/alerts.css">
+    <!-- style CSS
+		============================================ -->
+    <link rel="stylesheet" href="/style.css">
+    <!-- responsive CSS
+		============================================ -->
+    <link rel="stylesheet" href="/css/responsive.css">
+    <!-- modernizr JS
+		============================================ -->
+    <link rel="stylesheet" href="/css/my-css.css">  
+    <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+	<script src="/js/util/alert.js"></script>
+{{/section}}
+    <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%">
+		<div class="row my-search-row breadcome-heading" style="position: relative;">
+			<div class="my-search-group" id="search-form">
+                <input 
+                    type="text" 
+                    name="name"
+                    placeholder="Nhập tên nhân viên" 
+                    id="search-input"
+                    class="search-int form-control"
+                >
+                <button type="button"><i class="fa fa-search"></i></button>
+            </div>
+
+			<div class="add-product">
+				<a href="/admin/add">Thêm Nhân viên</a>
+			</div>
+		</div>
+		<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column">
+			<div class="asset-inner" style="flex: 1 1 auto;">
+				<table>
+					<thead>
+						<tr>
+							<th>STT</th>
+							<th>Mã nhân viên</th>
+							<th>Họ tên</th>
+							<th>Tên đăng nhập</th>
+							<th>Hành động</th>
+						</tr>
+					</thead>
+					<tbody id="table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>Lê Trần Đăng Khoa</td>
+                            <td>admin</td>
+                            <td>
+                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>Lê Trần Đăng Khoa</td>
+                            <td>admin</td>
+                            <td>
+                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>Lê Trần Đăng Khoa</td>
+                            <td>admin</td>
+                            <td>
+                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
+                            </td>
+                        </tr>
+					</tbody>
+				</table>
+			</div>
+			<form 	
+                method="get"
+                action="/admin"
+            >
+                <ul class="my-pagination" id="my-pagination" style="padding-left: 0; margin-top: 0"> 
+                    <li class="my-page-item">
+                        <input style="display: none;" id="page-prev" value="0" type="radio" name="page"/>
+                        <label for="page-prev"  class="my-page-button">Trang trước</label>
+                    </li>
+                    <li class="my-page-item">
+                        <input  style="display: none;" id="page-1" value="1" type="radio" name="page"/>
+                        <label for="page1"  class="my-page-link my-current-page">1</label>
+                    </li>
+                        <li class="my-page-item">
+                        <input  style="display: none;" id="page-2" value="2" type="radio" name="page"/>
+                        <label for="page-2"  class="my-page-link">2</label>
+                    </li>
+                        <li class="my-page-item">
+                        <input  style="display: none;" id="page-3" value="3" type="radio" name="page"/>
+                        <label for="page-3"  class="my-page-link">3</label>
+                    </li>
+                        <li class="my-page-item">
+                        <input  style="display: none;" id="page-4" value="4" type="radio" name="page"/>
+                        <label for="page-4"  class="my-page-link">4</label>
+                    </li>
+                    <li class="my-page-item">
+                        <input  style="display: none;" id="page-5" value="5" type="radio" name="page"/>
+                        <label for="page-5"  class="my-page-link">5</label>
+                    </li>
+                    <li class="my-page-item">
+                        <input  style="display: none;" id="page-next" value="6" type="radio" name="page"/>
+                        <label for="page-next"  class="my-page-button">Trang sau</label>
+                    </li>
+                </ul>
+            </form>
+		</div>
+    </div>
+{{#section 'script'}}
+      <!-- jquery
+		============================================ -->
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+		============================================ -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- wow JS
+		============================================ -->
+    <script src="/js/wow.min.js"></script>
+    <!-- price-slider JS
+		============================================ -->
+    <script src="/js/jquery-price-slider.js"></script>
+    <!-- meanmenu JS
+		============================================ -->
+    <script src="/js/jquery.meanmenu.js"></script>
+    <!-- owl.carousel JS
+		============================================ -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <!-- sticky JS
+		============================================ -->
+    <script src="/js/jquery.sticky.js"></script>
+    <!-- scrollUp JS
+		============================================ -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <!-- counterup JS
+		============================================ -->
+    <script src="/js/counterup/jquery.counterup.min.js"></script>
+    <script src="/js/counterup/waypoints.min.js"></script>
+    <script src="/js/counterup/counterup-active.js"></script>
+    <!-- mCustomScrollbar JS
+		============================================ -->
+    <script src="/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/js/scrollbar/mCustomScrollbar-active.js"></script>
+    <!-- metisMenu JS
+		============================================ -->
+    <script src="/js/metisMenu/metisMenu.min.js"></script>
+    <script src="/js/metisMenu/metisMenu-active.js"></script>
+    <!-- data table JS
+		============================================ -->
+    <script src="/js/data-table/bootstrap-table.js"></script>
+    <script src="/js/data-table/tableExport.js"></script>
+    <script src="/js/data-table/data-table-active.js"></script>
+    <script src="/js/data-table/bootstrap-table-editable.js"></script>
+    <script src="/js/data-table/bootstrap-editable.js"></script>
+    <script src="/js/data-table/bootstrap-table-resizable.js"></script>
+    <script src="/js/data-table/colResizable-1.5.source.js"></script>
+    <script src="/js/data-table/bootstrap-table-export.js"></script>
+    <!--  editable JS
+        ============================================ -->
+    <script src="/js/editable/jquery.mockjax.js"></script>
+    <script src="/js/editable/mock-active.js"></script>
+    <script src="/js/editable/select2.js"></script>
+    <script src="/js/editable/moment.min.js"></script>
+    <script src="/js/editable/bootstrap-datetimepicker.js"></script>
+    <script src="/js/editable/bootstrap-editable.js"></script>
+    <script src="/js/editable/xediable-active.js"></script>
+    <!-- Chart JS
+        ============================================ -->
+    <script src="/js/chart/jquery.peity.min.js"></script>
+    <script src="/js/peity/peity-active.js"></script>
+    <!-- tab JS
+        ============================================ -->
+    <script src="/js/tab.js"></script>
+    <!-- morrisjs JS
+		============================================ -->
+    {{!-- <script src="/js/morrisjs/raphael-min.js"></script>
+    <script src="/js/morrisjs/morris.js"></script>
+    <script src="/js/morrisjs/morris-active.js"></script> --}}
+    <!-- morrisjs JS
+		============================================ -->
+    <script src="/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/js/sparkline/jquery.charts-sparkline.js"></script>
+    <script src="/js/sparkline/sparkline-active.js"></script>
+    <!-- calendar JS
+		============================================ -->
+    <script src="/js/calendar/moment.min.js"></script>
+    <script src="/js/calendar/fullcalendar.min.js"></script>
+    <script src="/js/calendar/fullcalendar-active.js"></script>
+    <!-- plugins JS
+		============================================ -->
+    <script src="/js/plugins.js"></script>
+    <!-- main JS
+		============================================ -->
+    <script src="/js/main.js"></script>
+    <!-- tawk chat JS
+		============================================ -->
+    <!-- <script src="/js/tawk-chat.js"></script> -->
+
+	<!-- MY JAVASCRIPT
+		============================================ -->
+	<script src="/js/numeral.js"></script>
+	<script src="/js/util/generatePager.js"></script>
+	<script src="/js/util/ajaxAPI.js"></script>
+	<script src="/js/util/queryString.js"></script>
+	<script>
+
+	</script>
+{{/section}}

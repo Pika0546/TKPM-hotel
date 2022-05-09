@@ -253,3 +253,8 @@
     background-color: white;
    border-bottom: 1px solid #e9ecef
 }
+
+.my-tab-pane.active{
+    display: flex;
+    flex-direction: column;
+}
