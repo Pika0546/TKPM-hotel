@@ -2322,11 +2322,21 @@ ul.two-part-sp li{
 /*----------------------------------------*/
 /*  14. Library
 /*----------------------------------------*/
-.add-product a {
+.add-product a{
     float: right;
     position: absolute;
     top: 20px;
     right: 35px;
+    background: #006DF0;
+    padding: 6px 20px;
+    color: #fff;
+    border-radius: 4px;
+}
+.btn-confirm a{
+    bottom: 5px;
+    float: right;
+    position: absolute;
+    right: 55px;
     background: #006DF0;
     padding: 6px 20px;
     color: #fff;
@@ -2339,6 +2349,7 @@ ul.two-part-sp li{
 }
 .product-status-wrap table {
     width: 100%;
+    padding-bottom: 10px;
 }
 .product-status-wrap table th {
     padding: 20px 5px;

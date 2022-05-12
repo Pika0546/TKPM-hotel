@@ -254,6 +254,41 @@
    border-bottom: 1px solid #e9ecef
 }
 
+
+@media (max-width: 767px){
+    .add-product.bill a {
+        display: block;
+        float: none !important;
+        top: 180px;
+        margin: 0 auto;
+        right: calc(50% - 60px);
+    }
+    .my-search-row{
+        padding-bottom: 60px;
+    }
+}
+@media (max-width: 1199px){
+    .add-product.add-room a {
+        top: 180px;
+    }
+    .my-search-row{
+        padding-bottom: 60px;
+    }
+    .product-status-wrap{
+        padding-bottom: 50px;
+    }
+}
+@media (max-width: 767px){
+    .add-product.add-room a {
+        top: 280px;
+    }
+    .my-search-row{
+        padding-bottom: 60px;
+    }
+    .product-status-wrap{
+        padding-bottom: 50px;
+    }
+}
 .my-tab-pane.active{
     display: flex;
     flex-direction: column;
