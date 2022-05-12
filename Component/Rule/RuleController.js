@@ -4,25 +4,12 @@ const RuleService = require('./RuleService');
 const PageUtil = require('../../utils/page');
 const ObjectUtil = require('../../utils/object');
 
-const maximumPagination = 5;
-const limit = 5;
-
-let currentGuestTypePage = 1;
-let totalGuestTypePage = 1;
-let totalGuestType = 0;
-
-let currentRoomTypePage = 1;
-let totalRoomTypePage = 1;
-let totalRoomType = 0;
-
 class RuleController{
     getRulePage = async (req, res, next) => {
-        let pageNumber = req.query.page;
         let rule = {};
-        currentGuestTypePage = PageUtil.getCurrentPage(pageNumber, totalGuestTypePage);
-        rule.guestTypes = await RuleService.getGuestTypeList(limit, currentGuestTypePage);
-        rule.roomTypes = await RuleService.getRoomTypeList(limit, currentGuestTypePage);
-        const otherRule = await RuleService.getRule()
+        rule.guestTypes = await RuleService.getGuestTypeList();
+        rule.roomTypes = await RuleService.getRoomTypeList();
+        const otherRule = await RuleService.getRule();
         rule = {...rule, ...ObjectUtil.convertRuleToObject(otherRule)}
         res.render('rule/index', {rule})
         
@@ -51,6 +38,183 @@ class RuleController{
             res.status(200).json({
                 success: true,
                 message: "Thêm loại khách thành công",
+                data: newGuestType
+            });
+            return;
+        } catch (error) {
+            res.status(500).json(error);
+        }
+
+    }
+
+    editGuestTypeApi = async (req, res, next) => {
+        const {name, coefficient, id} = req.body;
+        if(!id || !name || !coefficient || isNaN(coefficient)){
+            res.status(200).json({
+                success: false,
+                message: "Đầu vào không hợp lệ"
+            });
+            return;
+        }
+        try {
+            const rule = await RuleService.findGuestTypeById(id);
+            if(!rule){
+                res.status(200).json({
+                    success: false,
+                    message: "Không tồn tại"
+                });
+                return;
+            }
+            const other = await RuleService.findGuestTypeByName(name);
+            if(other.id !== rule.id){
+                res.status(200).json({
+                    success: false,
+                    message: "Loại khách đã tồn tại"
+                });
+                return;
+            }
+
+            const newGuestType = await RuleService.updateGuestType(id, name, parseFloat(coefficient));
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật loại khách thành công",
+                data: newGuestType
+            });
+            return;
+        } catch (error) {
+            res.status(500).json(error);
+        }
+
+    }
+
+    deleteGuestTypeApi = async (req, res, next) => {
+        const {id} = req.body;
+        if(!id){
+            res.status(200).json({
+                success: false,
+                message: "Đầu vào không hợp lệ"
+            });
+            return;
+        }
+        try {
+            const rule = await RuleService.findGuestTypeById(id);
+            if(!rule){
+                res.status(200).json({
+                    success: false,
+                    message: "Không tồn tại"
+                });
+                return;
+            }
+
+            const newGuestType = await RuleService.deleteGuestType(id);
+            res.status(200).json({
+                success: true,
+                message: "Xóa loại khách thành công",
+                data: newGuestType
+            });
+            return;
+        } catch (error) {
+            res.status(500).json(error);
+        }
+
+    }
+
+
+    addRoomTypeApi = async (req, res, next) => {
+        const {name, price} = req.body;
+        if(!name || !price || isNaN(price)){
+            res.status(200).json({
+                success: false,
+                message: "Đầu vào không hợp lệ"
+            });
+            return;
+        }
+        try {
+            const other = await RuleService.findRoomTypeByName(name);
+            if(other){
+                res.status(200).json({
+                    success: false,
+                    message: "Loại phòng đã tồn tại"
+                });
+                return;
+            }
+
+            const newRoomType = await RuleService.createRoomType(name, parseInt(price));
+            res.status(200).json({
+                success: true,
+                message: "Thêm loại phòng thành công",
+                data: newRoomType
+            });
+            return;
+        } catch (error) {
+            res.status(500).json(error);
+        }
+
+    }
+
+    editRoomTypeApi = async (req, res, next) => {
+        const {name, price, id} = req.body;
+        if(!id || !name || !price || isNaN(price)){
+            res.status(200).json({
+                success: false,
+                message: "Đầu vào không hợp lệ"
+            });
+            return;
+        }
+        try {
+            const rule = await RuleService.findRoomTypeById(id);
+            if(!rule){
+                res.status(200).json({
+                    success: false,
+                    message: "Không tồn tại"
+                });
+                return;
+            }
+            const other = await RuleService.findRoomTypeByName(name);
+            if(other.id !== rule.id){
+                res.status(200).json({
+                    success: false,
+                    message: "Loại phòng đã tồn tại"
+                });
+                return;
+            }
+
+            const newRoomType = await RuleService.updateRoomType(id, name, parseInt(price));
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật loại phòng thành công",
+                data: newRoomType
+            });
+            return;
+        } catch (error) {
+            res.status(500).json(error);
+        }
+
+    }
+
+    deleteRoomTypeApi = async (req, res, next) => {
+        const {id} = req.body;
+        if(!id){
+            res.status(200).json({
+                success: false,
+                message: "Đầu vào không hợp lệ"
+            });
+            return;
+        }
+        try {
+            const rule = await RuleService.findRoomTypeById(id);
+            if(!rule){
+                res.status(200).json({
+                    success: false,
+                    message: "Không tồn tại"
+                });
+                return;
+            }
+
+            const newGuestType = await RuleService.deleteRoomType(id);
+            res.status(200).json({
+                success: true,
+                message: "Xóa loại phòng thành công",
                 data: newGuestType
             });
             return;
