@@ -86,64 +86,23 @@
 								<th>Hành động</th>
 							</tr>
 						</thead>
-						<tbody id="table-body">
-							<tr>
-								<td>1</td>
-								<td>Nội địa</td>
-								<td>1</td>
-								<td>
-									<button data-id="1" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="1" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Nước ngoài</td>
-								<td>1.5</td>
-								<td>
-									<button data-id="2" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="2" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
+						<tbody id="table-body-guest">
+							{{#each rule.guestTypes}}
+								<tr class="guest-type-row" id="guest-type-{{this.id}}">
+									<td>{{sum @index 1}}</td>
+									<td>{{this.typeName}}</td>
+									<td>{{this.coefficient}}</td>
+									<td>
+										<button data-id="{{this.id}}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+										<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+									</td>
+								</tr>
+							{{/each}}
 						</tbody>
 					</table>
 				</div>
 				<div style="display: flex; justify-content: space-between">
-					<form 	
-						method="get"
-						action="/rule/guest-type"
-					>
-						<ul class="my-pagination" id="my-pagination" style="padding-left: 0; margin-top: 0"> 
-							<li class="my-page-item">
-								<input style="display: none;" id="page-prev" value="0" type="radio" name="page"/>
-								<label for="page-prev"  class="my-page-button">Trang trước</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-1" value="1" type="radio" name="page"/>
-								<label for="page1"  class="my-page-link my-current-page">1</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-2" value="2" type="radio" name="page"/>
-								<label for="page-2"  class="my-page-link">2</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-3" value="3" type="radio" name="page"/>
-								<label for="page-3"  class="my-page-link">3</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-4" value="4" type="radio" name="page"/>
-								<label for="page-4"  class="my-page-link">4</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-5" value="5" type="radio" name="page"/>
-								<label for="page-5"  class="my-page-link">5</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-next" value="6" type="radio" name="page"/>
-								<label for="page-next"  class="my-page-button">Trang sau</label>
-							</li>
-						</ul>
-					</form>
+					<div></div>
 					<button class="btn btn-primary waves-effect waves-light" type="button" data-toggle="modal" data-target="#add-guest-type-modal">Thêm loại khách</button>
 				</div>
 				<div  id="delete-guest-type-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
@@ -154,13 +113,12 @@
 							</div>
 							<div class="modal-body">
 								<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-								<h2 id="modal-text">Xóa loại khách này?</h2>
+								<h2 id="edit-room-type-modal-text">Xóa loại khách này?</h2>
 								<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
 							</div>
 							<div class="modal-footer danger-md">
 								<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-								<form method="post" style="display: none;" id="delete-guest-type-form"></form>
-								<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+								<button class="btn btn-danger" id="delete-guest-type-btn" type="button" data-dismiss="modal">Xóa</button>
 							</div>
 						</div>
 					</div>
@@ -174,28 +132,26 @@
 									<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 								</div>
 							</div>
-							<form action="/rule/guest-type/edit" method="post" class="needs-validation "  id="edit-guest-type-form" novalidate>
-								<div class="modal-body" style="padding: 0; text-align: left">
-									<div style="padding: 20px; background-color: white;">
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="form-group">
-													<label for="edit-guest-type-name">Loại khách</label>
-													<input id="edit-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
-												</div>  
-												<div class="form-group">
-													<label for="edit-coefficient">Hệ số</label>
-													<input id="edit-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
-												</div> 
-											</div>
+							<div class="modal-body" style="padding: 0; text-align: left">
+								<div style="padding: 20px; background-color: white;">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label for="edit-guest-type-name">Loại khách</label>
+												<input id="edit-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
+											</div>  
+											<div class="form-group">
+												<label for="edit-coefficient">Hệ số</label>
+												<input id="edit-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
+											</div> 
 										</div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn btn-primary waves-effect waves-light" type="submit">Lưu</button>
-								</div>
-							</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal" id="edit-guest-type-btn">Lưu</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -208,28 +164,26 @@
 									<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 								</div>
 							</div>
-							<form action="/rule/guest-type/add" method="post" class="needs-validation "  id="add-guest-type-form" novalidate>
-								<div class="modal-body" style="padding: 0; text-align: left">
-									<div style="padding: 20px; background-color: white;">
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="form-group">
-													<label for="add-guest-type-name">Loại khách</label>
-													<input id="add-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
-												</div>  
-												<div class="form-group">
-													<label for="add-coefficient">Hệ số</label>
-													<input id="add-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
-												</div> 
-											</div>
+							<div class="modal-body" style="padding: 0; text-align: left">
+								<div style="padding: 20px; background-color: white;">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label for="add-guest-type-name">Loại khách</label>
+												<input id="add-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
+											</div>  
+											<div class="form-group">
+												<label for="add-coefficient">Hệ số</label>
+												<input id="add-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
+											</div> 
 										</div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn btn-primary waves-effect waves-light" type="submit">Thêm</button>
-								</div>
-							</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Thêm</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -248,74 +202,24 @@
 								<th>Hành động</th>
 							</tr>
 						</thead>
-						<tbody id="table-body">
-							<tr>
-								<td>1</td>
-								<td>A</td>
-								<td>150.000 VND</td>
-								<td>
-									<button data-id="1" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="1" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>B</td>
-								<td>170.000 VND</td>
-								<td>
-									<button data-id="2" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="2" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>C</td>
-								<td>200.000 VND</td>
-								<td>
-									<button data-id="3" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="3" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
+						<tbody id="table-body-room">
+							{{#each rule.roomTypes}}
+								<tr>
+									<td>{{sum @index 1}}</td>
+									<td>{{this.typeName}}</td>
+									<td>{{currency this.price}}</td>
+									<td>
+										<button data-id="{{this.id}}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+										<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+									</td>
+								</tr>
+							{{/each}}
 						</tbody>
 					</table>
 				</div>
 				<div style="display: flex; justify-content: space-between">
-					<form 	
-						method="get"
-						action="/rule/room-type"
-					>
-						<ul class="my-pagination" id="my-pagination" style="padding-left: 0; margin-top: 0"> 
-							<li class="my-page-item">
-								<input style="display: none;" id="page-prev" value="0" type="radio" name="page"/>
-								<label for="page-prev"  class="my-page-button">Trang trước</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-1" value="1" type="radio" name="page"/>
-								<label for="page1"  class="my-page-link my-current-page">1</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-2" value="2" type="radio" name="page"/>
-								<label for="page-2"  class="my-page-link">2</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-3" value="3" type="radio" name="page"/>
-								<label for="page-3"  class="my-page-link">3</label>
-							</li>
-								<li class="my-page-item">
-								<input  style="display: none;" id="page-4" value="4" type="radio" name="page"/>
-								<label for="page-4"  class="my-page-link">4</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-5" value="5" type="radio" name="page"/>
-								<label for="page-5"  class="my-page-link">5</label>
-							</li>
-							<li class="my-page-item">
-								<input  style="display: none;" id="page-next" value="6" type="radio" name="page"/>
-								<label for="page-next"  class="my-page-button">Trang sau</label>
-							</li>
-						</ul>
-					</form>
-					<button class="btn btn-primary waves-effect waves-light" type="button" data-toggle="modal" data-target="#add-room-type-modal">Thêm loại khách</button>
+					<div></div>
+					<button class="btn btn-primary waves-effect waves-light" type="button" data-toggle="modal" data-target="#add-room-type-modal">Thêm loại phòng</button>
 				</div>
 				<div  id="delete-room-type-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
 					<div class="modal-dialog">
@@ -325,13 +229,12 @@
 							</div>
 							<div class="modal-body">
 								<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-								<h2 id="modal-text">Xóa loại phòng này?</h2>
+								<h2 id="delete-room-type-modal-text">Xóa loại phòng này?</h2>
 								<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
 							</div>
 							<div class="modal-footer danger-md">
 								<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-								<form method="post" style="display: none;" id="delete-room-type-form"></form>
-								<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+								<button class="btn btn-danger" id="delete-room-type-btn" data-dismiss="modal" type="button">Xóa</button>
 							</div>
 						</div>
 					</div>
@@ -345,28 +248,26 @@
 									<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 								</div>
 							</div>
-							<form action="/rule/room-type/edit" method="post" class="needs-validation "  id="edit-room-type-form" novalidate>
-								<div class="modal-body" style="padding: 0; text-align: left">
-									<div style="padding: 20px; background-color: white;">
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="form-group">
-													<label for="edit-room-type-name">Loại phòng</label>
-													<input id="edit-room-type-name" name="roomType" type="text" class="form-control" required maxlength="255" placeholder="Loại phòng">
-												</div>  
-												<div class="form-group">
-													<label for="edit-price">Đơn giá</label>
-													<input id="edit-price" name="price" type="text" class="form-control" required maxlength="255" placeholder="Đơn giá">
-												</div> 
-											</div>
+							<div class="modal-body" style="padding: 0; text-align: left">
+								<div style="padding: 20px; background-color: white;">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label for="edit-room-type-name">Loại phòng</label>
+												<input id="edit-room-type-name" name="roomType" type="text" class="form-control" required maxlength="255" placeholder="Loại phòng">
+											</div>  
+											<div class="form-group">
+												<label for="edit-price">Đơn giá</label>
+												<input id="edit-price" name="price" type="text" class="form-control" required maxlength="255" placeholder="Đơn giá">
+											</div> 
 										</div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn btn-primary waves-effect waves-light" type="submit">Lưu</button>
-								</div>
-							</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal" id="edit-room-type-btn">Lưu</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -379,28 +280,26 @@
 									<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 								</div>
 							</div>
-							<form action="/rule/room-type/add" method="post" class="needs-validation "  id="add-room-type-form" novalidate>
-								<div class="modal-body" style="padding: 0; text-align: left">
-									<div style="padding: 20px; background-color: white;">
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="form-group">
-													<label for="add-room-type-name">Loại phòng</label>
-													<input id="add-room-type-name" name="roomType" type="text" class="form-control" required maxlength="255" placeholder="Loại phòng">
-												</div>  
-												<div class="form-group">
-													<label for="add-price">Đơn giá</label>
-													<input id="add-price" name="price" type="text" class="form-control" required maxlength="255" placeholder="Đơn giá">
-												</div> 
-											</div>
+							<div class="modal-body" style="padding: 0; text-align: left">
+								<div style="padding: 20px; background-color: white;">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label for="add-room-type-name">Loại phòng</label>
+												<input id="add-room-type-name" name="roomType" type="text" class="form-control" required maxlength="255" placeholder="Loại phòng">
+											</div>  
+											<div class="form-group">
+												<label for="add-price">Đơn giá</label>
+												<input id="add-price" name="price" type="text" class="form-control" required maxlength="255" placeholder="Đơn giá">
+											</div> 
 										</div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn btn-primary waves-effect waves-light" type="submit">Thêm</button>
-								</div>
-							</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal" id="add-room-type-btn">Thêm</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -410,20 +309,20 @@
 			<div class="product-status-wrap" style="flex: 1 1 auto; display: flex; flex-direction: column; margin-bottom: 8px; align-items: flex-end;">
 				<div class="form-group" style="width: 100%;">
 					<label>Số khách tối đa mỗi phòng:</label>
-					<input required="" name="maximumGuest" type="number" class="form-control" placeholder="Số khách tối đa">
+					<input required="" name="maximumGuest" type="number" class="form-control" placeholder="Số khách tối đa" value="{{rule.maximumGuest}}">
 				</div>
-				<button class="btn btn-primary waves-effect waves-light" type="button">Xác nhận</button>
+				<button class="btn btn-primary waves-effect waves-light" type="button" id="update-maximum-guest">Xác nhận</button>
 			</div>
 			<div class="product-status-wrap" style="flex: 1 1 auto; display: flex; flex-direction: column; margin-top: 8px; align-items: flex-end;">
 				<div class="form-group" style="width: 100%;"style="width: 100%;">
 					<label>Phụ thu từ khách thứ:</label>
-					<input required="" name="surchagreFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ">
+					<input required="" name="surchagreFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ" value="{{rule.surchargeFrom}}" >
 				</div>
 				<div class="form-group" style="width: 100%;">
 					<label>Tỉ lệ phụ thu:</label>
-					<input required="" name="surchagre" type="number" class="form-control" placeholder="Tỉ lệ phụ thu">
+					<input required="" name="surchagre" type="number" class="form-control" placeholder="Tỉ lệ phụ thu" value="{{rule.surcharge}}" >
 				</div>
-				<button class="btn btn-primary waves-effect waves-light" type="button">Xác nhận</button>
+				<button class="btn btn-primary waves-effect waves-light" type="button" id="update-surchagre">Xác nhận</button>
 			</div>
 		</div>
 	</div>
@@ -492,6 +391,231 @@
 	<script src="/js/util/ajaxAPI.js"></script>
 	<script src="/js/util/alert.js"></script>
     <script>
+		let rule = {{{json rule}}}
+		console.log(rule)
+		const renderGuestType = (type, n) => {
+			return `
+						<tr class="guest-type-row" id="guest-type-${type.id}">
+							<td>${n + 1}</td>
+							<td>${type.typeName}</td>
+							<td>${type.coefficient}</td>
+							<td>
+								<button data-id="${type.id}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+								<button data-id="${type.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+							</td>
+						</tr>
+					`
+		}
+		const renderRoomType = (type, n) => {
+			return `
+						<tr class="room-type-row" id="room-type-${type.id}">
+							<td>${n + 1}</td>
+							<td>${type.typeName}</td>
+							<td>${numeral(type.price).format('0,0') + " VND"}</td>
+							<td>
+								<button data-id="${type.id}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+								<button data-id="${type.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+							</td>
+						</tr>
+					`
+		}
+		$(document).ready(function(){
+			//add guest type
+			document.getElementById("add-guest-type-btn").addEventListener("click", (e)=>{
+				const guestType = {};
+				guestType.name = $("#add-guest-type-name").val();
+				guestType.coefficient = $("#add-coefficient").val();
+				fetchData("post", guestType, "/rule/guest-type/add/api", (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+						const n = document.getElementsByClassName("guest-type-row").length;
+						rule.guestTypes.push(data.data);
+						$("#table-body-guest").append(renderGuestType(data.data, n))
+					}
+					else{
+						createAlert("error", data.message);
+					}
+					$('#add-guest-type-modal').modal('hide')
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+			})
+		
+			//edit guest type
+			let seletedType = null;
+			$('#edit-guest-type-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				seletedType = rule.guestTypes.filter((type)=> type.id === id)[0];
+				modal.find('#edit-guest-type-name').val(seletedType.typeName);
+				modal.find('#edit-coefficient').val(seletedType.coefficient);
+			});
+			document.getElementById("edit-guest-type-btn").addEventListener("click", (e)=>{
+				if(!seletedType){
+					return;
+				}
+				const guestType = {};
+				guestType.name = $("#edit-guest-type-name").val();
+				guestType.coefficient = $("#edit-coefficient").val();
+				guestType.id = seletedType.id;
 
+				fetchData("post", guestType, "/rule/guest-type/edit/api", (data)=>{
+					console.log(data);
+					if(data.success){
+						createAlert("success", data.message);
+						const n = rule.guestTypes.length;
+						for(let i = 0; i < n; i++){
+							if(rule.guestTypes[i].id === guestType.id){
+								rule.guestTypes[i] = {...guestType, typeName: guestType.name};
+								break;
+							}
+						}
+						$("#table-body-guest").empty();
+						for(let i = 0; i < n; i++){
+							$("#table-body-guest").append(renderGuestType(rule.guestTypes[i], i));
+						}
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+				
+			})
+			
+			//delete guest type
+			$('#delete-guest-type-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				seletedType = rule.guestTypes.filter((type)=> type.id === id)[0];
+			});
+			document.getElementById("delete-guest-type-btn").addEventListener("click", (e)=>{
+				if(!seletedType){
+					return;
+				}
+				fetchData("post", {id: seletedType.id}, "/rule/guest-type/delete/api", (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+						rule.guestTypes = rule.guestTypes.filter((rule)=> rule.id !== seletedType.id);
+						const n = rule.guestTypes.length;
+						$("#table-body-guest").empty();
+						for(let i = 0; i < n; i++){
+							$("#table-body-guest").append(renderGuestType(rule.guestTypes[i], i));
+						}
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+			})
+
+
+			//add room type
+			document.getElementById("add-room-type-btn").addEventListener("click", (e)=>{
+				const roomType = {};
+				roomType.name = $("#add-room-type-name").val();
+				roomType.price = $("#add-price").val();
+				fetchData("post", roomType, "/rule/room-type/add/api", (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+						const n = document.getElementsByClassName("room-type-row").length;
+						rule.roomTypes.push(data.data);
+						$("#table-body-room").append(renderRoomType(data.data, n))
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+			})
+		
+			//edit room type
+			$('#edit-room-type-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				seletedType = rule.roomTypes.filter((type)=> type.id === id)[0];
+				modal.find('#edit-room-type-name').val(seletedType.typeName);
+				modal.find('#edit-price').val(seletedType.price);
+			});
+			document.getElementById("edit-room-type-btn").addEventListener("click", (e)=>{
+				if(!seletedType){
+					return;
+				}
+				const roomType = {};
+				roomType.name = $("#edit-room-type-name").val();
+				roomType.price = $("#edit-price").val();
+				roomType.id = seletedType.id;
+				console.log(roomType)
+				fetchData("post", roomType, "/rule/room-type/edit/api", (data)=>{
+					console.log(data);
+					if(data.success){
+						createAlert("success", data.message);
+						const n = rule.roomTypes.length;
+						console.log(rule.roomTypes)
+						console.log(data.data)
+						for(let i = 0; i < n; i++){
+							if(rule.roomTypes[i].id === roomType.id){
+								rule.roomTypes[i] = {...roomType, typeName: roomType.name};
+								break;
+							}
+						}
+						$("#table-body-room").empty();
+						for(let i = 0; i < n; i++){
+							$("#table-body-room").append(renderRoomType(rule.roomTypes[i], i));
+						}
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+				
+			})
+			
+			//delete room type
+			$('#delete-room-type-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				seletedType = rule.roomTypes.filter((type)=> type.id === id)[0];
+			});
+			document.getElementById("delete-room-type-btn").addEventListener("click", (e)=>{
+				if(!seletedType){
+					return;
+				}
+				fetchData("post", {id: seletedType.id}, "/rule/room-type/delete/api", (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+						rule.roomTypes = rule.roomTypes.filter((rule)=> rule.id !== seletedType.id);
+						const n = rule.roomTypes.length;
+						$("#table-body-room").empty();
+						for(let i = 0; i < n; i++){
+							$("#table-body-room").append(renderRoomType(rule.roomTypes[i], i));
+						}
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+			})
+
+			document.getElementById("")
+		})
     </script>
 {{/section}}

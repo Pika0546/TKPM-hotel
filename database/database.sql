@@ -141,8 +141,8 @@ VALUES
 
 INSERT INTO GuestType(typeName, coefficient) 
 VALUES 
-	('foreigner', '1.5'), 
-    ('local', '1');
+	('Nước ngoài', '1.5'), 
+    ('Nội địa', '1');
     
 
 
