@@ -87,24 +87,17 @@
 							</tr>
 						</thead>
 						<tbody id="table-body">
-							<tr>
-								<td>1</td>
-								<td>Nội địa</td>
-								<td>1</td>
-								<td>
-									<button data-id="1" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="1" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Nước ngoài</td>
-								<td>1.5</td>
-								<td>
-									<button data-id="2" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="2" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
+							{{#each rule.guestTypes}}
+								<tr class="guest-type-row" id="guest-type-{{this.id}}">
+									<td>{{sum @index 1}}</td>
+									<td>{{this.typeName}}</td>
+									<td>{{this.coefficient}}</td>
+									<td>
+										<button data-id="{{this.id}}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+										<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+									</td>
+								</tr>
+							{{/each}}
 						</tbody>
 					</table>
 				</div>
@@ -208,28 +201,26 @@
 									<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 								</div>
 							</div>
-							<form action="/rule/guest-type/add" method="post" class="needs-validation "  id="add-guest-type-form" novalidate>
-								<div class="modal-body" style="padding: 0; text-align: left">
-									<div style="padding: 20px; background-color: white;">
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="form-group">
-													<label for="add-guest-type-name">Loại khách</label>
-													<input id="add-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
-												</div>  
-												<div class="form-group">
-													<label for="add-coefficient">Hệ số</label>
-													<input id="add-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
-												</div> 
-											</div>
+							<div class="modal-body" style="padding: 0; text-align: left">
+								<div style="padding: 20px; background-color: white;">
+									<div class="row">
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label for="add-guest-type-name">Loại khách</label>
+												<input id="add-guest-type-name" name="guestType" type="text" class="form-control" required maxlength="255" placeholder="Loại khách">
+											</div>  
+											<div class="form-group">
+												<label for="add-coefficient">Hệ số</label>
+												<input id="add-coefficient" name="coefficient" type="text" class="form-control" required maxlength="255" placeholder="Hệ số">
+											</div> 
 										</div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn btn-primary waves-effect waves-light" type="submit">Thêm</button>
-								</div>
-							</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Thêm</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -249,33 +240,17 @@
 							</tr>
 						</thead>
 						<tbody id="table-body">
-							<tr>
-								<td>1</td>
-								<td>A</td>
-								<td>150.000 VND</td>
-								<td>
-									<button data-id="1" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="1" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>B</td>
-								<td>170.000 VND</td>
-								<td>
-									<button data-id="2" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="2" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>C</td>
-								<td>200.000 VND</td>
-								<td>
-									<button data-id="3" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-room-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-									<button data-id="3" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-								</td>
-							</tr>
+							{{#each rule.roomTypes}}
+								<tr>
+									<td>{{sum @index 1}}</td>
+									<td>{{this.typeName}}</td>
+									<td>{{currency this.price}}</td>
+									<td>
+										<button data-id="{{this.id}}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+										<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+									</td>
+								</tr>
+							{{/each}}
 						</tbody>
 					</table>
 				</div>
@@ -410,18 +385,18 @@
 			<div class="product-status-wrap" style="flex: 1 1 auto; display: flex; flex-direction: column; margin-bottom: 8px; align-items: flex-end;">
 				<div class="form-group" style="width: 100%;">
 					<label>Số khách tối đa mỗi phòng:</label>
-					<input required="" name="maximumGuest" type="number" class="form-control" placeholder="Số khách tối đa">
+					<input required="" name="maximumGuest" type="number" class="form-control" placeholder="Số khách tối đa" value="{{rule.maximumGuest}}">
 				</div>
 				<button class="btn btn-primary waves-effect waves-light" type="button">Xác nhận</button>
 			</div>
 			<div class="product-status-wrap" style="flex: 1 1 auto; display: flex; flex-direction: column; margin-top: 8px; align-items: flex-end;">
 				<div class="form-group" style="width: 100%;"style="width: 100%;">
 					<label>Phụ thu từ khách thứ:</label>
-					<input required="" name="surchagreFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ">
+					<input required="" name="surchagreFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ" value="{{rule.surchargeFrom}}" >
 				</div>
 				<div class="form-group" style="width: 100%;">
 					<label>Tỉ lệ phụ thu:</label>
-					<input required="" name="surchagre" type="number" class="form-control" placeholder="Tỉ lệ phụ thu">
+					<input required="" name="surchagre" type="number" class="form-control" placeholder="Tỉ lệ phụ thu" value="{{rule.surcharge}}" >
 				</div>
 				<button class="btn btn-primary waves-effect waves-light" type="button">Xác nhận</button>
 			</div>
@@ -492,6 +467,41 @@
 	<script src="/js/util/ajaxAPI.js"></script>
 	<script src="/js/util/alert.js"></script>
     <script>
-
+		const rule = {{{json rule}}}
+		console.log(rule)
+		$(document).ready(function(){
+			document.getElementById("add-guest-type-btn").addEventListener("click", (e)=>{
+				const guestType = {};
+				guestType.name = $("#add-guest-type-name").val();
+				guestType.coefficient = $("#add-coefficient").val();
+				console.log(guestType);
+				fetchData("post", guestType, "/rule/guest-type/add/api", (data)=>{
+					console.log(data);
+					if(data.success){
+						createAlert("success", data.message);
+						const n = document.getElementsByClassName("guest-type-row").length;
+						
+						$("#table-body").append(`
+							<tr class="guest-type-row" id="guest-type-${data.data.id}">
+								<td>${n + 1}</td>
+								<td>${data.data.typeName}</td>
+								<td>${data.data.coefficient}</td>
+								<td>
+									<button data-id="${data.data.id}" title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#edit-guest-type-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+									<button data-id="${data.data.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-type-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+								</td>
+							</tr>
+						`)
+					}
+					else{
+						createAlert("error", data.message);
+					}
+					$('#add-guest-type-modal').modal('hide')
+				}, (error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				});
+			})
+		})
     </script>
 {{/section}}

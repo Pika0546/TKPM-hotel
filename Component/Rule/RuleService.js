@@ -16,6 +16,28 @@ class RuleService{
             limit: limit
         })
     }
+
+    getRule = async () => {
+        return models.rule.findAll({
+            raw:true
+        })
+    }
+
+    createGuestType = async (name, coefficient) => {
+        return models.guesttype.create({
+            typeName:name,
+            coefficient: coefficient
+        })
+    }
+
+    findGuestTypeByName = async (name) => {
+        return models.guesttype.findOne({
+            raw:true,
+            where:{
+                typeName: name
+            }
+        })
+    }
 }
 
 module.exports = new RuleService();
