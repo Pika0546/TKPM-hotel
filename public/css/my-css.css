@@ -254,6 +254,7 @@
    border-bottom: 1px solid #e9ecef
 }
 
+
 @media (max-width: 767px){
     .add-product.bill a {
         display: block;
@@ -287,4 +288,8 @@
     .product-status-wrap{
         padding-bottom: 50px;
     }
+}
+.my-tab-pane.active{
+    display: flex;
+    flex-direction: column;
 }

@@ -50,7 +50,15 @@ class AdminController{
 
 
     getAdminList = async (req, res, next) => {
-        res.status(200).json("HELLO")
+       res.render('admin/list')
+    }
+
+    getAdminCreate = async (req, res, next) => {
+        res.render('admin/add')
+    }
+
+    getAdminDetail = async (req, res, next) => {
+        res.render('admin/detail')
     }
 
 }
