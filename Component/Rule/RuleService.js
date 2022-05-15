@@ -106,6 +106,19 @@ class RuleService{
             }
         })
     }
+
+    updateCommonRule = async (key, value) => {
+        console.log(key, value);
+        return models.rule.update({
+            value: value.toString()
+        }, {
+            where:{
+                key: key
+            }
+        })
+    }
+
+    
 }
 
 module.exports = new RuleService();
