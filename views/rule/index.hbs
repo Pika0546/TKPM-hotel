@@ -66,7 +66,7 @@
 {{/section}}
 
 <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%">
-	<div class="product-status-wrap mg-b-10 mg-t-10">
+	<div class="product-status-wrap mg-b-10 mg-t-10" style="padding: 20px">
 		<ul id="myTabedu1" class="tab-review-design" style="padding:0 0 10px 0;">
 			<li class="active"><a href="#guest-type">Thay đổi loại khách</a></li>
 			<li><a href="#room-type"> Thay đổi loại phòng</a></li>
@@ -316,11 +316,11 @@
 			<div class="product-status-wrap" style="flex: 1 1 auto; display: flex; flex-direction: column; margin-top: 8px; align-items: flex-end;">
 				<div class="form-group" style="width: 100%;"style="width: 100%;">
 					<label>Phụ thu từ khách thứ:</label>
-					<input required="" name="surchagreFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ" value="{{rule.surchargeFrom}}" >
+					<input required="" name="surchargeFrom" type="number" class="form-control" placeholder="Phụ thu từ khách thứ" value="{{rule.surchargeFrom}}" >
 				</div>
 				<div class="form-group" style="width: 100%;">
 					<label>Tỉ lệ phụ thu:</label>
-					<input required="" name="surchagre" type="number" class="form-control" placeholder="Tỉ lệ phụ thu" value="{{rule.surcharge}}" >
+					<input required="" name="surchagre" type="number" step="0.1" class="form-control" placeholder="Tỉ lệ phụ thu" value="{{rule.surcharge}}" >
 				</div>
 				<button class="btn btn-primary waves-effect waves-light" type="button" id="update-surchagre">Xác nhận</button>
 			</div>
@@ -615,7 +615,38 @@
 				});
 			})
 
-			document.getElementById("")
+			//update maximum guest
+			document.getElementById("update-maximum-guest").addEventListener("click", (e)=>{
+				const maximumGuest = $("input[name='maximumGuest']").val();
+				fetchData("post", {maximumGuest}, '/rule/common-rule/maximum-guest/api', (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				},(error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				})
+			})
+
+			//update-surchagre
+			document.getElementById("update-surchagre").addEventListener("click", (e)=>{
+				const surchargeFrom = $("input[name='surchargeFrom']").val();
+				const surcharge = $("input[name='surchagre']").val();
+				fetchData("post", {surcharge, surchargeFrom}, '/rule/common-rule/surcharge/api', (data)=>{
+					if(data.success){
+						createAlert("success", data.message);
+					}
+					else{
+						createAlert("error", data.message);
+					}
+				},(error)=>{
+					console.log(error);
+					createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!");
+				})
+			})
 		})
     </script>
 {{/section}}

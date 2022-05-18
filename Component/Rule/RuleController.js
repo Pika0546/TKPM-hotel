@@ -221,7 +221,73 @@ class RuleController{
         } catch (error) {
             res.status(500).json(error);
         }
+    }
 
+    updateMaximumGuest = async (req, res, next) => {
+        let {maximumGuest} = req.body;
+        try {
+            if(isNaN(maximumGuest)){
+                res.status(200).json({
+                    success: false,
+                    message: "Đầu vào không hợp lệ"
+                });
+                return;
+            }
+            maximumGuest = parseInt(maximumGuest);
+            let commonRule = await RuleService.getRule();
+            commonRule = ObjectUtil.convertRuleToObject(commonRule);
+            if(maximumGuest < parseInt(commonRule.surchargeFrom)){
+                res.status(200).json({
+                    success: false,
+                    message: "Lượng khách tối đa không thể bé hơn khách bắt đầu phụ thu"
+                });
+                return;
+            }
+            const resData = await RuleService.updateCommonRule("maximumGuest", maximumGuest);
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật khách tối đa thành công",
+                data: resData
+            });
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error);
+        }
+    }
+
+    updateSurcharge = async (req, res, next)=>{
+        let {surcharge, surchargeFrom} = req.body;
+        try {
+            console.log(surcharge, surchargeFrom)
+            if(isNaN(surchargeFrom) || isNaN(surcharge)){
+                res.status(200).json({
+                    success: false,
+                    message: "Đầu vào không hợp lệ"
+                });
+                return;
+            }
+            surcharge = parseFloat(surcharge);
+            surchargeFrom = parseInt(surchargeFrom);
+            let commonRule = await RuleService.getRule();
+            commonRule = ObjectUtil.convertRuleToObject(commonRule);
+            if(surchargeFrom > parseInt(commonRule.maximumGuest)){
+                res.status(200).json({
+                    success: false,
+                    message: "Khách bắt đầu phụ thu không thể lớn hơn khách tối đa"
+                });
+                return;
+            }
+            const res1 = await RuleService.updateCommonRule("surcharge", surcharge);
+            const res2 = await RuleService.updateCommonRule("surchargeFrom", surchargeFrom);
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật tỉ lệ phụ thu thành công",
+                data: [res1, res2]
+            });
+        } catch (error) {
+            console.log(error)
+            res.status(500).json(error);
+        }
     }
 }
 

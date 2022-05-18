@@ -10,4 +10,7 @@ router.post('/guest-type/delete/api', RuleController.deleteGuestTypeApi)
 router.post('/room-type/add/api', RuleController.addRoomTypeApi)
 router.post('/room-type/edit/api', RuleController.editRoomTypeApi)
 router.post('/room-type/delete/api', RuleController.deleteRoomTypeApi)
+router.post('/common-rule/maximum-guest/api', RuleController.updateMaximumGuest)
+router.post('/common-rule/surcharge/api', RuleController.updateSurcharge)
+
 module.exports = router;
