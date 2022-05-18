@@ -1,7 +1,7 @@
 {{#section 'head'}}
   <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Chi tiết hóa đơn</title>
+    <title>Thông tin cá nhân</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -69,140 +69,49 @@
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
 {{/section}}
 
-<div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%">
-  <div class="product-payment-inner-st">
-    <ul id="myTabedu1" class="tab-review-design">
-      <li class="active"><a href="#description">Thanh toán</a></li>
-    </ul>
-  </div>
-  <div class="my-search-row">
-		<div class="row" style="position: relative;">
-			<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Khách hàng/ Cơ quan:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="Công ty TNHH Catto">
-      </div>
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Địa chỉ:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="227 Nguyễn Văn Cừ, quận 5">
-      </div>
+<div class="single-pro-review-area mt-t-30 mg-b-15" style="width: 100%;">
+    <div class="container-fluid">
+        <div class="product-payment-inner-st">
+            <ul id="myTabedu1" class="tab-review-design">
+                <li class="active"><a href="#description">Tài khoản</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content custom-product-edit">
+                <div class="product-tab-list tab-pane fade active in" id="description">
+                    <div class="review-content-section">
+                        <form id="update-profile" method="post" action="" class="add-professors">
+                            <div class="form-group">
+								<label>Mã nhân viên:</label>
+                                <input name="meId" type="text" class="form-control" value="101" readonly>
+                            </div>
+
+                            <div class="form-group">
+								<label>Tên đăng nhập:</label>
+                                <input name="meUsername" type="text" class="form-control" value="admin" readonly>
+                            </div>
+
+                            <div class="form-group">
+								<label>Họ tên</label>
+                                <input name="meFullname" type="text" class="form-control" value="Lê Trần Đăng Khoa">
+                            </div>
+
+							<div class="form-group">
+								<label>CMND:</label>
+								<input name="cmnd" type="text" class="form-control" value="Nhập CMND">
+							</div>
+							
+							<div class="form-group edit-ta-resize">
+								<label>Địa chỉ:</label>
+								<input name="address" type="text" class="form-control" value="Thủ Đức">
+							</div>
+                            <div class="payment-adress">
+                                <button type="button" onclick="" class="btn btn-primary waves-effect waves-light">Cập nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row mg-t-10">
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Ngày thanh toán:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10/05/2022">
-      </div>
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Trị giá:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10.000.000 VND">
-      </div>
-    </div>
-  </div>
-		<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column">
-			<div class="asset-inner" style="flex: 1 1 auto;">
-				<table>
-					<thead>
-						<tr>
-							<th>STT</th>
-							<th>Phòng</th>
-							<th>Số ngày</th>
-							<th>Đơn giá</th>
-              <th>Thành tiền</th>
-							<th>Hành động</th>
-						</tr>
-					</thead>
-					<tbody id="table-body" style="padding-bottom: 100px !important">
-						<tr>
-							<td>1</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-            <tr>
-							<td>4</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-					</tbody>
-				</table>
-			</div>
-			<div  id="delete-room-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-close-area modal-close-df">
-							<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-						</div>
-						<div class="modal-body">
-							<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-							<h2 id="modal-text">Xóa phòng này</h2>
-							<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
-						</div>
-						<div class="modal-footer danger-md">
-							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<form method="post" style="display: none;" id="delete-room-form"></form>
-							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			{{#if paginationArray}}
-				<form 	
-					method="get"
-					action="/room"
-				>
-					<ul class="my-pagination" id="my-pagination">
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
-							<label for="page-prev"  class="my-page-button">Trang trước</label>
-						</li>
-						{{#each paginationArray}}
-							{{#if this.isCurrent}}
-								<li class="my-page-item">
-									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
-								</li>
-							{{else}}
-								<li class="my-page-item">
-									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
-								</li>
-							{{/if}}
-						{{/each}}
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
-							<label for="page-next"  class="my-page-button">Trang sau</label>
-						</li>
-					</ul>
-				</form>
-			{{/if}}
-		</div>
 </div>
 
 {{#section 'script'}}
@@ -279,6 +188,48 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		//
+		const roomTypes = {{{json roomTypes}}}
+		function changeType(ele){
+			const typeId = $("select[name='typeId'").val();
+			roomTypes.forEach(type=>{
+				if(type.id == parseInt(typeId)){
+					$("input[name='price']").val(type.price);
+				}
+			})
+		}
+
+		function successCallback(data){
+			if(data.found){
+				createAlert("error", "Phòng đã tồn tại!")
+			}
+			else{
+				document.getElementById("add-room").submit();
+			}
+			
+		}
+
+		function errorCallback(error){
+			console.log(error);
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+		}
+
+		function validateRoom(){
+			document.getElementById("add-room").submit();
+			{{!-- const roomId = $("input[name='roomId']").val();
+			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback) --}}
+		}
+		
+		$(document).ready(function(){
+			$("input[name='price']").val(roomTypes[0].price);
+			const message ={{{json message}}};
+			if(message.length > 0){
+				console.log(message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+		})
 	</script>
 {{/section}}
