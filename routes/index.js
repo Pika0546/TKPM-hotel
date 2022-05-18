@@ -17,7 +17,7 @@ function route(app){
     app.use('/room', roomRouter)
     app.use('/admin', adminRouter)
     app.use('/rule', ruleRouter)
-    app.use('/rent-room-history', roomRentRouter)
+    app.use('/rent', roomRentRouter)
     app.use('/bill', billRouter)
     app.use('/', siteRouter)
 }
