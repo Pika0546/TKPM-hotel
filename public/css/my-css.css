@@ -235,7 +235,17 @@
     top: 20px;
     right: 20px;
     min-width: 300px;
-    width: 25%;
+}
+#my-alert p {
+    margin: 0 30px;
+}
+
+#my-alert::after{
+    display: none;
+}
+
+#my-alert::before{
+    display: none;
 }
 
 .table-sticky-head{

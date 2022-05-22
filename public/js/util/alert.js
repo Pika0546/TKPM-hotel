@@ -49,7 +49,8 @@ const createAlert = (type, message, duration) => {
                 document.getElementsByTagName("body")[0].removeChild(alert);
             }
            
-        }, duration || 3000)
+        }, duration || 3600)
+        
     }
 }
 
