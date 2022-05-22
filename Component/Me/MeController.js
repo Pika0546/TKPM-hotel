@@ -1,9 +1,10 @@
 const MeService = require('./MeService');
 const createError = require('http-errors');
+const bcrypt = require('bcrypt');
+const { SALT_BCRYPT } = require('../../config');
 
 class MeController{
     getProfile = async (req, res, next) => {
-        console.log(req.user)
         res.render('me/profile',{
             message: req.flash('update-profile'),
         })
@@ -37,6 +38,35 @@ class MeController{
             }
         }
         res.redirect("/me/profile")
+    }
+
+    updatePassword = async (req, res, next) => {
+        try {
+            const {oldPassword, newPassword, confirmPassword} = req.body;
+            const isValidOldPassword = await bcrypt.compare(oldPassword, req.user.password);
+            let isOK = true;
+            if(!isValidOldPassword){
+                isOK = false;
+                req.flash("change-password", {success: false, message: "Mật khẩu không chính xác"})
+            }
+
+            if(newPassword !== confirmPassword){
+                isOK = false;
+                req.flash("change-password", {success: false, message: "Mật khẩu nhập lại phải trùng với mật khẩu mới"})
+            }
+
+            if(isOK){
+                const hashPassword = await bcrypt.hash(newPassword, SALT_BCRYPT)
+                const res = await MeService.updatePassword(req.user.id, hashPassword);
+                // req.flash("change-password", {success: true, message: "Thay đổi mật khẩu thành công!"})
+                // res.redirect("/change-password")
+                res.status(200).json({message: "Update password successfully"});
+            }
+        } catch (error) {
+            console.log(error)
+            next(createError(500))
+        }
+        
     }
 }
 
