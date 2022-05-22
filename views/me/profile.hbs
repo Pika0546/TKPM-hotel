@@ -78,33 +78,33 @@
             <div id="myTabContent" class="tab-content custom-product-edit">
                 <div class="product-tab-list tab-pane fade active in" id="description">
                     <div class="review-content-section">
-                        <form id="update-profile" method="post" action="" class="add-professors">
+                        <form id="update-profile" method="post"  >
                             <div class="form-group">
 								<label>Mã nhân viên:</label>
-                                <input name="meId" type="text" class="form-control" value="101" readonly>
+                                <input name="meId" type="text" class="form-control" value="{{user.id}}" readonly disabled>
                             </div>
 
                             <div class="form-group">
 								<label>Tên đăng nhập:</label>
-                                <input name="meUsername" type="text" class="form-control" value="admin" readonly>
+                                <input name="meUsername" type="text" class="form-control" value="{{user.username}}" readonly disabled>
                             </div>
 
                             <div class="form-group">
-								<label>Họ tên</label>
-                                <input name="meFullname" type="text" class="form-control" value="Lê Trần Đăng Khoa">
+								<label>Họ tên:</label>
+                                <input name="fullname" type="text" class="form-control" value="{{user.fullname}}">
                             </div>
 
 							<div class="form-group">
 								<label>CMND:</label>
-								<input name="cmnd" type="text" class="form-control" value="Nhập CMND">
+								<input name="identityNumber" type="text" class="form-control" value="{{user.identityNumber}}">
 							</div>
 							
 							<div class="form-group edit-ta-resize">
 								<label>Địa chỉ:</label>
-								<input name="address" type="text" class="form-control" value="Thủ Đức">
+								<input name="address" type="text" class="form-control" value="{{user.address}}">
 							</div>
                             <div class="payment-adress">
-                                <button type="button" onclick="" class="btn btn-primary waves-effect waves-light">Cập nhật</button>
+                                <button type="submit" onclick="" class="btn btn-primary waves-effect waves-light">Cập nhật</button>
                             </div>
                         </form>
                     </div>
@@ -188,39 +188,7 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		const roomTypes = {{{json roomTypes}}}
-		function changeType(ele){
-			const typeId = $("select[name='typeId'").val();
-			roomTypes.forEach(type=>{
-				if(type.id == parseInt(typeId)){
-					$("input[name='price']").val(type.price);
-				}
-			})
-		}
-
-		function successCallback(data){
-			if(data.found){
-				createAlert("error", "Phòng đã tồn tại!")
-			}
-			else{
-				document.getElementById("add-room").submit();
-			}
-			
-		}
-
-		function errorCallback(error){
-			console.log(error);
-			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
-		}
-
-		function validateRoom(){
-			document.getElementById("add-room").submit();
-			{{!-- const roomId = $("input[name='roomId']").val();
-			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback) --}}
-		}
-		
-		$(document).ready(function(){
-			$("input[name='price']").val(roomTypes[0].price);
+		$(document).ready(()=>{
 			const message ={{{json message}}};
 			if(message.length > 0){
 				console.log(message);
@@ -231,5 +199,6 @@
 				}
 			}
 		})
+		
 	</script>
 {{/section}}
