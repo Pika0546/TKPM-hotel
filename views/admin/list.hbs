@@ -82,9 +82,11 @@
                     placeholder="Nhập tên nhân viên" 
                     id="search-input"
                     class="search-int form-control"
-					{{#if}}
+					{{#if queryFullname}}
+						value="{{queryFullname}}"
+					{{/if}}
                 >
-                <button type="button"><i class="fa fa-search"></i></button>
+                <button type="button" onclick="submitQuery(this)"><i class="fa fa-search"></i></button>
             </div>
 
 			<div class="add-product">
@@ -104,71 +106,50 @@
 						</tr>
 					</thead>
 					<tbody id="table-body">
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>Lê Trần Đăng Khoa</td>
-                            <td>admin</td>
-                            <td>
-                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>Lê Trần Đăng Khoa</td>
-                            <td>admin</td>
-                            <td>
-                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>Lê Trần Đăng Khoa</td>
-                            <td>admin</td>
-                            <td>
-                                <a href="/admin/1" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
-                            </td>
-                        </tr>
+						{{#each admin}}
+							<tr>
+								<td>{{this.index}}</td>
+								<td>{{this.id}}</td>
+								<td>{{this.fullname}}</td>
+								<td>{{this.username}}</td>
+								<td>
+									<a href="/admin/{{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
+								</td>
+							</tr>
+						{{/each}}
 					</tbody>
 				</table>
 			</div>
-			<form 	
-                method="get"
-                action="/admin"
-            >
-                <ul class="my-pagination" id="my-pagination" style="padding-left: 0; margin-top: 0"> 
-                    <li class="my-page-item">
-                        <input style="display: none;" id="page-prev" value="0" type="radio" name="page"/>
-                        <label for="page-prev"  class="my-page-button">Trang trước</label>
-                    </li>
-                    <li class="my-page-item">
-                        <input  style="display: none;" id="page-1" value="1" type="radio" name="page"/>
-                        <label for="page1"  class="my-page-link my-current-page">1</label>
-                    </li>
-                        <li class="my-page-item">
-                        <input  style="display: none;" id="page-2" value="2" type="radio" name="page"/>
-                        <label for="page-2"  class="my-page-link">2</label>
-                    </li>
-                        <li class="my-page-item">
-                        <input  style="display: none;" id="page-3" value="3" type="radio" name="page"/>
-                        <label for="page-3"  class="my-page-link">3</label>
-                    </li>
-                        <li class="my-page-item">
-                        <input  style="display: none;" id="page-4" value="4" type="radio" name="page"/>
-                        <label for="page-4"  class="my-page-link">4</label>
-                    </li>
-                    <li class="my-page-item">
-                        <input  style="display: none;" id="page-5" value="5" type="radio" name="page"/>
-                        <label for="page-5"  class="my-page-link">5</label>
-                    </li>
-                    <li class="my-page-item">
-                        <input  style="display: none;" id="page-next" value="6" type="radio" name="page"/>
-                        <label for="page-next"  class="my-page-button">Trang sau</label>
-                    </li>
-                </ul>
-            </form>
+			{{#if paginationArray}}
+				<form 	
+					method="get"
+					action="/admin"
+				>
+					<ul class="my-pagination" id="my-pagination">
+						<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
+							<label for="page-prev"  class="my-page-button">Trang trước</label>
+						</li>
+						{{#each paginationArray}}
+							{{#if this.isCurrent}}
+								<li class="my-page-item">
+									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
+								</li>
+							{{else}}
+								<li class="my-page-item">
+									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
+								</li>
+							{{/if}}
+						{{/each}}
+						<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
+							<label for="page-next"  class="my-page-button">Trang sau</label>
+						</li>
+					</ul>
+				</form>
+			{{/if}}
 		</div>
     </div>
 {{#section 'script'}}
@@ -267,6 +248,56 @@
 	<script src="/js/util/ajaxAPI.js"></script>
 	<script src="/js/util/queryString.js"></script>
 	<script>
+		function generateAdmin(adminList){
+			return adminList.map(admin=>{
+				return `
+					<tr>
+						<td>${admin.index}</td>
+						<td>${admin.id}</td>
+						<td>${admin.fullname}</td>
+						<td>${admin.username}</td>
+						<td>
+							<a href="/admin/${admin.id}" style="color: black;"><button data-toggle="tooltip" title="Xem chi tiết" class="pd-setting-ed"><i class="educate-icon educate-info modal-check-pro information-icon-pro" aria-hidden="true"></i></button></a>
+						</td>
+					</tr>
+				`
+			})
+		}
 
+		const successCallback = (data) => {
+			$("#my-pagination").empty();
+			if(data.paginationArray && data.paginationArray.length > 0){
+				const pageView = generatePager(data.paginationArray, data.prevPage, data.nextPage, "submitQuery(this)");
+				pageView.forEach(page=>{
+					$("#my-pagination").append(page);
+				});
+			
+			}
+			const adminList = generateAdmin(data.admin);
+			$("#table-body").empty();
+			adminList.forEach(admin=>{
+				$("#table-body").append(admin);
+			});
+		}
+
+		const errorCallback = (error) => {
+			console.log(error);
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+		}
+
+		function submitQuery(ele){
+			const data = {};
+			data.fullname = $("input[name='name']").val();
+			data.page = $("input[name='page']:checked").val();
+			if(!data.page){
+				data.page = '1';
+			}
+			if(ele && ele.getAttribute("name") !== "page"){
+				data.page = '1';
+			}
+			const newRelativePathQuery = window.location.pathname + '?' + queryString(data);
+			history.pushState(null, '', newRelativePathQuery);
+			fetchData('get', data, '/admin/api', successCallback, errorCallback);
+		}
 	</script>
 {{/section}}

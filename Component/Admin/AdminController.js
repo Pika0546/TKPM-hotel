@@ -63,6 +63,9 @@ class AdminController{
         totalAdmin = await AdminService.countAllAdmin(fullname);
         totalPage = Math.ceil(totalAdmin/limit);
         const paginationArray = PageUtil.getPaginationArray(currentPage, totalPage, maximumPagination);
+        for(let i = 0 ; i < admin.length; i++){
+            admin[i].index = i + (currentPage-1)*limit + 1
+        }
         return {
             admin,
             page: currentPage,
@@ -101,7 +104,24 @@ class AdminController{
     }
 
     getAdminDetail = async (req, res, next) => {
-        res.render('admin/detail')
+        const {id}  = req.params;
+        try {
+            const admin = await AdminService.findAccountById(id);
+            if(admin){
+                delete admin.password
+                console.log(admin)
+                res.render('admin/detail', {
+                    admin,
+                });
+            }
+            else{
+                next(createError(404));
+            }
+          
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
     }
 
 }
