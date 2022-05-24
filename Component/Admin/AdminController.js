@@ -1,5 +1,12 @@
 const createError = require('http-errors');
 const AdminService = require("./AdminService");
+const PageUtil = require('../../utils/page');
+
+const maximumPagination = 5;
+let currentPage = 1;
+let totalPage = 1;
+let totalAdmin = 0;
+const limit = 5;
 
 class AdminController{
     //[GET] /login
@@ -48,9 +55,48 @@ class AdminController{
         }
     }
 
+    fetchAdminListFromDB = async (req, res, next) => {
+        const pageNumber = req.query.page;
+        const fullname = req.query.fullname || null;
+        currentPage = PageUtil.getCurrentPage(pageNumber,totalPage);
+        const admin = await AdminService.getAdminList(limit, currentPage, fullname);
+        totalAdmin = await AdminService.countAllAdmin(fullname);
+        totalPage = Math.ceil(totalAdmin/limit);
+        const paginationArray = PageUtil.getPaginationArray(currentPage, totalPage, maximumPagination);
+        for(let i = 0 ; i < admin.length; i++){
+            admin[i].index = i + (currentPage-1)*limit + 1
+        }
+        return {
+            admin,
+            page: currentPage,
+            totalPage,
+            totalAdmin,
+            paginationArray,
+            queryFullname: fullname,
+            prevPage: (currentPage > 1) ? currentPage - 1 : 1,
+            nextPage: (currentPage < totalPage) ? currentPage + 1 : totalPage,
+        }
+    }
+
 
     getAdminList = async (req, res, next) => {
-       res.render('admin/list')
+        try {
+            const adminListData = await this.fetchAdminListFromDB(req, res, next);
+            res.render('admin/list', adminListData)
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
+    }
+
+    getAdminListAPI = async (req, res, next) => {
+        try {
+            const adminListData = await this.fetchAdminListFromDB(req, res, next);
+            res.status(200).json(adminListData)
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
     }
 
     getAdminCreate = async (req, res, next) => {
@@ -58,7 +104,24 @@ class AdminController{
     }
 
     getAdminDetail = async (req, res, next) => {
-        res.render('admin/detail')
+        const {id}  = req.params;
+        try {
+            const admin = await AdminService.findAccountById(id);
+            if(admin){
+                delete admin.password
+                console.log(admin)
+                res.render('admin/detail', {
+                    admin,
+                });
+            }
+            else{
+                next(createError(404));
+            }
+          
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
     }
 
 }
