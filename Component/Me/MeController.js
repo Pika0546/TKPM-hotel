@@ -10,6 +10,12 @@ class MeController{
         })
     }
 
+    getChangePassword = async (req, res, next) => {
+        res.render('me/change-password',{
+            message: req.flash('change-password'),
+        });
+    }
+
     updateProfile = async (req, res, next) => {
         const {fullname, identityNumber, address} = req.body;
         let isValid = true;
@@ -42,27 +48,29 @@ class MeController{
 
     updatePassword = async (req, res, next) => {
         try {
-            const {oldPassword, newPassword, confirmPassword} = req.body;
-            const isValidOldPassword = await bcrypt.compare(oldPassword, req.user.password);
+            const {password, newPassword, confirmPassword} = req.body;
+            const isValidOldPassword = await bcrypt.compare(password, req.user.password);
             let isOK = true;
             if(!isValidOldPassword){
                 isOK = false;
-                req.flash("change-password", {success: false, message: "Mật khẩu không chính xác"})
+                req.flash("change-password", {success: false, message: "Mật khẩu không chính xác", data:{password, newPassword, confirmPassword}})
+                res.redirect("/me/change-password")
                 return;
             }
 
             if(newPassword !== confirmPassword){
                 isOK = false;
-                req.flash("change-password", {success: false, message: "Mật khẩu nhập lại phải trùng với mật khẩu mới"})
+                req.flash("change-password", {success: false, message: "Mật khẩu nhập lại phải trùng với mật khẩu mới", data:{password, newPassword, confirmPassword}})
+                res.redirect("/me/change-password")
                 return;
             }
 
             if(isOK){
                 const hashPassword = await bcrypt.hash(newPassword, SALT_BCRYPT)
-                const res = await MeService.updatePassword(req.user.id, hashPassword);
-                // req.flash("change-password", {success: true, message: "Thay đổi mật khẩu thành công!"})
-                // res.redirect("/change-password")
-                res.status(200).json({message: "Update password successfully"});
+                const resData = await MeService.updatePassword(req.user.id, hashPassword);
+                req.flash("change-password", {success: true, message: "Thay đổi mật khẩu thành công!"})
+                res.redirect("/me/change-password")
+                // res.status(200).json({message: "Update password successfully"});
             }
         } catch (error) {
             console.log(error)
