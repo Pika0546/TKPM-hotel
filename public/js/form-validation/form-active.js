@@ -74,7 +74,7 @@
 				},
 				address:
 				{
-					required: 'Please enter your address'
+					required: 'Không được bỏ trống trường này!'
 				},
 				department:
 				{

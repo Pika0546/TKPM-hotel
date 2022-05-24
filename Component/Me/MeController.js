@@ -48,11 +48,13 @@ class MeController{
             if(!isValidOldPassword){
                 isOK = false;
                 req.flash("change-password", {success: false, message: "Mật khẩu không chính xác"})
+                return;
             }
 
             if(newPassword !== confirmPassword){
                 isOK = false;
                 req.flash("change-password", {success: false, message: "Mật khẩu nhập lại phải trùng với mật khẩu mới"})
+                return;
             }
 
             if(isOK){
