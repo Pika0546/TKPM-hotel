@@ -1,4 +1,6 @@
 const createError = require('http-errors');
+const bcrypt = require('bcrypt');
+const { SALT_BCRYPT } = require('../../config');
 const AdminService = require("./AdminService");
 const PageUtil = require('../../utils/page');
 
@@ -100,7 +102,9 @@ class AdminController{
     }
 
     getAdminCreate = async (req, res, next) => {
-        res.render('admin/add')
+        res.render('admin/add',{
+            message: req.flash('admin-add'),
+        })
     }
 
     getAdminDetail = async (req, res, next) => {
@@ -112,12 +116,51 @@ class AdminController{
                 console.log(admin)
                 res.render('admin/detail', {
                     admin,
+                    message: req.flash('admin-detail'),
                 });
             }
             else{
                 next(createError(404));
             }
           
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
+    }
+
+    createAdmin = async (req, res, next) => {
+        
+
+        try {
+            const {username, fullname, identity, address, password, confirmPassword} = req.body;
+            console.log(username);
+            const other = await AdminService.findAccountByUsername(username);
+            console.log(other)
+            if(!username ||
+                !fullname ||
+                !password ||
+                !confirmPassword
+            ){
+                
+                req.flash("admin-add", {success: false, message: "Đầu vào không hợp lệ!", data: {username, fullname, identity, address, password, confirmPassword}})
+                res.redirect("/admin/add");
+                return;
+            }
+            if(other){
+                req.flash("admin-add", {success: false, message: "Tên đăng nhập đã tồn tại!", data: {username, fullname, identity, address, password, confirmPassword}})
+                res.redirect("/admin/add");
+                return;
+            }
+            if(password !== confirmPassword){
+                req.flash("admin-add", {success: false, message: "Mật khẩu nhập lại phải trùng với mật khẩu!", data: {username, fullname, identity, address, password, confirmPassword}})
+                res.redirect("/admin/add");
+                return;
+            }
+            const hashPassword = await bcrypt.hash(password, SALT_BCRYPT)
+            const resData = await AdminService.createAdmin(username, fullname, identity, address, hashPassword);
+            req.flash("admin-detail", {success: true, message: "Tạo tài khoản thành công!"})
+            res.redirect(`/admin/${resData.id}`);
         } catch (error) {
             console.log(error);
             next(createError(500));

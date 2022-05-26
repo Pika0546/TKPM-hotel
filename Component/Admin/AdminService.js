@@ -39,5 +39,16 @@ class AdminService  {
             }
         })
     }
+
+    createAdmin = (username, fullname, identity, address, password) => {
+        return models.admin.create({
+            username, 
+            fullname, 
+            identityNumber: identity ? identity : null, 
+            address: address ? address : null, 
+            password
+        })
+    }
+
 }
 module.exports = new AdminService();

@@ -78,39 +78,109 @@
             <div id="myTabContent" class="tab-content custom-product-edit">
                 <div class="product-tab-list tab-pane fade active in" id="description">
                     <div class="review-content-section">
-                        <form id="add-room" method="post" action="/room/add" class="add-professors">
+                        <form id="add-room" method="post" action="/admin/add" class="add-professors">
                             <div class="form-group">
-								<label>Tên đăng nhập:</label>
-                                <input required="" name="username" type="text" class="form-control" placeholder="Tên đăng nhập">
+								<label>Tên đăng nhập:<span style="color: #D80027;">*</span></label>
+                                <input 
+									required="" 
+									name="username" 
+									type="text" 
+									class="form-control" 
+									placeholder="Tên đăng nhập"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.username}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 
                             <div class="form-group">
-								<label>Họ và tên:</label>
-                                <input required="" name="fullname" type="text" class="form-control" placeholder="Họ và tên">
+								<label>Họ và tên:<span style="color: #D80027;">*</span></label>
+                                <input 
+									required="" 
+									name="fullname" 
+									type="text" 
+									class="form-control" 
+									placeholder="Họ và tên"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.fullname}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 							
 							 <div class="form-group">
 								<label>CMND:</label>
-                                <input required="" name="identity" type="text" class="form-control" placeholder="Số CMND">
+                                <input 
+									name="identity" 
+									type="text" 
+									class="form-control" 
+									placeholder="Số CMND"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.identity}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 
                              <div class="form-group">
 								<label>Địa chỉ:</label>
-                                <input required="" name="address" type="text" class="form-control" placeholder="Địa chỉ">
+                                <input 
+									name="address" 
+									type="text" 
+									class="form-control" 
+									placeholder="Địa chỉ"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.address}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 
                              <div class="form-group">
-								<label>Mật khẩu:</label>
-                                <input required="" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+								<label>Mật khẩu:<span style="color: #D80027;">*</span></label>
+                                <input 
+									required="" 
+									name="password" 
+									type="password" 
+									class="form-control" 
+									placeholder="Mật khẩu"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.password}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 
                              <div class="form-group">
-								<label>Nhập lại mật khẩu:</label>
-                                <input required="" name="confirm-password" type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+								<label>Nhập lại mật khẩu:<span style="color: #D80027;">*</span></label>
+                                <input 
+									required="" 
+									name="confirmPassword" 
+									type="password" 
+									class="form-control" 
+									placeholder="Nhập lại mật khẩu"
+									{{#each message}}
+										{{#if this.success}}
+										{{else}}
+											value="{{this.data.confirmPassword}}"
+										{{/if}}
+									{{/each}}
+								>
                             </div>
 
                             <div class="payment-adress">
-                                <button type="button"class="btn btn-primary waves-effect waves-light">Thêm nhân viên</button>
+                                <button type="submit"class="btn btn-primary waves-effect waves-light">Thêm nhân viên</button>
                             </div>
                         </form>
                     </div>
@@ -194,6 +264,16 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		
+		$(document).ready(()=>{
+			const message ={{{json message}}};
+			console.log(message);
+			if(message.length > 0){
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+		})
 	</script>
 {{/section}}
