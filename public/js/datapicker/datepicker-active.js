@@ -35,13 +35,15 @@
 		forceParse: false,
 		forceParse: false,
 		autoclose: true,
-		todayHighlight: true
+		todayHighlight: true,
+		format: "dd/mm/yyyy"
 	});
 
 	$('#data_5 .input-daterange').datepicker({
 		keyboardNavigation: false,
 		forceParse: false,
-		autoclose: true
+		autoclose: true,
+		format: "dd/mm/yyyy"
 	});
 
 })(jQuery);
