@@ -81,6 +81,9 @@ app.engine('.hbs', hbs.engine({
 		},
 		ratio: function(value){
 			return numeral(value).format("0%");
+		},
+		today: function(){
+			return new Date().toLocaleDateString("vi-VN", {day: "2-digit", month: "2-digit", year: "numeric"}); 
 		}
 }
 }));

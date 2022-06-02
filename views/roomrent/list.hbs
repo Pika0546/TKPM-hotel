@@ -50,6 +50,9 @@
 		============================================ -->
     <link rel="stylesheet" href="/css/calendar/fullcalendar.min.css">
     <link rel="stylesheet" href="/css/calendar/fullcalendar.print.min.css">
+	<!-- datapicker CSS
+		============================================ -->
+    <link rel="stylesheet" href="css/datapicker/datepicker3.css">
     <!-- x-editor CSS
 		============================================ -->
     <link rel="stylesheet" href="/css/editor/select2.css">
@@ -82,7 +85,7 @@
 				<div class="my-search-group" style="min-width:300px">
 					<input 
 						type="text" 
-						name="guestName"
+						name="roomId"
 						placeholder="Nhập mã phòng" 
 						id="search-input"
 						class="search-int form-control"
@@ -101,10 +104,53 @@
 			</div>
 			<div class="form-group data-custon-pick data-custom-mg col-lg-4 col-sm-8" id="data_5">
 				<div class="input-daterange input-group" id="datepicker">
-					<input type="text" class="form-control date-rent" name="start" value="05/14/2022">
+					<input 
+						type="text"
+						class="form-control date-rent"
+						name="start" 
+						onchange="submitQuery(this)"
+						{{#if queryRentDateFrom}}
+							value="{{queryRentDateFrom}}"
+						{{else}}
+							value="01/01/1970"
+						{{/if}}
+						>
 					<span class="input-group-addon">đến</span>
-					<input type="text" class="form-control date-rent" name="end" value="05/22/2022">
+					<input 
+						type="text"
+						class="form-control date-rent"
+						name="end"
+						{{#if queryRentDateTo}}
+							value="{{queryRentDateTo}}"
+						{{else}}
+							value="{{today }}"
+						{{/if}}
+						onchange="submitQuery(this)"
+					>
 				</div>
+			</div>
+
+			<div class="col-lg-2 col-md-6 col-sm-6 col-xs-6">
+				<h5 style="margin-top: 15px !important">Tình trạng:</h5>
+			</div>
+			<div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">  
+				<select onchange="submitQuery(this)" id="room-rent-state-select" class="form-control" name="state">
+                    <option value="">Tất cả</option>
+                    <option value="1" 
+						{{#if queryStatus}}
+							{{#isEqual "1" queryStatus}}
+ 								selected=""
+							{{/isEqual}}
+						{{/if}}
+					>Đang thuê</option>
+                    <option value="2"
+						{{#if queryStatus}}
+							{{#isEqual "2" queryStatus}}
+ 								selected=""
+							{{/isEqual}}
+						{{/if}}
+					>Đã thanh toán</option>
+				</select>
 			</div>
 
 			<div class="add-product rent-room">
@@ -124,56 +170,26 @@
 						</tr>
 					</thead>
 					<tbody id="table-body">
-						<tr>
-							<td>1</td>
-							<td>101</td>
-							<td>10/05/2022</td>
-							<td>Đang thuê</td>
-							<td>
-                                <a href="/rent/edit" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                <a href="/bill/add" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
-                            </td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>101</td>
-							<td>10/05/2022</td>
-							<td>Đã thanh toán</td>
-							<td>
-                                <a href="/rent/edit" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                <button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>101</td>
-							<td>10/05/2022</td>
-							<td>Đã thanh toán</td>
-							<td>
-                                <a href="/rent/edit" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                <button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>101</td>
-							<td>10/05/2022</td>
-							<td>Đã thanh toán</td>
-							<td>
-                                <a href="/rent/edit" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                <button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>101</td>
-							<td>10/05/2022</td>
-							<td>Đã thanh toán</td>
-							<td>
-                                <a href="/rent/edit" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                <button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
+						{{#each roomrent}}
+							<tr>
+								<td>{{this.id}}</td>
+								<td>{{this.room.roomId}}</td>
+								<td>{{this.rentDate}}</td>
+								{{#if this.billId}}
+									<td>Đã thanh toán</td>
+								{{else}}
+									<td>Đang thuê</td>
+								{{/if}}
+								<td>
+									<a href="/rent/edit/{{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+									{{#if this.billId}}
+										<a style="color: black;"><button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+									{{else}}
+										<a href="/bill/add?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
+									{{/if}}	
+								</td>
+							</tr>
+						{{/each}}
 					</tbody>
 				</table>
 			</div>
@@ -199,7 +215,7 @@
 			{{#if paginationArray}}
 				<form 	
 					method="get"
-					action="/rent-room-history"
+					action="/rent"
 				>
 					<ul class="my-pagination" id="my-pagination">
 						<li class="my-page-item">
@@ -293,6 +309,10 @@
     <!-- tab JS
         ============================================ -->
     <script src="/js/tab.js"></script>
+	<!-- datapicker JS
+		============================================ -->
+    <script src="js/datapicker/bootstrap-datepicker.js"></script>
+    <script src="js/datapicker/datepicker-active.js"></script>
     <!-- morrisjs JS
 		============================================ -->
     {{!-- <script src="/js/morrisjs/raphael-min.js"></script>
@@ -326,5 +346,67 @@
 	<script src="/js/util/queryString.js"></script>
 	<script>
 		$('.form-control.date-rent').datepicker();
+
+		function generateRoom(roomRentList){
+			return roomRentList.map(room=>{
+				return `
+					<tr>
+						<td>${room.id}</td>
+						<td>${room.room.roomId}</td>
+						<td>${room.rentDate}</td>
+						${room.billId ?
+							`<td>Đã thanh toán</td>` :
+							`<td>Đang thuê</td>`
+						}
+						<td>
+							<a href="/rent/edit/${room.id}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+							${room.billId ?
+								`<a style="color: black;"><button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>` : 
+								`<a href="/bill/add?room=${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
+							}
+						</td>
+					</tr>
+				`
+			})
+		}
+		
+		const successCallback = (data) => {
+			$("#my-pagination").empty();
+			if(data.paginationArray && data.paginationArray.length > 0){
+				const pageView = generatePager(data.paginationArray, data.prevPage, data.nextPage, "submitQuery(this)");
+				pageView.forEach(page=>{
+					$("#my-pagination").append(page);
+				});
+			}
+			const roomRentList = generateRoom(data.roomrent);
+			$("#table-body").empty();
+			roomRentList.forEach(room=>{
+				$("#table-body").append(room);
+			});
+		}
+
+		const errorCallback = (error) => {
+			console.log(error);
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+		}
+
+		function submitQuery(ele){
+			const data = {};
+			data.room = $("input[name='roomId']").val();
+			data.rentDateFrom = $("input[name='start'").val();
+			data.rentDateTo = $("input[name='end'").val();
+			data.status = $("select[name='state']").val();
+			data.page = $("input[name='page']:checked").val();
+			if(!data.page){
+				data.page = '1';
+			}
+			if(ele && ele.getAttribute("name") !== "page"){
+				data.page = '1';
+			}
+			//console.log(data);
+			const newRelativePathQuery = window.location.pathname + '?' + queryString(data);
+			history.pushState(null, '', newRelativePathQuery);
+			fetchData('get', data, '/rent/api', successCallback, errorCallback);
+		}
 	</script>
 {{/section}}

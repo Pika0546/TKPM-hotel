@@ -150,6 +150,10 @@ INSERT INTO roomrent(roomId, billId)
 VALUES
 	(6, NULL),
     (6, NULL),
+    (4, NULL),
+    (3, NULL),
+    (2, NULL),
+    (1, NULL),
     (5, NULL);
     
 INSERT INTO Guest(fullname, identityNumber, address, typeId, roomRentId)

@@ -1,9 +1,82 @@
-const RoomRentService = require('./RoomRentService')
+const createError = require('http-errors');
+const PageUtil = require('../../utils/page');
+const ObjectUtil = require('../../utils/object');
+
+const RoomRentService = require('./RoomRentService');
+
+const maximumPagination = 5;
+let currentPage = 1;
+let totalPage = 1;
+let totalRoom = 0;
+const limit = 5;
 
 class RoomRentController{
-    getRoomRentList = async (req, res, next) => {
-        res.render('roomrent/list')
+    fetchRoomRentListFromDB = async (req, res, next) => {
+        const pageNumber = req.query.page;
+        const roomId = req.query.room || null;
+        const rentDateFrom = req.query.rentDateFrom || null;
+        let rentDateStart = null;
+        if (rentDateFrom)
+        {
+            let dateFrom = rentDateFrom.split('/');
+            rentDateStart = new Date(dateFrom[2]+'-'+dateFrom[1]+'-'+dateFrom[0]+'T00:00:00Z');
+        }
+        const rentDateTo = req.query.rentDateTo || null;
+        let rentDateEnd = null;
+        if (rentDateTo)
+        {
+            let dateTo = rentDateTo.split('/');
+            rentDateEnd = new Date(dateTo[2]+'-'+dateTo[1]+'-'+dateTo[0]+'T23:59:59Z');
+        }
+        const status = req.query.status || null;
+        currentPage = PageUtil.getCurrentPage(pageNumber, totalPage);
+        const roomrent = await RoomRentService.getRoomRentList(limit, currentPage, roomId, rentDateStart, rentDateEnd, status);
+        totalRoom = await RoomRentService.countAllRoom(roomId, rentDateStart, rentDateEnd, status);
+        totalPage = Math.ceil(totalRoom/limit);
+        const paginationArray = PageUtil.getPaginationArray(currentPage, totalPage, maximumPagination);
+        let roomrentLen = Object.keys(roomrent).length;
+        for (let i = 0; i < roomrentLen; i++) {
+            let date = new Date(roomrent[i].createdAt);
+            let d = date.getUTCDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            let m = (date.getUTCMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            let y = date.getUTCFullYear().toString();
+            roomrent[i].rentDate = d + '/' + m + '/' + y;
+        }
+        return {
+            roomrent: roomrent.map((item) => ObjectUtil.getObject(item)),
+            page: currentPage,
+            totalPage,
+            totalRoom,
+            paginationArray,
+            queryRoom: roomId,
+            queryRentDateFrom: rentDateFrom,
+            queryRentDateTo: rentDateTo,
+            queryStatus: status,
+            prevPage: (currentPage > 1) ? currentPage - 1 : 1,
+            nextPage: (currentPage < totalPage) ? currentPage + 1 : totalPage,
+        }
     }
+
+    getRoomRentList = async (req, res, next) => {
+        try {
+            const roomRentListData = await this.fetchRoomRentListFromDB(req, res, next);
+            res.render('roomrent/list', roomRentListData);
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
+    }
+
+    getRoomRentListApi = async (req, res, next) => {
+        try {
+            const roomRentListData = await this.fetchRoomRentListFromDB(req, res, next);
+            res.status(200).json(roomRentListData);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+    }
+
     getAddRoomRent = async (req, res, next) => {
         res.render('roomrent/add');
     }
