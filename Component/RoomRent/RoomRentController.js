@@ -94,6 +94,7 @@ class RoomRentController{
                 return;
             }
             const resData = await RoomRentService.findRoomRentById(id);
+            console.log(resData)
             if(!resData){
                 res.status(200).json({
                     success: false,
