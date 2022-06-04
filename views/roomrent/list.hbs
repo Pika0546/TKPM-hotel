@@ -108,7 +108,7 @@
 						type="text"
 						class="form-control date-rent"
 						name="start" 
-						onchange="submitQuery(this)"
+						{{!-- onchange="submitQuery(this)" --}}
 						{{#if queryRentDateFrom}}
 							value="{{queryRentDateFrom}}"
 						{{else}}
@@ -125,7 +125,7 @@
 						{{else}}
 							value="{{today }}"
 						{{/if}}
-						onchange="submitQuery(this)"
+						{{!-- onchange="submitQuery(this)" --}}
 					>
 				</div>
 			</div>
@@ -183,7 +183,7 @@
 								<td>
 									<a href="/rent/edit/{{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 									{{#if this.billId}}
-										<a style="color: black;"><button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+										<a style="color: black;"><button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
 									{{else}}
 										<a href="/bill/add?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
 									{{/if}}	
@@ -206,7 +206,6 @@
 						</div>
 						<div class="modal-footer danger-md">
 							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<form method="post" style="display: none;" id="delete-room-form"></form>
 							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
 						</div>
 					</div>
@@ -361,7 +360,7 @@
 						<td>
 							<a href="/rent/edit/${room.id}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 							${room.billId ?
-								`<a style="color: black;"><button title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>` : 
+								`<a style="color: black;"><button data-id="${room.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>` : 
 								`<a href="/bill/add?room=${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
 							}
 						</td>
@@ -389,13 +388,9 @@
 			console.log(error);
 			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
 		}
-		let flag = false;
 		function submitQuery(ele){
-			if(flag){
-				return;
-			}
-			flag = true;
 			const data = {};
+			console.log("here")
 			data.room = $("input[name='roomId']").val();
 			data.rentDateFrom = $("input[name='start'").val();
 			data.rentDateTo = $("input[name='end'").val();
@@ -404,7 +399,7 @@
 			if(!data.page){
 				data.page = '1';
 			}
-			if(ele && ele.getAttribute("name") !== "page"){
+			if(ele && (ele.notPage || ele.getAttribute("name") !== "page" )){
 				data.page = '1';
 			}
 			{{!-- console.log(data); --}}
@@ -412,5 +407,38 @@
 			history.pushState(null, '', newRelativePathQuery);
 			fetchData('get', data, '/rent/api', successCallback, errorCallback);
 		}
+
+		const deleteSuccessCallback = (data) => {
+			if(data.success){
+				createAlert("success", "Xóa thành công !");
+				submitQuery();
+			}
+			else{
+				createAlert("error", data.message)
+			}
+		}
+
+		$(document).ready(()=>{
+			let modalRentId = null;
+			const deleteForm = document.getElementById("delete-rent-room-modal");
+			document.getElementById("submit-delete-form").addEventListener('click', function(e){
+				if(modalRentId){
+					fetchData('post', {modalRentId}, `/rent/api/delete/${modalRentId}`, deleteSuccessCallback, errorCallback);
+				}
+				$('#delete-rent-room-modal').modal('hide')
+			});
+			$('#delete-rent-room-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget)
+				const id = button.data('id')
+				const modal = $(this);
+				modalRentId = id;
+			});
+
+			$('#datepicker').datepicker()
+				.on("changeDate", function(e) {
+					// `e` here contains the extra attributes
+					submitQuery({notPage: true})
+    		});
+		})
 	</script>
 {{/section}}
