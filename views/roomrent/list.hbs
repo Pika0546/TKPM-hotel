@@ -389,8 +389,12 @@
 			console.log(error);
 			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
 		}
-
+		let flag = false;
 		function submitQuery(ele){
+			if(flag){
+				return;
+			}
+			flag = true;
 			const data = {};
 			data.room = $("input[name='roomId']").val();
 			data.rentDateFrom = $("input[name='start'").val();
@@ -403,7 +407,7 @@
 			if(ele && ele.getAttribute("name") !== "page"){
 				data.page = '1';
 			}
-			//console.log(data);
+			{{!-- console.log(data); --}}
 			const newRelativePathQuery = window.location.pathname + '?' + queryString(data);
 			history.pushState(null, '', newRelativePathQuery);
 			fetchData('get', data, '/rent/api', successCallback, errorCallback);
