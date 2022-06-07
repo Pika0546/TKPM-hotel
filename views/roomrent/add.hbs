@@ -105,50 +105,7 @@
 						</tr>
 					</thead>
 					<tbody id="table-body" style="padding-bottom: 100px !important">
-						<tr>
-							<td>1</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-                        <tr>
-							<td>4</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-                        </tr>
+
 					</tbody>
 				</table>
 			</div>
@@ -165,8 +122,7 @@
 						</div>
 						<div class="modal-footer danger-md">
 							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<form method="post" style="display: none;" id="delete-room-form"></form>
-							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+							<button class="btn btn-danger" id="delete-guest-btn" type="button">Xóa</button>
 						</div>
 					</div>
 				</div>
@@ -191,8 +147,9 @@
                                         <div class="form-group">
                                             <label for="add-guest-type">Loại khách:</label>
                                             <select id="guest-type-select" class="form-control" name="guestType">
-										        <option value="1">Nội địa</option>
-                                                <option value="2">Nước ngoài</option>
+												{{#each guestType}}
+													<option value="{{this.id}}">{{this.typeName}}</option>
+												{{/each}}
 								            </select>
                                         </div>  
                                         <div class="form-group">
@@ -260,7 +217,7 @@
 		</div>
 	<div class="row" style="position: relative;">
     	<div class="btn-confirm">
-			<a href="#">Xác nhận</a>
+			<a href type="button" id="add-room-rent">Xác nhận</a>
 		</div>
 	</div>
 </div>
@@ -339,6 +296,143 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		//
+		const guestTypes = {{{json guestType}}}
+		const room = {{{json roomName}}}
+		let guests = [];
+		let seletedGuestId = "";
+
+		const handleAddGuest = ( ) => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			const guest = {};
+
+			// push nó vô mảng guests
+
+			//render ra giao diện
+			$("#table-body").append(`<tr>
+										<td>${guests.length}</td>
+										<td>Nội địa</td>
+										<td>Nội địa</td>
+										<td>1234567890</td>
+										<td>TP.HCM</td>
+										<td>
+											<button data-id="${guest.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${guest.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+		}
+
+
+		const handleUpdateGuest = () => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			const guest = {};
+			seletedGuestId;
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi update thông tin
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+				$("#table-body").append(`<tr>
+										<td>${index + 1}</td>
+										<td>Nội địa</td>
+										<td>Nội địa</td>
+										<td>1234567890</td>
+										<td>TP.HCM</td>
+										<td>
+											<button data-id="${guest.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${guest.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+		}
+
+		const handleDeleteGuest = () => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			const guest = {};
+			seletedGuestId;
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi xóa
+			guests = guests.filter((item) => item.id !== seletedGuestId);//parseInt()
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+				$("#table-body").append(`<tr>
+										<td>${index + 1}</td>
+										<td>Nội địa</td>
+										<td>Nội địa</td>
+										<td>1234567890</td>
+										<td>TP.HCM</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+		}
+
+		const handleAddRoomRent = (e) => {
+			e.preventDefault();
+			// Create a form dynamically
+			const form = document.createElement("form");
+			form.setAttribute("method", "post");
+			form.setAttribute("action", "/rent/add");
+
+			//input for room
+			const roomEle = document.createElement("input");
+			roomEle.setAttribute("type", "text");
+			roomEle.setAttribute("name", "room");
+			roomEle.value = room;
+
+			form.append(roomEle);
+
+			const json = JSON.stringify(guests);
+			const guestEle = document.createElement("input");
+			guestEle.setAttribute("type", "text");
+			guestEle.setAttribute("name", "guests");
+			guestEle.value = json;
+			form.append(guestEle);
+
+			document.getElementsByTagName("body")[0].appendChild(form);
+			form.submit();
+			
+		}
+
+		$(document).ready(()=>{
+			//add guest event
+			{{!-- document.getElementById("<id nút add>").addEventListener('click', handleAddGuest);
+
+			//update guest event
+			document.getElementById("<id nút update>").addEventListener('click', handleUpdateGuest);
+
+			//delete guest event
+			document.getElementById("<id nút delete>").addEventListener('click', handleDeleteGuest); --}}
+
+			//add room rent
+			document.getElementById("add-room-rent").addEventListener('click', handleAddRoomRent);
+
+			$('#update-guest-modal').on('show.bs.modal', function (event) {
+				//get id
+				const button = $(event.relatedTarget) 
+				const id = button.data('id') 
+				seletedGuestId = id;
+				//get guest by id
+				//code here
+				let guest = {};
+
+				// fill data
+				const modal = $(this)
+				modal.find('#update-guest-name').val(guest.name);
+				modal.find("#guest-type-select").val(guest.type);
+			})
+
+			$('#delete-guest-modal').on('show.bs.modal', function (event) {
+				//get id
+				const button = $(event.relatedTarget) 
+				const id = button.data('id') 
+				seletedGuestId = id;
+			});
+		})
 	</script>
 {{/section}}
