@@ -122,7 +122,7 @@
 						</div>
 						<div class="modal-footer danger-md">
 							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<button class="btn btn-danger" id="delete-guest-btn" type="button">Xóa</button>
+							<button class="btn btn-danger" id="delete-guest-btn" data-dismiss="modal" type="button">Xóa</button>
 						</div>
 					</div>
 				</div>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Thêm</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-btn">Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -190,18 +190,19 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="update-guest-type">Loại khách:</label>
-                                            <select id="guest-type-select" class="form-control" name="guestType">
-										        <option value="1" selected="">Nội địa</option>
-                                                <option value="2">Nước ngoài</option>
+                                            <select id="update-type-select" class="form-control" name="guestType">
+										        {{#each guestType}}
+													<option value="{{this.id}}">{{this.typeName}}</option>
+												{{/each}}
 								            </select>
                                         </div>  
                                         <div class="form-group">
                                             <label for="update-guest-id">CMND/CCCD:</label>
-                                            <input id="update-guest-id" name="guestId" type="text" class="form-control" required maxlength="255" placeholder="CMND/CCCD" value="1234567890">
+                                            <input id="update-guest-id" name="guestId" type="text" class="form-control" required maxlength="255" placeholder="CMND/CCCD" value="{{data.id}}">
                                         </div>
                                         <div class="form-group">
                                             <label for="update-guest-address">Địa chỉ:</label>
-                                            <input id="update-guest-address" name="guestAddress" type="text" class="form-control" required maxlength="255" placeholder="Địa chỉ" value="TP.HCM">
+                                            <input id="update-guest-address" name="guestAddress" type="text" class="form-control" required maxlength="255" placeholder="Địa chỉ" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -209,7 +210,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Cập nhật</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="button"  id="update-guest-btn">Cập nhật</button>
                         </div>
                     </div>
                 </div>
@@ -296,80 +297,154 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		const guestTypes = {{{json guestType}}}
 		const room = {{{json roomName}}}
+		let guestTypes = {{{json guestType}}}
 		let guests = [];
-		let seletedGuestId = "";
+		let seletedGuest = null;
+
+		// Khach ton tai => trung cccd
+		const isExist = (guest) => {
+			const guestsById = guests.filter(g=>g.guestId === guest.guestId);
+			return (!guestsById || guestsById.length || false); 
+		}
+
+		const displayGuestType = (guestTypeId) => {
+			const guestTypeSelected = guestTypes.filter(type=>type.id === parseInt(guestTypeId));
+			return guestTypeSelected[0].typeName;
+		}
+
+		const invalidInput = (guest)=>{
+			let message ="";
+			const {guestName, guestType, guestId, address} = guest;
+			if(!guestName || !guestId || !guestType || !address){
+				message = "Bạn phải điền đầy đủ thông tin vào các trường!";
+			}
+			else if(Number.isNaN(+guestId)){
+				message = "CCCD không hợp lệ!";
+			}
+			return message;
+		}
+
+		//reset input sau khi them thanh cong
+		const resetInput = ()=>{
+			let guestName = document.getElementById("add-guest-name").value = "";
+			$("#guest-type-select").val($("#guest-type-select option:first").val());
+			let guestId = document.getElementById("add-guest-id").value = "";
+			let address = document.getElementById("add-guest-address").value = "";
+		}
 
 		const handleAddGuest = ( ) => {
 			//lấy value từ mấy cái input trong cái form update
 			//gán vô 1 con guest
-			const guest = {};
+			//const guest = {};
+			let id = new Date().getMilliseconds();
+			let guestName = document.getElementById("add-guest-name").value;
+			let guestType = document.getElementById("guest-type-select").value;
+			let guestId = document.getElementById("add-guest-id").value;
+			let address = document.getElementById("add-guest-address").value;
+			let guest = {id, guestName, guestType, guestId, address};
+			
+			const message = invalidInput(guest);
+
+			if(message){
+				createAlert("error", message);
+				document.getElementById("add-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
+
+			if(isExist(guest)){
+				createAlert("error", "Khách đã tồn tại trong danh sách!");
+				document.getElementById("add-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
 
 			// push nó vô mảng guests
+			guests.push(guest);
 
 			//render ra giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
 			$("#table-body").append(`<tr>
-										<td>${guests.length}</td>
-										<td>Nội địa</td>
-										<td>Nội địa</td>
-										<td>1234567890</td>
-										<td>TP.HCM</td>
-										<td>
-											<button data-id="${guest.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="${guest.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-										</td>
-									</tr>`)
-		}
-
-
-		const handleUpdateGuest = () => {
-			//lấy value từ mấy cái input trong cái form update
-			//gán vô 1 con guest
-			const guest = {};
-			seletedGuestId;
-			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi update thông tin
-
-			//update giao diện
-			$("#table-body").empty();
-			guests.forEach((item, index)=>{
-				$("#table-body").append(`<tr>
 										<td>${index + 1}</td>
-										<td>Nội địa</td>
-										<td>Nội địa</td>
-										<td>1234567890</td>
-										<td>TP.HCM</td>
-										<td>
-											<button data-id="${guest.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="${guest.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-										</td>
-									</tr>`)
-			})
-		}
-
-		const handleDeleteGuest = () => {
-			//lấy value từ mấy cái input trong cái form update
-			//gán vô 1 con guest
-			const guest = {};
-			seletedGuestId;
-			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi xóa
-			guests = guests.filter((item) => item.id !== seletedGuestId);//parseInt()
-
-			//update giao diện
-			$("#table-body").empty();
-			guests.forEach((item, index)=>{
-				$("#table-body").append(`<tr>
-										<td>${index + 1}</td>
-										<td>Nội địa</td>
-										<td>Nội địa</td>
-										<td>1234567890</td>
-										<td>TP.HCM</td>
+										<td>${item.guestName}</td>
+										<td>${displayGuestType(item.guestType)}</td>
+										<td>${item.guestId}</td>
+										<td>${item.address}</td>
 										<td>
 											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
 											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 									</tr>`)
 			})
+			createAlert("success", "Thêm khách thành công!");
+			resetInput();
+			document.getElementById("add-guest-btn").setAttribute("data-dismiss", "modal");
+		}
+
+		const handleUpdateGuest = () => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			let id = seletedGuest.id;
+			let guestName = document.getElementById("update-guest-name").value;
+			let guestType = document.getElementById("update-type-select").value;
+			let guestId = document.getElementById("update-guest-id").value;
+			let address = document.getElementById("update-guest-address").value;
+			let newGuest = {id, guestName, guestType, guestId, address};
+
+			const message = invalidInput(newGuest);
+			if(message){
+				createAlert("error", message);
+				document.getElementById("update-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
+			
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi update thông tin
+			guests = guests.map(g=>{
+				if(g.id === seletedGuest.id){
+					return newGuest;
+				}
+				else return g;
+			})
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+			$("#table-body").append(`<tr>
+										<td>${guests.length + 1}</td>
+										<td>${item.guestName}</td>
+										<td>${displayGuestType(item.guestType)}</td>
+										<td>${item.guestId}</td>
+										<td>${item.address}</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+			createAlert("success", "Cập nhật khách thành công!");
+			document.getElementById("update-guest-btn").setAttribute("data-dismiss", "modal");
+		}
+
+		const handleDeleteGuest = () => {
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi xóa
+			guests = guests.filter((item) => item.id !== parseInt(seletedGuestId));//parseInt()
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+			$("#table-body").append(`<tr>
+										<td>${guests.length + 1}</td>
+										<td>${item.guestName}</td>
+										<td>${displayGuestType(item.guestType)}</td>
+										<td>${item.guestId}</td>
+										<td>${item.address}</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+			createAlert("success", "Xóa khách thành công!");
 		}
 
 		const handleAddRoomRent = (e) => {
@@ -401,13 +476,13 @@
 
 		$(document).ready(()=>{
 			//add guest event
-			{{!-- document.getElementById("<id nút add>").addEventListener('click', handleAddGuest);
+			document.getElementById("add-guest-btn").addEventListener('click', handleAddGuest);
 
 			//update guest event
-			document.getElementById("<id nút update>").addEventListener('click', handleUpdateGuest);
+			document.getElementById("update-guest-btn").addEventListener('click', handleUpdateGuest);
 
 			//delete guest event
-			document.getElementById("<id nút delete>").addEventListener('click', handleDeleteGuest); --}}
+			document.getElementById("delete-guest-btn").addEventListener('click', handleDeleteGuest);
 
 			//add room rent
 			document.getElementById("add-room-rent").addEventListener('click', handleAddRoomRent);
@@ -416,15 +491,17 @@
 				//get id
 				const button = $(event.relatedTarget) 
 				const id = button.data('id') 
-				seletedGuestId = id;
+				seletedGuest = guests.filter(g=>g.id == parseInt(id))[0];
 				//get guest by id
 				//code here
-				let guest = {};
+				//let guest = {};
 
 				// fill data
 				const modal = $(this)
-				modal.find('#update-guest-name').val(guest.name);
-				modal.find("#guest-type-select").val(guest.type);
+				modal.find('#update-guest-name').val(seletedGuest.guestName);
+				modal.find("#update-type-select").val(seletedGuest.guestType);
+				modal.find('#update-guest-id').val(seletedGuest.guestId);
+				modal.find("#update-guest-address").val(seletedGuest.address);
 			})
 
 			$('#delete-guest-modal').on('show.bs.modal', function (event) {
