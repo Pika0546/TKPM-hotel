@@ -78,11 +78,45 @@ class RoomRentController{
     }
 
     getAddRoomRent = async (req, res, next) => {
-        res.render('roomrent/add');
+        //lấy guesttype
+        const guestType = await RoomRentService.getGuestTypeList();
+        const roomName = req.query.room;
+        res.render('roomrent/add', {
+            guestType, 
+            roomName,
+            message: req.flash("add-rent")
+        });
     }
     getDetailRoomRent = async (req, res, next) => {
         res.render('roomrent/edit');
     }
+
+    createRoomRent = async (req, res, next) => {
+        try {
+            const roomId = req.body.room;///mã phòng
+            const guests = JSON.parse(req.body.guests);
+            //validate input
+            //check rỗng
+    
+            //check room có tồn tại k
+            const room = {} //fetch data get room
+    
+            //create room rent
+            let roomRent = await RoomRentService.createRoomRent(room.id);
+            const n = guests.length;
+            for(let i = 0 ; i < n; i++){
+                guests[i].roomRentId = roomRent.id;
+                let guest = await RoomRentService.createGuest(guests[i])
+            }
+            req.flash("add-rent", {success: true, message: "Thuê phòng thành công!"})
+            res.redirect(`/rent/edit/${roomRent.id}`)
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
+        
+    }
+
     deleteRoomRentAPI = async (req, res, next) => {
         try {
             const {id} = req.params;

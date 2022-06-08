@@ -82,6 +82,11 @@ class RoomRentService{
             },
         });
     }
+    getGuestTypeList = async () => {
+        return models.guesttype.findAll({
+            raw:true
+        })
+    }
 }
 
 module.exports = new RoomRentService();

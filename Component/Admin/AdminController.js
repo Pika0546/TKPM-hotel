@@ -130,7 +130,6 @@ class AdminController{
     }
 
     createAdmin = async (req, res, next) => {
-        
 
         try {
             const {username, fullname, identity, address, password, confirmPassword} = req.body;
