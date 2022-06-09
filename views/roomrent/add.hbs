@@ -81,13 +81,13 @@
   <div class="my-search-row">
 		<div class="row" style="position: relative;">
 			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Phòng: 101</label>
+        <label class="login2" id="cur-room">Phòng: 101</label>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <label class="login2 pull-right pull-right-pro">Ngày thuê: 22/04/2022</label>
       </div>
       <div class="add-product add-customer">
-			<a href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a>
+			<a id="add-guest-a" href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a>
 		</div>
     </div>
   </div>
@@ -297,6 +297,9 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
+		const maximumGuest = {{{json maximumGuest}}}
+		const maximum = parseInt(maximumGuest.value);
+		console.log(maximumGuest);
 		const room = {{{json roomName}}}
 		let guestTypes = {{{json guestType}}}
 		let guests = [];
@@ -337,6 +340,7 @@
 			//lấy value từ mấy cái input trong cái form update
 			//gán vô 1 con guest
 			//const guest = {};
+			
 			let id = new Date().getMilliseconds();
 			let guestName = document.getElementById("add-guest-name").value;
 			let guestType = document.getElementById("guest-type-select").value;
@@ -410,7 +414,7 @@
 			$("#table-body").empty();
 			guests.forEach((item, index)=>{
 			$("#table-body").append(`<tr>
-										<td>${guests.length + 1}</td>
+										<td>${index + 1}</td>
 										<td>${item.guestName}</td>
 										<td>${displayGuestType(item.guestType)}</td>
 										<td>${item.guestId}</td>
@@ -433,7 +437,7 @@
 			$("#table-body").empty();
 			guests.forEach((item, index)=>{
 			$("#table-body").append(`<tr>
-										<td>${guests.length + 1}</td>
+										<td>${index + 1}</td>
 										<td>${item.guestName}</td>
 										<td>${displayGuestType(item.guestType)}</td>
 										<td>${item.guestId}</td>
@@ -453,15 +457,14 @@
 			const form = document.createElement("form");
 			form.setAttribute("method", "post");
 			form.setAttribute("action", "/rent/add");
-
+			
 			//input for room
 			const roomEle = document.createElement("input");
 			roomEle.setAttribute("type", "text");
 			roomEle.setAttribute("name", "room");
 			roomEle.value = room;
-
 			form.append(roomEle);
-
+			//input for guests
 			const json = JSON.stringify(guests);
 			const guestEle = document.createElement("input");
 			guestEle.setAttribute("type", "text");
@@ -470,11 +473,30 @@
 			form.append(guestEle);
 
 			document.getElementsByTagName("body")[0].appendChild(form);
-			form.submit();
-			
+			form.submit();	
+		}
+		const handleAdda = () => {
+			if(guests.length >= maximum){
+				document.getElementById("add-guest-a").removeAttribute("data-target", "#add-guest-modal");
+				createAlert("error", "Số khách đang ở mức tối đa!");
+			}
+			else{
+				document.getElementById("add-guest-a").setAttribute("data-target", "#add-guest-modal");
+			}
 		}
 
 		$(document).ready(()=>{
+			const message ={{{json message}}};
+			console.log("message " + message);
+			if(message.length > 0){
+				console.log("mesage " + message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+
 			//add guest event
 			document.getElementById("add-guest-btn").addEventListener('click', handleAddGuest);
 
@@ -486,6 +508,9 @@
 
 			//add room rent
 			document.getElementById("add-room-rent").addEventListener('click', handleAddRoomRent);
+
+			//
+			document.getElementById("add-guest-a").addEventListener('click', handleAdda);
 
 			$('#update-guest-modal').on('show.bs.modal', function (event) {
 				//get id
@@ -510,6 +535,8 @@
 				const id = button.data('id') 
 				seletedGuestId = id;
 			});
+
+			document.getElementById("cur-room").innerText = "Phòng: " + room;
 		})
 	</script>
 {{/section}}

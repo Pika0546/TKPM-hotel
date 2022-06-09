@@ -110,50 +110,19 @@
 						</tr>
 					</thead>
 					<tbody id="table-body" style="padding-bottom: 100px !important">
-						<tr>
-							<td>1</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-						</tr>
-                        <tr>
-							<td>4</td>
-							<td>Lê Văn A</td>
-							<td>Nội địa</td>
-							<td>1234567890</td>
-                            <td>TP.HCM</td>
-							<td>
-                                <button data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                            </td>
-                        </tr>
+            {{#each guests}}
+            <tr>
+								<td>{{this.id}}</td>
+										<td>{{this.fullname}}</td>
+										<td>{{this.typeName}}</td>
+										<td>{{this.identityNumber}}</td>
+										<td>{{this.address}}</td>
+										<td>
+											<button data-id="{{this.roomId}}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+							</tr>
+            {{/each}}
 					</tbody>
 				</table>
 			</div>
@@ -345,5 +314,29 @@
 	<script src="/js/util/alert.js"></script>
 	<script>
 		//
+    let index = 0;
+    let guestTypes = {{{json guestType}}}
+    console.log("guest type: " + guestTypes);
+    const roomrentId = {{{json roomrentId}}}
+		let guests = {{{json guests}}}
+    console.log("guests: " + guests);
+
+    const displayGuestType = (guestTypeId) => {
+			const guestTypeSelected = guestTypes.filter(type=>type.id === parseInt(guestTypeId));
+			return guestTypeSelected[0].typeName;
+		}
+
+    $(document).ready(()=>{
+      const message ={{{json message}}};
+			console.log("message " + message);
+			if(message.length > 0){
+				console.log("mesage " + message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+    })
 	</script>
 {{/section}}

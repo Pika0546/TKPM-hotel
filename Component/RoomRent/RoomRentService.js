@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 
 const { models } = require("../../models");
+const RoomService = require("../Room/RoomService");
 
 class RoomRentService{
     getRoomRentList = async (limit, page, roomId, rentDateFrom, rentDateTo, status) => {
@@ -85,6 +86,30 @@ class RoomRentService{
     getGuestTypeList = async () => {
         return models.guesttype.findAll({
             raw:true
+        })
+    }
+
+    getGuetsByRoomRentId = async (id) => {
+        return models.guest.findAll({
+            raw: true,
+            where:{roomRentId:id}
+        })
+    }
+
+    createRoomRent = async (id) => {
+        return models.roomrent.create({
+            roomId: id
+        })
+    }
+
+    createGuest = async (guest) => {
+        const {guestName, guestType, guestId, address, roomRentId} = guest;
+        return models.guest.create({
+            fullname:guestName,
+            identityNumber:guestId,
+            address: address,
+            typeId: guestType,
+            roomRentId: roomRentId
         })
     }
 }
