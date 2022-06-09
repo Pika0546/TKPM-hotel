@@ -70,41 +70,43 @@
 {{/section}}
 
 <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%">
-  <div class="product-payment-inner-st">
-    <ul id="myTabedu1" class="tab-review-design">
-      <li class="active"><a href="#description">Thanh toán</a></li>
-    </ul>
-  </div>
-  <div class="my-search-row">
-		<div class="row" style="position: relative;">
-			<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Khách hàng/ Cơ quan:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="Công ty TNHH Catto">
-      </div>
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Địa chỉ:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="227 Nguyễn Văn Cừ, quận 5">
-      </div>
-    </div>
-    <div class="row mg-t-10">
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Ngày thanh toán:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10/05/2022">
-      </div>
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Trị giá:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10.000.000 VND">
-      </div>
-    </div>
-  </div>
+  	<div class="product-payment-inner-st">
+    	<ul id="myTabedu1" class="tab-review-design">
+      		<li class="active"><a href="#description">Thanh toán</a></li>
+    	</ul>
+  	</div>
+  	<div class="my-search-row">
+		{{#with bill}}
+			<div class="row" style="position: relative;">
+				<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+					<label class="login2" style="padding-top: 10px;">Khách hàng/ Cơ quan:</label>
+				</div>
+				<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+					<input type="text" readonly class="form-control" value="{{guest.fullname}}">
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+					<label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Địa chỉ:</label>
+				</div>
+				<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+					<input type="text" readonly class="form-control" value="{{guest.address}}">
+				</div>
+			</div>
+			<div class="row mg-t-10">
+				<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+					<label class="login2" style="padding-top: 10px;">Ngày thanh toán:</label>
+				</div>
+				<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+					<input type="text" readonly class="form-control" value="{{billDate}}">
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+					<label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Trị giá:</label>
+				</div>
+				<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+					<input type="text" readonly class="form-control" value="{{currency totalCost}}">
+				</div>
+			</div>
+		{{/with}}
+  	</div>
 		<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column">
 			<div class="asset-inner" style="flex: 1 1 auto;">
 				<table>
@@ -114,94 +116,24 @@
 							<th>Phòng</th>
 							<th>Số ngày</th>
 							<th>Đơn giá</th>
-              <th>Thành tiền</th>
+              				<th>Thành tiền</th>
 							<th>Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="table-body" style="padding-bottom: 100px !important">
-						<tr>
-							<td>1</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-            <tr>
-							<td>4</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><a href="" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+						{{#each roomList}}
+							<tr>
+								<td>{{this.numorder}}</td>
+								<td>{{this.room.roomId}}</td>
+								<td>{{this.numRentDays}}</td>
+								<td>{{currency this.room.roomtype.price}}</td>
+								<td>{{currency this.totalCost}}</td>
+								<td><a href="/rent/edit/{{this.id}}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+							</tr>
+						{{/each}}
 					</tbody>
 				</table>
 			</div>
-			<div  id="delete-room-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-close-area modal-close-df">
-							<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-						</div>
-						<div class="modal-body">
-							<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-							<h2 id="modal-text">Xóa phòng này</h2>
-							<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
-						</div>
-						<div class="modal-footer danger-md">
-							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<form method="post" style="display: none;" id="delete-room-form"></form>
-							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			{{#if paginationArray}}
-				<form 	
-					method="get"
-					action="/room"
-				>
-					<ul class="my-pagination" id="my-pagination">
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
-							<label for="page-prev"  class="my-page-button">Trang trước</label>
-						</li>
-						{{#each paginationArray}}
-							{{#if this.isCurrent}}
-								<li class="my-page-item">
-									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
-								</li>
-							{{else}}
-								<li class="my-page-item">
-									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
-								</li>
-							{{/if}}
-						{{/each}}
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
-							<label for="page-next"  class="my-page-button">Trang sau</label>
-						</li>
-					</ul>
-				</form>
-			{{/if}}
 		</div>
 </div>
 
