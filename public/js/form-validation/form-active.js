@@ -13,10 +13,6 @@
 				{
 					required: true
 				},
-				address:
-				{
-					required: true
-				},
 				department:
 				{
 					required: true
@@ -71,10 +67,6 @@
 				lastname:
 				{
 					required: 'Please enter last name'
-				},
-				address:
-				{
-					required: 'Không được bỏ trống trường này!'
 				},
 				department:
 				{
