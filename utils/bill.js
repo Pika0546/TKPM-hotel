@@ -21,6 +21,25 @@ class BillUtil{
 
         return roomRent.room.roomtype.price ;
     }
+
+    calculateRoomTotalCostInBill = (roomBill, rule) => {
+        let result = roomBill.room.roomtype.price * roomBill.numRentDays;
+        const guestNumber = roomBill.guests.length;
+        let surcharge = 0;
+        if(guestNumber >= rule.surchargeFrom){
+            surcharge =  result * rule.surcharge;
+        }
+
+        let guestTypeInRoom = [...new Map(roomBill.guests.map(item =>[item.guesttype.typeName, item])).values()];;
+        guestTypeInRoom.forEach(type => {
+            if(type){
+                surcharge += (type.guesttype.coefficient - 1) * result;
+            }
+        });
+
+        result += surcharge;
+        return result;
+    }
 }
 
 module.exports = new BillUtil();

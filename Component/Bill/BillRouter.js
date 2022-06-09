@@ -5,6 +5,6 @@ const BillController = require('./BillController');
 
 router.get('/', BillController.getBillList);
 router.get('/add', BillController.getAddBill);
-router.get('/detail', BillController.getDetailBill);
+router.get('/detail/:id', BillController.getDetailBill);
 
 module.exports = router;
