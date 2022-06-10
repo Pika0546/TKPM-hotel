@@ -135,38 +135,39 @@ VALUES
     ('102', 2, 'Trống', 'Có máy lạnh'), 
     ('103', 3, 'Trống', 'Có máy lạnh, bồn tắm'),
     ('104', 3, 'Trống', 'Có máy lạnh, bồn tắm'),
-    ('201', 1, 'Đang thuê', 'Không có máy lạnh'),
-    ('202', 2, 'Đang thuê', 'Có máy lạnh'),
+    ('201', 1, 'Trống', 'Không có máy lạnh'),
+    ('202', 2, 'Trống', 'Có máy lạnh'),
     ('203', 3, 'Trống', 'Có máy lạnh, bồn tắm');
 
 INSERT INTO GuestType(typeName, coefficient) 
 VALUES 
-	('Nước ngoài', '1.5'), 
-    ('Nội địa', '1');
+    ('Nội địa', '1'),
+	('Nước ngoài', '1.5');
+    
     
 
 
-INSERT INTO roomrent(roomId, billId)
-VALUES
-	(6, NULL),
-    (6, NULL),
-    (4, NULL),
-    (3, NULL),
-    (2, NULL),
-    (1, NULL),
-    (5, NULL);
+-- INSERT INTO roomrent(roomId, billId)
+-- VALUES
+-- 	(6, NULL),
+--     (6, NULL),
+--     (4, NULL),
+--     (3, NULL),
+--     (2, NULL),
+--     (1, NULL),
+--     (5, NULL);
     
-INSERT INTO Guest(fullname, identityNumber, address, typeId, roomRentId)
-VALUES 
-	("Nguyễn Văn A", "123456789012", "Thành phố HCM", 1, 1),
-    ("Lê Thị B", "123456789123", "Vũng Tàu", 1, 2),
-    ("Trần Thị C", "123456789456", "Đồng Nai", 1, 3),
-    ("Arslan Audley", "52137865312", "Newyork, America", 2, 2);
+-- INSERT INTO Guest(fullname, identityNumber, address, typeId, roomRentId)
+-- VALUES 
+-- 	("Nguyễn Văn A", "123456789012", "Thành phố HCM", 1, 1),
+--     ("Lê Thị B", "123456789123", "Vũng Tàu", 1, 2),
+--     ("Trần Thị C", "123456789456", "Đồng Nai", 1, 3),
+--     ("Arslan Audley", "52137865312", "Newyork, America", 2, 2);
 
-INSERT INTO bill(guestID)
-VALUES
-	(4);
+-- INSERT INTO bill(guestID)
+-- VALUES
+-- 	(4);
 
-UPDATE roomrent set billId = 1 where id = 2
+-- UPDATE roomrent set billId = 1 where id = 2
 
 	
