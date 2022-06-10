@@ -95,11 +95,27 @@ class RoomRentService{
             where:{roomRentId:id}
         })
     }
+    getRoomByRoomRentId = async (id) => {
+        const roomRent = await this.findRoomRentById(id);
+        const roomId = roomRent.roomId;
+        return models.room.findOne({
+            raw: true,
+            where:{id:roomId}
+        })
+    }
 
     createRoomRent = async (id) => {
         return models.roomrent.create({
             roomId: id
         })
+    }
+
+    deleteGuestByIdentityNumber = async (identityNumber) => {
+        return models.guest.destroy({
+            where: {
+                identityNumber: identityNumber
+            },
+        });
     }
 
     createGuest = async (guest) => {
@@ -109,6 +125,17 @@ class RoomRentService{
             identityNumber:guestId,
             address: address,
             typeId: guestType,
+            roomRentId: roomRentId
+        })
+    }
+
+    createGuestAPI = async (guest) => {
+        const {fullname, identityNumber, typeId, address, roomRentId} = guest;
+        return models.guest.create({
+            fullname:fullname,
+            identityNumber:identityNumber,
+            address: address,
+            typeId: typeId,
             roomRentId: roomRentId
         })
     }

@@ -81,14 +81,15 @@
   <div class="my-search-row">
 		<div class="row" style="position: relative;">
 			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Phòng: 101</label>
+        <label id="cur-room" class="login2">Phòng: 101</label>
       </div>
       <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
         <label class="login2 pull-right pull-right-pro">Ngày thuê: 22/04/2022</label>
       </div>
       <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12">
             <div class="add-product add-customer">
-                <a href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a>
+                
+                <a id="add-guest-a" href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a>{{!-- <a id="add-guest-a" href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a> --}}
             </div>
         </div>
         <div class="add-product add-customer">
@@ -105,21 +106,21 @@
 							<th>Khách hàng</th>
 							<th>Loại khách</th>
 							<th>CMND/CCCD</th>
-                            <th>Địa chỉ</th>
+              <th>Địa chỉ</th>
 							<th>Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="table-body" style="padding-bottom: 100px !important">
             {{#each guests}}
             <tr>
-								<td>{{this.id}}</td>
+								<td>{{this.stt}}</td>
 										<td>{{this.fullname}}</td>
 										<td>{{this.typeName}}</td>
 										<td>{{this.identityNumber}}</td>
 										<td>{{this.address}}</td>
 										<td>
-											<button data-id="{{this.roomId}}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+											<button data-id="{{this.id}}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 							</tr>
             {{/each}}
@@ -140,7 +141,7 @@
 						<div class="modal-footer danger-md">
 							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
 							<form method="post" style="display: none;" id="delete-room-form"></form>
-							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+							<button class="btn btn-danger" id="delete-guest-btn" type="button" data-dismiss="modal">Xóa</button>
 						</div>
 					</div>
 				</div>
@@ -165,8 +166,9 @@
                                         <div class="form-group">
                                             <label for="add-guest-type">Loại khách:</label>
                                             <select id="guest-type-select" class="form-control" name="guestType">
-										        <option value="1">Nội địa</option>
-                                                <option value="2">Nước ngoài</option>
+                                              {{#each guestType}}
+													                      <option value="{{this.id}}">{{this.typeName}}</option>
+												                      {{/each}}
 								            </select>
                                         </div>  
                                         <div class="form-group">
@@ -183,7 +185,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Thêm</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-btn">Thêm</button>
                         </div>
                     </div>
                 </div>
@@ -207,10 +209,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="update-guest-type">Loại khách:</label>
-                                            <select id="guest-type-select" class="form-control" name="guestType">
-										        <option value="1" selected="">Nội địa</option>
-                                                <option value="2">Nước ngoài</option>
-								            </select>
+                                            <select id="update-type-select" class="form-control" name="guestType">
+										                          {{#each guestType}}
+													                      <option value="{{this.id}}">{{this.typeName}}</option>
+												                      {{/each}}
+								                            </select>
                                         </div>  
                                         <div class="form-group">
                                             <label for="update-guest-id">CMND/CCCD:</label>
@@ -226,7 +229,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary waves-effect waves-light" type="button" data-dismiss="modal">Hủy</button>
-                            <button class="btn btn-primary waves-effect waves-light" type="button" id="add-guest-type-btn">Cập nhật</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="button" id="update-guest-btn">Cập nhật</button>
                         </div>
                     </div>
                 </div>
@@ -234,7 +237,7 @@
 		</div>
 	<div class="row" style="position: relative;">
     	<div class="btn-confirm">
-			<a href="#">Cập nhật</a>
+			<a id="capnhat" href="#">Cập nhật</a>
 		</div>
 	</div>
 </div>
@@ -315,18 +318,207 @@
 	<script>
 		//
     let index = 0;
-    let guestTypes = {{{json guestType}}}
-    console.log("guest type: " + guestTypes);
+    const maximumGuest = {{{json maximumGuest}}};
+    let guestType = {{{json guestType}}};
+    //console.log("guest type: " + guestTypes);
     const roomrentId = {{{json roomrentId}}}
 		let guests = {{{json guests}}}
-    console.log("guests: " + guests);
+    let seletedGuest = null;
+    let room = {{{json room}}}
+    //console.log("guests: " + guests);
 
     const displayGuestType = (guestTypeId) => {
-			const guestTypeSelected = guestTypes.filter(type=>type.id === parseInt(guestTypeId));
+			const guestTypeSelected = guestType.filter(type=>type.id === parseInt(guestTypeId));
 			return guestTypeSelected[0].typeName;
 		}
+    // Khach ton tai => trung cccd
+		const isExist = (guest) => {
+			const guestsById = guests.filter(g=>g.identityNumber === guest.identityNumber);
+			return (!guestsById || guestsById.length || false); 
+		}
+
+    // check input
+    const invalidInput = (guest)=>{
+			let message ="";
+			const {fullname, typeId, identityNumber, address} = guest;
+			if(!fullname || !typeId || !identityNumber || !address){
+				message = "Bạn phải điền đầy đủ thông tin vào các trường!";
+			}
+			else if(Number.isNaN(+identityNumber)){
+				message = "CCCD không hợp lệ!";
+			}
+			return message;
+		}
+
+    //reset input sau khi them thanh cong
+		const resetInput = ()=>{
+			document.getElementById("add-guest-name").value = "";
+			$("#guest-type-select").val($("#guest-type-select option:first").val());
+			document.getElementById("add-guest-id").value = "";
+			document.getElementById("add-guest-address").value = "";
+		}
+
+    const handleAddGuest = () => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			//const guest = {};
+			
+			let id = new Date().getMilliseconds();
+			let fullname = document.getElementById("add-guest-name").value;
+			let typeId = document.getElementById("guest-type-select").value;
+			let identityNumber = document.getElementById("add-guest-id").value;
+			let address = document.getElementById("add-guest-address").value;
+			let guest = {id, fullname, typeId, identityNumber, address, roomrentId};
+			
+			const message = invalidInput(guest);
+
+			if(message){
+				createAlert("error", message);
+				document.getElementById("add-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
+
+			if(isExist(guest)){
+				createAlert("error", "Khách đã tồn tại trong danh sách!");
+				document.getElementById("add-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
+
+			// push nó vô mảng guests
+			guests.push(guest);
+
+			//render ra giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+			$("#table-body").append(`<tr>
+										<td>${index + 1}</td>
+										<td>${item.fullname}</td>
+										<td>${displayGuestType(item.typeId)}</td>
+										<td>${item.identityNumber}</td>
+										<td>${item.address}</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+			createAlert("success", "Thêm khách thành công!");
+			resetInput();
+			document.getElementById("add-guest-btn").setAttribute("data-dismiss", "modal");
+		}
+    const handleAdda = () => {
+			if(guests.length >= parseInt(maximumGuest.value)){
+				document.getElementById("add-guest-a").removeAttribute("data-target", "#add-guest-modal");
+				createAlert("error", "Số khách đang ở mức tối đa!");
+			}
+			else{
+				document.getElementById("add-guest-a").setAttribute("data-target", "#add-guest-modal");
+			}
+		}
+    const handleUpdateGuest = () => {
+			//lấy value từ mấy cái input trong cái form update
+			//gán vô 1 con guest
+			let id = seletedGuest.id;
+			let fullname = document.getElementById("update-guest-name").value;
+			let typeId = document.getElementById("update-type-select").value;
+			let identityNumber = document.getElementById("update-guest-id").value;
+			let address = document.getElementById("update-guest-address").value;
+			let newGuest = {id, fullname, typeId, identityNumber, address, roomrentId};
+
+			const message = invalidInput(newGuest);
+			if(message){
+				createAlert("error", message);
+				document.getElementById("update-guest-btn").removeAttribute("data-dismiss", "modal");
+				return;
+			}
+			
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi update thông tin
+			guests = guests.map(g=>{
+				if(g.id === seletedGuest.id){
+					return newGuest;
+				}
+				else return g;
+			})
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+			$("#table-body").append(`<tr>
+										<td>${index + 1}</td>
+										<td>${item.fullname}</td>
+										<td>${displayGuestType(item.typeId)}</td>
+										<td>${item.identityNumber}</td>
+										<td>${item.address}</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+			createAlert("success", "Cập nhật khách thành công!");
+			document.getElementById("update-guest-btn").setAttribute("data-dismiss", "modal");
+		}
+    //
+    const handleDeleteGuest = () => {
+			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi xóa
+			guests = guests.filter((item) => item.id !== parseInt(seletedGuestId));//parseInt()
+
+			//update giao diện
+			$("#table-body").empty();
+			guests.forEach((item, index)=>{
+			$("#table-body").append(`<tr>
+										<td>${index + 1}</td>
+										<td>${item.fullname}</td>
+										<td>${displayGuestType(item.typeId)}</td>
+										<td>${item.identityNumber}</td>
+										<td>${item.address}</td>
+										<td>
+											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+										</td>
+									</tr>`)
+			})
+			createAlert("success", "Xóa khách thành công!");
+		}
+
+    const handleUpdateRoomRent = (e) => {
+      e.preventDefault();
+
+      if(guests.length === 0){
+        createAlert("error", "Danh sách khách trống!");
+        return;
+      }
+
+      if(guests.length > maximumGuest.value){
+        createAlert("error", "Danh sách khách vượt quá số khách tối đa!");
+        return;
+      }
+      
+      fetchData('post', {
+        {{!-- roomrentId: roomrentId,  --}}
+        maximumGuest: maximumGuest.value, 
+        room: JSON.stringify(room), 
+        guests: JSON.stringify(guests)},
+        `/rent/api/update/${roomrentId}`, successCallback, errorCallback)
+    }
+
+    const successCallback = (data) => {
+      if(!data.success){
+        createAlert("error", data.message);
+        return;
+      }
+      else{
+        createAlert("success", data.message);
+        return;
+      }
+    }
+    const errorCallback = (error) => {
+      console.log(error);
+      createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+    }
 
     $(document).ready(()=>{
+      //get message
       const message ={{{json message}}};
 			console.log("message " + message);
 			if(message.length > 0){
@@ -337,6 +529,41 @@
 					createAlert("success", message[0].message);
 				}
 			}
+      //
+      //add guest event
+			document.getElementById("add-guest-btn").addEventListener('click', handleAddGuest);
+      document.getElementById("add-guest-a").addEventListener('click', handleAdda);
+      document.getElementById("update-guest-btn").addEventListener('click', handleUpdateGuest);
+      document.getElementById("delete-guest-btn").addEventListener('click', handleDeleteGuest);
+      document.getElementById("capnhat").addEventListener('click', handleUpdateRoomRent);
+
+      //
+      $('#update-guest-modal').on('show.bs.modal', function (event) {
+				//get id
+				const button = $(event.relatedTarget) 
+				const id = button.data('id')
+        console.log("id: " + id); 
+				seletedGuest = guests.filter(g=>g.id == parseInt(id))[0];
+				//get guest by id
+				//code here
+				//let guest = {};
+        console.log("seletedGuest: " + seletedGuest);
+				// fill data
+				const modal = $(this)
+				modal.find('#update-guest-name').val(seletedGuest.fullname);
+				modal.find("#update-type-select").val(seletedGuest.typeId);
+				modal.find('#update-guest-id').val(seletedGuest.identityNumber);
+				modal.find("#update-guest-address").val(seletedGuest.address);
+			})
+
+      $('#delete-guest-modal').on('show.bs.modal', function (event) {
+				//get id
+				const button = $(event.relatedTarget) 
+				const id = button.data('id') 
+				seletedGuestId = id;
+			});
+
+      document.getElementById("cur-room").innerText = "Phòng: " + room.roomId;
     })
 	</script>
 {{/section}}
