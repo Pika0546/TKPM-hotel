@@ -4,22 +4,21 @@ class BillUtil{
     calculateRoomCost = (roomRent, rule) => {
         const rentDate = roomRent.createdAt;
         const returnDate = roomRent.bill.createdAt;
-        const totalDate = Math.round(DateUtil.convertMilisecondtoDay(returnDate - rentDate));
-
-        let result = 0;
+        const totalDate = Math.ceil(DateUtil.convertMilisecondtoDay(returnDate - rentDate));
+        
+        let result = roomRent.room.roomtype.price * totalDate;
         const guestNumber = roomRent.guests.length;
         let surcharge = 0;
         if(guestNumber >= rule.surchargeFrom){
-            surcharge =  roomRent.room.roomtype.price * rule.surcharge;
+            surcharge =  result * rule.surcharge;
         }
-
         roomRent.guests.forEach(guest => {
             if(guest){
-
+                surcharge += (guest.guesttype.coefficient - 1) * result;
             }
         });
-
-        return roomRent.room.roomtype.price ;
+        result += surcharge;
+        return result;
     }
 
     calculateRoomTotalCostInBill = (roomBill, rule) => {
