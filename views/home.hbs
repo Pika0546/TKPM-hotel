@@ -339,13 +339,11 @@
 		const roomTypeSuccessCallback = (data) => {
 			if(data.success){
 				const resultRoomType = data.data.resultRoomType;
-				console.log(resultRoomType)
 				let isNotEmpty = 0;
 				Object.keys(resultRoomType).forEach(key=>{
 					isNotEmpty += resultRoomType[key].value;
 				});
 				if(isNotEmpty){
-					console.log(resultRoomType);
 					$("#data-container-1").show();
 					$("#table-body-1").empty();
 					Object.keys(resultRoomType).forEach((key,index)=>{
@@ -399,7 +397,6 @@
 			const data = {};
 			data.month =  $("select[name='month1']").val();
 			data.year =  $("select[name='year1']").val();
-			console.log(data);
 			fetchData('get', data, '/api/room-type', roomTypeSuccessCallback, errorCallback);
 		}
 
