@@ -339,13 +339,11 @@
 		const roomTypeSuccessCallback = (data) => {
 			if(data.success){
 				const resultRoomType = data.data.resultRoomType;
-				console.log(resultRoomType)
 				let isNotEmpty = 0;
 				Object.keys(resultRoomType).forEach(key=>{
 					isNotEmpty += resultRoomType[key].value;
 				});
 				if(isNotEmpty){
-					console.log(resultRoomType);
 					$("#data-container-1").show();
 					$("#table-body-1").empty();
 					Object.keys(resultRoomType).forEach((key,index)=>{
@@ -367,13 +365,11 @@
 		const roomDensitySuccessCallback = (data) => {
 			if(data.success){
 				const resultRoomDensity = data.data.resultRoomDensity;
-				console.log(resultRoomDensity)
 				let isNotEmpty = 0;
 				Object.keys(resultRoomDensity).forEach(key=>{
 					isNotEmpty += resultRoomDensity[key].value;
 				});
 				if(isNotEmpty){
-					console.log(resultRoomDensity);
 					$("#data-container-2").show();
 					$("#table-body-2").empty();
 					Object.keys(resultRoomDensity).forEach((key,index)=>{
@@ -401,7 +397,6 @@
 			const data = {};
 			data.month =  $("select[name='month1']").val();
 			data.year =  $("select[name='year1']").val();
-			console.log(data);
 			fetchData('get', data, '/api/room-type', roomTypeSuccessCallback, errorCallback);
 		}
 
@@ -409,15 +404,35 @@
 			const data = {};
 			data.month =  $("select[name='month2']").val();
 			data.year =  $("select[name='year2']").val();
-			console.log(data);
 			fetchData('get', data, '/api/room-density', roomDensitySuccessCallback, errorCallback);
 		}
 
 		const roomTypeData = {{{json resultRoomType}}};
 		const roomDensityData = {{{json resultRoomDensity}}};
 		$(document).ready(()=>{
-			renderRoomTypeChart(roomTypeData);
-			renderRoomDensityChart(roomDensityData);
+			let isNotEmpty = 0;
+			Object.keys(roomDensityData).forEach(key=>{
+				isNotEmpty += roomDensityData[key].value;
+			});
+			if(isNotEmpty){
+				renderRoomDensityChart(roomDensityData);
+			}
+			else{
+				$("#data-container-2").hide();
+				createAlert("info", "Không có dữ liệu")
+			}
+			isNotEmpty = 0;
+			Object.keys(roomTypeData).forEach(key=>{
+				isNotEmpty += roomTypeData[key].value;
+			});
+			if(isNotEmpty){
+				renderRoomTypeChart(roomTypeData);
+			}
+			else{
+				$("#data-container-1").hide();
+				createAlert("info", "Không có dữ liệu")
+			}
+			
 			const currentYear = new Date().getFullYear();
 			for(i = currentYear; i >= 1970; i--){
 				if(i == currentYear){
