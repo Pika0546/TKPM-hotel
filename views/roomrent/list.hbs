@@ -172,7 +172,7 @@
 					<tbody id="table-body">
 						{{#each roomrent}}
 							<tr>
-								<td>{{this.id}}</td>
+								<td>{{this.numorder}}</td>
 								<td>{{this.room.roomId}}</td>
 								<td>{{this.rentDate}}</td>
 								{{#if this.billId}}
@@ -350,7 +350,7 @@
 			return roomRentList.map(room=>{
 				return `
 					<tr>
-						<td>${room.id}</td>
+						<td>${room.numorder}</td>
 						<td>${room.room.roomId}</td>
 						<td>${room.rentDate}</td>
 						${room.billId ?
@@ -390,7 +390,6 @@
 		}
 		function submitQuery(ele){
 			const data = {};
-			console.log("here")
 			data.room = $("input[name='roomId']").val();
 			data.rentDateFrom = $("input[name='start'").val();
 			data.rentDateTo = $("input[name='end'").val();

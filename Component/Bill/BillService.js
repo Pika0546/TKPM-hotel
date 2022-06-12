@@ -12,6 +12,7 @@ class BillService{
             include: [
                 {
                     model: models.guest,
+                    attributes:['fullname', 'address'],
                     require: true
                 }
             ]
@@ -27,6 +28,7 @@ class BillService{
             include: [
                 {
                     model: models.room,
+                    attributes:['id', 'roomId', 'typeId'],
                     require: true,
                     include: [
                         {
@@ -57,6 +59,60 @@ class BillService{
     getRule = async () => {
         return models.rule.findAll({
             raw: true
+        })
+    }
+
+    getRoomBeingRentList = async () => {
+        return models.roomrent.findAll({
+            raw: true,
+            where:{
+                billId:{
+                    [Op.is]: null
+                }
+            },
+            include: [
+                {
+                    model: models.room,
+                    attributes: ['id', 'roomId', 'typeId'],
+                    require: true,
+                    include: [
+                        {
+                            model: models.roomtype,
+                            attributes:['price'],
+                            require: true
+                        }
+                    ]
+                }
+            ],
+            order: [
+                [models.room, 'roomId', 'ASC']
+            ]
+        })
+    }
+
+    getRoomBeingRent = async (roomRentId) => {
+        return models.roomrent.findOne({
+            raw: true,
+            where:{
+                id: roomRentId
+            },
+            include: [
+                {
+                    model: models.room,
+                    attributes: ['id', 'roomId', 'typeId'],
+                    require: true,
+                    include: [
+                        {
+                            model: models.roomtype,
+                            attributes:['price'],
+                            require: true
+                        }
+                    ]
+                }
+            ],
+            order: [
+                [models.room, 'roomId', 'ASC']
+            ]
         })
     }
 }

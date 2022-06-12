@@ -72,7 +72,6 @@
 		============================================ -->
     <link rel="stylesheet" href="/css/my-css.css">  
     <script src="/js/vendor/modernizr-2.8.3.min.js"></script>
-	<script src="/js/util/alert.js"></script>
 {{/section}}
 <div class="container-fluid mg-b-15" style="display: flex; flex-direction:column;  width: 100%;">
   <div class="product-payment-inner-st">
@@ -83,36 +82,36 @@
   <div class="my-search-row">
 		<div class="row" style="position: relative;">
 			<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Khách hàng/ Cơ quan:</label>
+        <label class="login2" style="padding-top: 10px;">Khách hàng/Cơ quan:</label>
       </div>
       <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" class="form-control" value="Công ty TNHH Catto">
+        <input type="text" name="guestName" required="" class="form-control" placeholder="Nhập tên khách hàng/cơ quan">
       </div>
       <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Địa chỉ:</label>
+        <label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Địa chỉ:</label>
       </div>
       <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" class="form-control" value="227 Nguyễn Văn Cừ, quận 5">
+        <input type="text" name="guestAddress" required="" class="form-control" placeholder="Nhập địa chỉ khách hàng/cơ quan">
       </div>
       <div class="add-product add-room">
-				<a href="#" data-toggle="modal" data-target="#rent-room-modal">Thêm phòng</a>
+				<a href="#" data-toggle="modal" data-target="#add-rent-room-modal">Thêm phòng</a>
 			</div>
     </div>
     <div class="row mg-t-10">
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2">Ngày thanh toán:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10/05/2022">
-      </div>
-      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Trị giá:</label>
-      </div>
-      <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
-        <input type="text" readonly class="form-control" value="10.000.000 VND">
-      </div>
+		<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+			<label class="login2" style="padding-top: 10px;">Ngày thanh toán:</label>
+		</div>
+		<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+			<input type="text" name="dateCreated" readonly="" class="form-control" value="{{today }}">
+		</div>
+		<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+			<label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Trị giá:</label>
+		</div>
+		<div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
+			<input type="text" name="totalBillCost" readonly="" class="form-control" value="{{currency 0}}">
+		</div>
     </div>
-  </div>
+  	</div>
 		<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
 			<div class="asset-inner" style="flex: 1 1 auto;">
 				<table>
@@ -122,50 +121,16 @@
 							<th>Phòng</th>
 							<th>Số ngày</th>
 							<th>Đơn giá</th>
-              <th>Thành tiền</th>
+              				<th>Thành tiền</th>
 							<th>Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="table-body" style="padding-bottom: 100px !important">
-						<tr>
-							<td>1</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><button title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#rent-room-modal-update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-              <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><button title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#rent-room-modal-update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-              <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><button title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#rent-room-modal-update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-              <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-						</tr>
-            <tr>
-							<td>4</td>
-							<td>101</td>
-							<td>2</td>
-							<td>400.000 VND</td>
-              <td>700.000 VND</td>
-							<td><button title="Cập nhật" class="pd-setting-ed" data-toggle="modal" data-target="#rent-room-modal-update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-              <button data-id="" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+						
 					</tbody>
 				</table>
 			</div>
-			<div  id="delete-room-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
+			<div  id="delete-rent-room-modal" class="modal modal-edu-general FullColor-popup-DangerModal fade" role="dialog">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-close-area modal-close-df">
@@ -173,19 +138,17 @@
 						</div>
 						<div class="modal-body">
 							<span class="educate-icon educate-danger modal-check-pro information-icon-pro"></span>
-							<h2 id="modal-text">Sửa phòng này</h2>
-							<!-- <p>If you delete this product, they can not access the shop's website anymore.</p> -->
+							<h2 id="modal-text">Xóa phòng này</h2>
 						</div>
 						<div class="modal-footer danger-md">
 							<button class="btn btn-danger " type="button" data-dismiss="modal">Hủy</button>
-							<form method="post" style="display: none;" id="delete-room-form"></form>
-							<button class="btn btn-danger" id="submit-delete-form" type="button">Xóa</button>
+							<button class="btn btn-danger" id="delete-rent-room-btn" type="button">Xóa</button>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div id="rent-room-modal-update" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div id="update-rent-room-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						
@@ -194,19 +157,20 @@
 							<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 						</div>
 						<div class="col-md-6 col-sm-12 col-xs-12">
-							<label for="#room-id-select">Phòng:</label>
-							<select onchange="" id="room-id-select" class="form-control" name="typeId">
-								<option value="">101</option>
-								<option value="">102</option>
-								<option value="">103</option>
+							<label for="#update-room-id-select">Phòng:</label>
+							<select onchange="updateChangeRoomId(this)" id="update-room-id-select" class="form-control" name="typeId">
+								
 							</select>
 						</div>
 
 						<div class="col-md-6 col-sm-12 col-xs-12">
 							<label for="#rent-date">Ngày thuê:</label>
-							<input type="text" id="rent-date" readonly class="form-control" value="18/05/2022">
+							<input type="text" id="update-rent-date" readonly class="form-control" value="">
 						</div>
-
+						<input style="display: none;" type="text" id="update-num-rent-days" readonly="" class="form-control" value="">
+						<input style="display: none;" type="text" id="update-price" readonly="" class="form-control" value="">
+						<input style="display: none;" type="text" id="update-total-cost" readonly="" class="form-control" value="">
+							
 						<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
 							<div class="asset-inner" style="flex: 1 1 auto; overflow: hidden !important">
 								<table>
@@ -218,28 +182,8 @@
 											<th>CMND</th>
 											<th>Địa chỉ</th>
 										</tr>
-										<tbody id="table-body" style="padding-bottom: 100px !important">
-											<tr>
-												<td>1</td>
-												<td>Lê Văn A</td>
-												<td>Nội địa</td>
-												<td>1234567890</td>
-												<td>TP HCM</td>
-											</tr>
-											<tr>
-												<td>2</td>
-												<td>Lê Văn A</td>
-												<td>Nội địa</td>
-												<td>1234567890</td>
-												<td>TP HCM</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Lê Văn A</td>
-												<td>Nội địa</td>
-												<td>1234567890</td>
-												<td>TP HCM</td>
-											</tr>
+										<tbody id="update-guest-table-body" style="padding-bottom: 100px !important">
+											
 										</tbody>
 									</thead>
 								</table>
@@ -247,15 +191,14 @@
 
 							<div class="modal-footer primary-md">
 								<button class="btn" style="background-color: #006df0; color:white" type="button" data-dismiss="modal">Hủy</button>
-								<form method="post" style="display: none;" id="delete-room-form"></form>
-								<button class="btn" style="background-color: #006df0; color:white" id="submit-delete-form" type="button">Xác nhận</button>
+								<button class="btn" style="background-color: #006df0; color:white" id="update-room-rent-btn" type="button">Xác nhận</button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div id="rent-room-modal"class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div id="add-rent-room-modal"class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						
@@ -264,82 +207,57 @@
 							<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 						</div>
 						<div class="col-md-6 col-sm-12 col-xs-12">
-							<label for="#room-id-select">Phòng:</label>
-							<select onchange="" id="room-id-select" class="form-control" name="typeId">
-								<option value="">Mã phòng</option>
-								<option value="">101</option>
-								<option value="">102</option>
-								<option value="">103</option>
+							<label for="#add-room-id-select">Phòng:</label>
+							<select onchange="changeRoomId(this)" id="add-room-id-select" class="form-control" name="roomId">
+								{{#each roomRentList}}
+									<option id="room-option-{{this.id}}" value="{{this.id}}" data-roomid="{{this.room.roomId}}">{{this.room.roomId}}</option>
+								{{/each}}
 							</select>
 						</div>
 
-						<div class="col-md-6 col-sm-12 col-xs-12">
-							<label for="#rent-date">Ngày thuê:</label>
-							<input type="text" id="rent-date" readonly class="form-control" value="18/05/2022">
-						</div>
-
-						<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
-							<div class="asset-inner" style="flex: 1 1 auto; overflow: hidden !important">
-								<table style="min-height: 240px">
-									<thead>
-										<tr>
-											<th>STT</th>
-											<th>Khách hàng</th>
-											<th>Loại khách</th>
-											<th>CMND</th>
-											<th>Địa chỉ</th>
-										</tr>
-										<tbody id="table-body" style="padding-bottom: 100px !important">
+						{{#with roomRentFirst}}
+							<div class="col-md-6 col-sm-12 col-xs-12">
+								<label for="#rent-date">Ngày thuê:</label>
+								<input type="text" id="rent-date" readonly="" class="form-control" value="{{rentdate}}">
+							</div>
+							<input style="display: none;" type="text" id="num-rent-days" readonly="" class="form-control" value="{{numRentDays}}">
+							<input style="display: none;" type="text" id="price" readonly="" class="form-control" value="{{room.roomtype.price}}">
+							<input style="display: none;" type="text" id="total-cost" readonly="" class="form-control" value="{{totalCost}}">
+							<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
+								<div class="asset-inner" style="flex: 1 1 auto; overflow: hidden !important">
+									<table>
+										<thead style="min-height: 240px">
 											<tr>
-												
+												<th>STT</th>
+												<th>Khách hàng</th>
+												<th>Loại khách</th>
+												<th>CMND</th>
+												<th>Địa chỉ</th>
 											</tr>
-										</tbody>
-									</thead>
-								</table>
-							</div>
+											<tbody id="guest-table-body" style="padding-bottom: 100px !important">
+												{{#each guests}}
+													<tr>
+														<td>{{this.numorder}}</td>
+														<td>{{this.fullname}}</td>
+														<td>{{this.guesttype.typeName}}</td>
+														<td>{{this.identityNumber}}</td>
+														<td>{{this.address}}</td>
+													</tr>
+												{{/each}}
+											</tbody>
+										</thead>
+									</table>
+								</div>
 
-							<div class="modal-footer primary-md">
-								<button class="btn" style="background-color: #006df0; color:white" type="button" data-dismiss="modal">Hủy</button>
-								<form method="post" style="display: none;" id="delete-room-form"></form>
-								<button class="btn" style="background-color: #006df0; color:white" id="submit-delete-form" type="button">Xác nhận</button>
+								<div class="modal-footer primary-md">
+									<button class="btn" style="background-color: #006df0; color:white" type="button" data-dismiss="modal">Hủy</button>
+									<button class="btn" style="background-color: #006df0; color:white" id="add-room-rent-btn" type="button">Xác nhận</button>
+								</div>
 							</div>
-						</div>
+						{{/with}}
 					</div>
 				</div>
 			</div>
-
-					
-			
-			{{#if paginationArray}}
-				<form 	
-					method="get"
-					action="/room"
-				>
-					<ul class="my-pagination" id="my-pagination">
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
-							<label for="page-prev"  class="my-page-button">Trang trước</label>
-						</li>
-						{{#each paginationArray}}
-							{{#if this.isCurrent}}
-								<li class="my-page-item">
-									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link my-current-page">{{this.page}}</label>
-								</li>
-							{{else}}
-								<li class="my-page-item">
-									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
-									<label for="page-{{this.page}}"  class="my-page-link">{{this.page}}</label>
-								</li>
-							{{/if}}
-						{{/each}}
-						<li class="my-page-item">
-							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
-							<label for="page-next"  class="my-page-button">Trang sau</label>
-						</li>
-					</ul>
-				</form>
-			{{/if}}
 		</div>
 	<div class="row" style="position: relative;">
     	<div class="btn-confirm">
@@ -422,6 +340,186 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		//
+		const roomRentOption = {{{json roomRentList}}};
+		let roomRentList = [];
+		let seletedRoomRent = null;
+		let deletedRoomRentId = null;
+
+		function generateGuestList(guestList){
+			return guestList.map(guest=>{
+				return `
+					<tr>
+						<td>${guest.numorder}</td>
+						<td>${guest.fullname}</td>
+						<td>${guest.guesttype.typeName}</td>
+						<td>${guest.identityNumber}</td>
+						<td>${guest.address}</td>
+					</tr>
+				`
+			})
+		}
+
+		function generateRoomRentList(roomList){
+			return roomList.map((room, index)=>{
+				return `<tr>
+							<td>${index + 1}</td>
+							<td>${room.roomId}</td>
+							<td>${room.numRentDays}</td>
+							<td>${numeral(room.price).format('0,0') + " VND"}</td>
+							<td>${numeral(room.totalCost).format('0,0') + " VND"}</td>
+							<td>
+								<button data-id="${room.id}" data-toggle="modal" data-target="#update-rent-room-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+								<button data-id="${room.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+							</td>
+						</tr>`
+			})
+		}
+
+		const addSuccessCallback = (data) => {
+			$("input[id='rent-date']").val(data.rentdate);
+			$("input[id='num-rent-days']").val(data.numRentDays);
+			$("input[id='price']").val(data.price);
+			$("input[id='total-cost']").val(data.totalCost);
+			const guests = generateGuestList(data.roomRentGuests);
+			$("#guest-table-body").empty();
+			guests.forEach(guest=>{
+				$("#guest-table-body").append(guest);
+			});
+		}
+
+		const updateSuccessCallback = (data) => {
+			$("input[id='update-rent-date']").val(data.rentdate);
+			$("input[id='update-num-rent-days']").val(data.numRentDays);
+			$("input[id='update-price']").val(data.price);
+			$("input[id='update-total-cost']").val(data.totalCost);
+			const guests = generateGuestList(data.roomRentGuests);
+			$("#update-guest-table-body").empty();
+			guests.forEach(guest=>{
+				$("#update-guest-table-body").append(guest);
+			});
+		}
+
+		const errorCallback = (error) => {
+			console.log(error);
+			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
+		}
+
+		function changeRoomId(ele){
+			const roomRentId = $("select[id='add-room-id-select']").val();
+			//const newRelativePathQuery = window.location.pathname + '?' + queryString({roomRentId});
+			//history.pushState(null, '', newRelativePathQuery);
+			fetchData('get', {roomRentId}, '/bill/add/api', addSuccessCallback, errorCallback);
+		}
+
+		function updateChangeRoomId(ele){
+			const roomRentId = $("select[id='update-room-id-select']").val();
+			//const newRelativePathQuery = window.location.pathname + '?' + queryString({roomRentId});
+			//history.pushState(null, '', newRelativePathQuery);
+			fetchData('get', {roomRentId}, '/bill/add/api', updateSuccessCallback, errorCallback);
+		}
+
+		const resetOption = ()=>{
+			const roomRentOptionUpdate = roomRentOption.filter(({ id: id1 }) => !roomRentList.some(({ id: id2 }) => parseInt(id2) === id1));
+			$("#add-room-id-select").empty();
+			roomRentOptionUpdate.forEach(room=>{
+				$("#add-room-id-select").append(`
+					<option id="room-option-${room.id}" value="${room.id}" data-roomid="${room.room.roomId}">${room.room.roomId}</option>
+				`);
+			});
+			const roomRentId = roomRentOptionUpdate[0].id;
+			fetchData('get', {roomRentId}, '/bill/add/api', addSuccessCallback, errorCallback);
+		}
+
+		const handleAddRentRoom = () => {
+			const id = $("select[id='add-room-id-select']").val();
+			const roomId = $("#room-option-" + id).data("roomid");
+			const rentdate = $("input[id='rent-date']").val();
+			const numRentDays = $("input[id='num-rent-days']").val();
+			const price = $("input[id='price']").val();
+			const totalCost = $("input[id='total-cost']").val();
+			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
+
+			roomRentList.push(roomRent);
+
+			const rooms = generateRoomRentList(roomRentList);
+			$("#table-body").empty();
+			rooms.forEach(room=>{
+				$("#table-body").append(room);
+			});
+			
+			createAlert("success", "Thêm phòng thuê thành công!");
+			resetOption();
+			document.getElementById("add-room-rent-btn").setAttribute("data-dismiss", "modal");
+		}
+
+		const handleUpdateRentRoom = () => {
+			const id = $("select[id='update-room-id-select']").val();
+			const roomId = $("#update-room-option-" + id).data("roomid");
+			const rentdate = $("input[id='update-rent-date']").val();
+			const numRentDays = $("input[id='update-num-rent-days']").val();
+			const price = $("input[id='update-price']").val();
+			const totalCost = $("input[id='update-total-cost']").val();
+			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
+
+			const indexUpdate = roomRentList.findIndex((room => room.id === seletedRoomRent.id));
+			roomRentList[indexUpdate] = roomRent;
+
+			const rooms = generateRoomRentList(roomRentList);
+			$("#table-body").empty();
+			rooms.forEach(room=>{
+				$("#table-body").append(room);
+			});
+			
+			createAlert("success", "Cập nhật phòng thuê thành công!");
+			resetOption();
+			document.getElementById("update-room-rent-btn").setAttribute("data-dismiss", "modal");
+		}
+
+		const handleDeleteRentRoom = () => {
+			const indexDelete = roomRentList.findIndex((room => room.id === deletedRoomRentId));
+			roomRentList.splice(indexDelete, 1);
+			const rooms = generateRoomRentList(roomRentList);
+			$("#table-body").empty();
+			rooms.forEach(room=>{
+				$("#table-body").append(room);
+			});
+			
+			createAlert("success", "Xóa phòng thuê thành công!");
+			resetOption();
+			document.getElementById("delete-rent-room-btn").setAttribute("data-dismiss", "modal");
+		}
+
+		$(document).ready(() => {
+			document.getElementById("add-room-rent-btn").addEventListener('click', handleAddRentRoom);
+			document.getElementById("update-room-rent-btn").addEventListener('click', handleUpdateRentRoom);
+			document.getElementById("delete-rent-room-btn").addEventListener('click', handleDeleteRentRoom);
+			
+			$('#update-rent-room-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget);
+				const id = button.data('id');
+				seletedRoomRent = roomRentList.filter(room => parseInt(room.id) === id)[0];
+
+				const modal = $(this)
+				const roomRentOptionUpdate = roomRentOption.filter(({ id: id1 }) => 
+					((!roomRentList.some(({ id: id2 }) => parseInt(id2) === id1)) 
+						|| (parseInt(seletedRoomRent.id) === id1))
+				);
+				$("#update-room-id-select").empty();
+				roomRentOptionUpdate.forEach(room=>{
+					$("#update-room-id-select").append(`
+						<option id="update-room-option-${room.id}" value="${room.id}" data-roomid="${room.room.roomId}">${room.room.roomId}</option>
+					`);
+				});
+				modal.find('#update-room-id-select').val(seletedRoomRent.id);
+				
+				const roomRentId = seletedRoomRent.id;
+				fetchData('get', {roomRentId}, '/bill/add/api', updateSuccessCallback, errorCallback);
+			})
+
+			$('#delete-rent-room-modal').on('show.bs.modal', function (event) {
+				const button = $(event.relatedTarget);
+				deletedRoomRentId = button.data('id');
+			});
+		})
 	</script>
 {{/section}}
