@@ -136,16 +136,39 @@ class RoomRentController{
         try {
             const maximumGuest = await RuleService.getRuleByKey("maximumGuest");
             const roomId = req.body.room;///mã phòng
-            
             const guests = JSON.parse(req.body.guests);
 
-            //check room có tồn tại kh
+            //check room Id có tồn tại không
+            if(!roomId || !roomId.length || Number.isNaN(+roomId)){
+                req.flash('add-rent', {success:false, message: "Chưa có thông tin phòng!"});
+                res.redirect(`/rent`)
+                return;
+            }
+            //check room có tồn tại không
             const room = await RoomService.getRoomByRoomId(parseInt(roomId));
-            console.log(room);
+            //console.log(room);
             if(!room){
                 req.flash('add-rent', {success:false, message: "Phòng không tồn tại!"});
                 res.redirect(`/rent`)
                 return;
+            }
+            //check trạng thái room
+            if(room.status === "Đang thuê"){
+                req.flash('add-rent', {success:false, message: "Phòng đang được thuê!"});
+                res.redirect(`/rent`)
+                return;
+            }
+            // check dữ liệu rỗng cho guests
+            for(let i=0; i<guests.length; i++){
+                let g = guests[i];
+                if(!g || !g.guestName || !g.guestName.length || 
+                    !g.guestType || !g.guestType.length || 
+                    !g.guestId || !g.guestId.length || 
+                    !g.address || !g.address.length){
+                    req.flash('add-rent', {success:false, message: "Đầu vào không hợp lệ!"});
+                    res.redirect(`/rent/add?room=${roomId}`)
+                    return;
+                }
             }
             // check danh sách rỗng
             if(guests.length === 0){
@@ -159,18 +182,6 @@ class RoomRentController{
                 res.redirect(`/rent/add?room=${roomId}`)
                 return;
             }
-            // check dữ liệu rỗng
-            for(let i=0; i<guests.length; i++){
-                let g = guests[i];
-                if(!g || !g.guestName || !g.guestName.length || 
-                    !g.guestType || !g.guestType.length || 
-                    !g.guestId || !g.guestId.length || 
-                    !g.address || !g.address.length){
-                    req.flash('add-rent', {success:false, message: "Đầu vào không hợp lệ!"});
-                    res.redirect(`/rent/add?room=${roomId}`)
-                    return;
-                }
-            }
             //create room rent
             let roomRent = await RoomRentService.createRoomRent(room.id);
             const n = guests.length;
@@ -182,7 +193,6 @@ class RoomRentController{
             RoomService.updateRoomStatus(room.id, "Đang thuê");
 
             req.flash("edit-rent", {success: true, message: "Thêm phiếu thuê thành công!"})
-            //console.log("Thêm thành công!")
             res.redirect(`/rent/edit/${roomRent.id}`);
         } catch (error) {
             console.log(error);
@@ -193,34 +203,39 @@ class RoomRentController{
     updateRoomRentAPI = async (req, res, next) => {
         try{
             const roomrentId = parseInt(req.params.id);
-            console.log("roomrentId" + roomrentId);
             let {maximumGuest, room, guests} = req.body;
-            // console.log("maximumGuest: " + maximumGuest);
-            // console.log("room: " + room);
-            // console.log("roomRentId: " + roomrentId);
-            // console.log("guests: " + guests);
-            //check room có tồn tại kh
+            room = JSON.parse(room);
             guests = JSON.parse(guests);
-            // check danh sách rỗng
-            console.log("guests: " + guests);
-            
-            console.log("length: " + guests.length);
-            if(guests.length == 0){
+
+            //check room Id
+            if(!room || Number.isNaN(+room.id)){
                 res.status(200).json({
                     success: false,
-                    message: "Danh sách khách rỗng!"
+                    message: "Phòng không hợp lệ!"
                 });
                 return;
             }
-            if(guests.length > maximumGuest){
+
+            //check room có tồn tại không
+            const roomDB = await RoomService.getRoomByRoomId(room.roomId);
+            if(!roomDB){
                 res.status(200).json({
                     success: false,
-                    message: "Danh sách khách vượt quá số khách tối đa!"
+                    message: "Phòng không tồn tại!"
+                });
+                return;
+            }
+
+            //check room status có đang thuê không
+            if(roomDB.status !== "Đang thuê"){
+                res.status(200).json({
+                    success: false,
+                    message: "Phòng chưa được thuê!"
                 });
                 return;
             }
             
-            //check dữ liệu rỗng
+            //check dữ liệu rỗng cho guests
             for(let i=0; i<guests.length; i++){
                 let g = guests[i];
                 if(!g || !g.fullname || !g.fullname.length || 
@@ -233,6 +248,23 @@ class RoomRentController{
                         });
                     return;
                 }
+            }
+
+            // check guest rỗng
+            if(guests.length === 0){
+                res.status(200).json({
+                    success: false,
+                    message: "Danh sách khách rỗng!"
+                });
+                return;
+            }
+            // check guests quá quy định
+            if(guests.length > maximumGuest){
+                res.status(200).json({
+                    success: false,
+                    message: "Danh sách khách vượt quá số khách tối đa!"
+                });
+                return;
             }
 
             //Lấy ds guest cũ
