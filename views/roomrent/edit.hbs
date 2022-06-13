@@ -84,7 +84,7 @@
         <label id="cur-room" class="login2">Phòng: 101</label>
       </div>
       <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Ngày thuê: 22/04/2022</label>
+        <label class="login2 pull-right pull-right-pro" id="time">Ngày thuê: 22/04/2022</label>
       </div>
       <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12">
             <div class="add-product add-customer">
@@ -325,7 +325,8 @@
 	let guests = {{{json guests}}}
     let seletedGuest = null;
     let room = {{{json room}}}
-    //console.log("guests: " + guests);
+	let time = {{{json time}}}
+	time = time.substring(0, 10).split("-");
 
     const displayGuestType = (guestTypeId) => {
 			const guestTypeSelected = guestType.filter(type=>type.id === parseInt(guestTypeId));
@@ -583,6 +584,7 @@
 			});
 
       document.getElementById("cur-room").innerText = "Phòng: " + room.roomId;
+	  document.getElementById("time").innerText = `Ngày thuê: ${time[2]}/${time[1]}/${time[0]}`;
     })
 	</script>
 {{/section}}
