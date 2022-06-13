@@ -107,6 +107,7 @@ class RoomRentController{
             const roomrentId = parseInt(req.params.id);
             const room = await RoomRentService.getRoomByRoomRentId(roomrentId);
             const guests = await RoomRentService.getGuetsByRoomRentId(roomrentId);
+            const roomrent = await RoomRentService.findRoomRentById(roomrentId);
             for(let i=0; i<guests.length; i++){
                 for(let j=0; j <guestType.length; j++){
                     if(guests[i].typeId === guestType[j].id){
@@ -116,13 +117,14 @@ class RoomRentController{
                 }
                 guests[i].stt = i + 1;
             }
-            console.log(guests);
+            //console.log(guests);
             res.render('roomrent/edit',{
                 roomrentId,
                 maximumGuest,
                 guestType,
                 guests,
                 room,
+                time: roomrent.createdAt,
                 message: req.flash("edit-rent")
             });
         }catch(error){
