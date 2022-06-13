@@ -3,6 +3,10 @@ const PageUtil = require('../../utils/page');
 const ObjectUtil = require('../../utils/object');
 
 const RoomRentService = require('./RoomRentService');
+const RoomService = require('../Room/RoomService');
+const models = require('../../models');
+const RuleService = require('../Rule/RuleService');
+const guest = require('../../models/guest');
 
 const maximumPagination = 5;
 let currentPage = 1;
@@ -40,7 +44,7 @@ class RoomRentController{
             let d = date.getUTCDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
             let m = (date.getUTCMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
             let y = date.getUTCFullYear().toString();
-            roomrent[i].numorder = i + 1;
+            roomrent[i].numorder = i + 1 + ((currentPage - 1) * limit);
             roomrent[i].rentDate = d + '/' + m + '/' + y;
         }
         return {
@@ -80,28 +84,94 @@ class RoomRentController{
 
     getAddRoomRent = async (req, res, next) => {
         //lấy guesttype
-        const guestType = await RoomRentService.getGuestTypeList();
-        const roomName = req.query.room;
-        res.render('roomrent/add', {
-            guestType, 
+        try{
+            const maximumGuest = await RuleService.getRuleByKey("maximumGuest");
+            const guestType = await RoomRentService.getGuestTypeList();
+            const roomName = req.query.room;
+            res.render('roomrent/add', {
+            maximumGuest,
+            guestType,
             roomName,
             message: req.flash("add-rent")
         });
+        }
+        catch(error){
+            console.log(error);
+            next(createError(500));
+        }
     }
+
     getDetailRoomRent = async (req, res, next) => {
-        res.render('roomrent/edit');
+        try{
+            const maximumGuest = await RuleService.getRuleByKey("maximumGuest");
+            const guestType = await RoomRentService.getGuestTypeList();
+            const roomrentId = parseInt(req.params.id);
+            const room = await RoomRentService.getRoomByRoomRentId(roomrentId);
+            const guests = await RoomRentService.getGuetsByRoomRentId(roomrentId);
+            for(let i=0; i<guests.length; i++){
+                for(let j=0; j <guestType.length; j++){
+                    if(guests[i].typeId === guestType[j].id){
+                        guests[i].typeName = guestType[j].typeName;
+                        break;
+                    }
+                }
+                guests[i].stt = i + 1;
+            }
+            console.log(guests);
+            res.render('roomrent/edit',{
+                roomrentId,
+                maximumGuest,
+                guestType,
+                guests,
+                room,
+                message: req.flash("edit-rent")
+            });
+        }catch(error){
+            console.log(error);
+            next(createError(500));
+        }   
     }
 
     createRoomRent = async (req, res, next) => {
+        //console.log(req.body.room);
         try {
+            const maximumGuest = await RuleService.getRuleByKey("maximumGuest");
             const roomId = req.body.room;///mã phòng
+            
             const guests = JSON.parse(req.body.guests);
-            //validate input
-            //check rỗng
-    
-            //check room có tồn tại k
-            const room = {} //fetch data get room
-    
+
+            //check room có tồn tại kh
+            const room = await RoomService.getRoomByRoomId(parseInt(roomId));
+            console.log(room);
+            if(!room){
+                req.flash('add-rent', {success:false, message: "Phòng không tồn tại!"});
+                res.redirect(`/rent`)
+                return;
+            }
+            // check danh sách rỗng
+            if(guests.length === 0){
+                req.flash('add-rent', {success:false, message: "Danh sách khách trống!"});
+                res.redirect(`/rent/add?room=${roomId}`)
+                return;
+            }
+            // check vượt quá tối đa
+            if(guests.length > parseInt(maximumGuest)){
+                req.flash('add-rent', {success:false, message: "Danh sách khách vượt quá số lượng tối đa!"});
+                res.redirect(`/rent/add?room=${roomId}`)
+                return;
+            }
+            // check dữ liệu rỗng
+            for(let i=0; i<guests.length; i++){
+                let g = guests[i];
+                if(!g || !g.guestName || !g.guestName.length || 
+                    !g.guestType || !g.guestType.length || 
+                    !g.guestId || !g.guestId.length || 
+                    !g.address || !g.address.length){
+                    req.flash('add-rent', {success:false, message: "Đầu vào không hợp lệ!"});
+                    res.redirect(`/rent/add?room=${roomId}`)
+                    return;
+                }
+            }
             //create room rent
             let roomRent = await RoomRentService.createRoomRent(room.id);
             const n = guests.length;
@@ -109,13 +179,82 @@ class RoomRentController{
                 guests[i].roomRentId = roomRent.id;
                 let guest = await RoomRentService.createGuest(guests[i])
             }
-            req.flash("add-rent", {success: true, message: "Thuê phòng thành công!"})
-            res.redirect(`/rent/edit/${roomRent.id}`)
+            //cập nhật tình trạng phòng khi thuê thành công
+            RoomService.updateRoomStatus(room.id, "Đang thuê");
+
+            req.flash("edit-rent", {success: true, message: "Thêm phiếu thuê thành công!"})
+            //console.log("Thêm thành công!")
+            res.redirect(`/rent/edit/${roomRent.id}`);
         } catch (error) {
             console.log(error);
             next(createError(500));
+        }    
+    }
+
+    updateRoomRentAPI = async (req, res, next) => {
+        try{
+            const roomrentId = parseInt(req.params.id);
+            console.log("roomrentId" + roomrentId);
+            let {maximumGuest, room, guests} = req.body;
+            // console.log("maximumGuest: " + maximumGuest);
+            // console.log("room: " + room);
+            // console.log("roomRentId: " + roomrentId);
+            // console.log("guests: " + guests);
+            //check room có tồn tại kh
+            guests = JSON.parse(guests);
+            // check danh sách rỗng
+            console.log("guests: " + guests);
+            
+            console.log("length: " + guests.length);
+            if(guests.length == 0){
+                res.status(200).json({
+                    success: false,
+                    message: "Danh sách khách rỗng!"
+                });
+                return;
+            }
+            if(guests.length > maximumGuest){
+                res.status(200).json({
+                    success: false,
+                    message: "Danh sách khách vượt quá số khách tối đa!"
+                });
+                return;
+            }
+            
+            //check dữ liệu rỗng
+            for(let i=0; i<guests.length; i++){
+                let g = guests[i];
+                if(!g || !g.fullname || !g.fullname.length || 
+                    !g.typeId || 
+                    !g.identityNumber || !g.identityNumber.length || 
+                    !g.address || !g.address.length){
+                        res.status(200).json({
+                            success: false,
+                            message: "Đầu vào không hợp lệ!"
+                        });
+                    return;
+                }
+            }
+
+            //Lấy ds guest cũ
+            let guestsOld = await RoomRentService.getGuetsByRoomRentId(parseInt(roomrentId));
+            
+            for(let i=0; i<guestsOld.length; i++){
+                await RoomRentService.deleteGuestByIdentityNumber(guestsOld[i].identityNumber);
+            }
+            for(let j=0; j<guests.length; j++){
+                guests[j].roomRentId = roomrentId;
+                await RoomRentService.createGuestAPI(guests[j]);
+            }
+            res.status(200).json({
+                success: true,
+                message: "Cập nhật phiếu thuê thành công!"
+                });
+
+        }catch(error){
+            console.log(error);
+            next(createError(500));
         }
-        
     }
 
     deleteRoomRentAPI = async (req, res, next) => {

@@ -392,7 +392,6 @@
 	<script src="/js/util/alert.js"></script>
     <script>
 		let rule = {{{json rule}}}
-		console.log(rule)
 		const renderGuestType = (type, n) => {
 			return `
 						<tr class="guest-type-row" id="guest-type-${type.id}">
@@ -464,7 +463,6 @@
 				guestType.id = seletedType.id;
 
 				fetchData("post", guestType, "/rule/guest-type/edit/api", (data)=>{
-					console.log(data);
 					if(data.success){
 						createAlert("success", data.message);
 						const n = rule.guestTypes.length;
@@ -558,14 +556,10 @@
 				roomType.name = $("#edit-room-type-name").val();
 				roomType.price = $("#edit-price").val();
 				roomType.id = seletedType.id;
-				console.log(roomType)
 				fetchData("post", roomType, "/rule/room-type/edit/api", (data)=>{
-					console.log(data);
 					if(data.success){
 						createAlert("success", data.message);
 						const n = rule.roomTypes.length;
-						console.log(rule.roomTypes)
-						console.log(data.data)
 						for(let i = 0; i < n; i++){
 							if(rule.roomTypes[i].id === roomType.id){
 								rule.roomTypes[i] = {...roomType, typeName: roomType.name};

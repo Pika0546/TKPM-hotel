@@ -118,6 +118,15 @@ class RuleService{
         })
     }
 
+    getRuleByKey = async (key) => {
+        console.log(key);
+        return models.rule.findOne({
+            raw: true,
+            where:{
+                key:key
+            }
+        })
+    }
     
 }
 

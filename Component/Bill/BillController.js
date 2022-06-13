@@ -11,6 +11,7 @@ class BillController{
         res.render('bill/list')
     }
     getAddBill = async (req, res, next) => {
+        const roomRentId = req.query.room || null;
         const roomRentList = await BillService.getRoomBeingRentList();
         for (let i = 0; i < roomRentList.length; i++) {
             let rentdate = new Date(roomRentList[i].createdAt);
@@ -33,6 +34,7 @@ class BillController{
             roomRentFirst.totalCost = BillUtil.calculateRoomTotalCostInBill(roomRentFirst, ObjectUtil.convertRuleToObject(rule));
         }
         res.render('bill/add', {
+            roomRentId,
             roomRentList: roomRentList.map((item) => ObjectUtil.getObject(item)),
             roomRentFirst,
             message: req.flash('create-bill-message')

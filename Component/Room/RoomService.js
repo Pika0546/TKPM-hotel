@@ -99,6 +99,19 @@ class RoomService{
         )
     }
 
+    updateRoomStatus = async(id, status)=>{
+        return models.room.update(
+            {
+                status
+            },
+            {
+                where:{
+                    id: id
+                }
+            }
+        )
+    }
+
     deleteRoomByRoomId = async (roomId) => {
         return models.room.destroy({
             where: {

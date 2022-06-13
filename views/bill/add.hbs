@@ -261,7 +261,7 @@
 		</div>
 	<div class="row" style="position: relative;">
     	<div class="btn-confirm">
-			<a href="#">Xác nhận</a>
+			<a href="#" type="button" id="add-bill-btn">Xác nhận</a>
 		</div>
 	</div>
 </div>
@@ -340,8 +340,10 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
+		const roomRentId = {{{json roomRentId}}};
 		const roomRentOption = {{{json roomRentList}}};
 		let roomRentList = [];
+		let totalBillCost = 0;
 		let seletedRoomRent = null;
 		let deletedRoomRentId = null;
 
@@ -373,6 +375,28 @@
 							</td>
 						</tr>`
 			})
+		}
+
+		const addTableSuccessCallback = (data) => {
+			const id = roomRentId;
+			console.log(roomRentId);
+			const roomId = $("#room-option-" + id).data("roomid");
+			const rentdate = data.rentdate;
+			const numRentDays = data.numRentDays;
+			const price = data.price;
+			const totalCost = data.totalCost;
+			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
+
+			roomRentList.push(roomRent);
+			totalBillCost += parseInt(roomRent.totalCost);
+
+			$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
+			const rooms = generateRoomRentList(roomRentList);
+			$("#table-body").empty();
+			rooms.forEach(room=>{
+				$("#table-body").append(room);
+			});
+			resetOption();
 		}
 
 		const addSuccessCallback = (data) => {
@@ -440,13 +464,15 @@
 			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
 
 			roomRentList.push(roomRent);
+			totalBillCost += parseInt(roomRent.totalCost);
 
+			$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
 			const rooms = generateRoomRentList(roomRentList);
 			$("#table-body").empty();
 			rooms.forEach(room=>{
 				$("#table-body").append(room);
 			});
-			
+
 			createAlert("success", "Thêm phòng thuê thành công!");
 			resetOption();
 			document.getElementById("add-room-rent-btn").setAttribute("data-dismiss", "modal");
@@ -462,8 +488,11 @@
 			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
 
 			const indexUpdate = roomRentList.findIndex((room => room.id === seletedRoomRent.id));
+			totalBillCost -= parseInt(roomRentList[indexUpdate].totalCost);
 			roomRentList[indexUpdate] = roomRent;
+			totalBillCost += parseInt(roomRentList[indexUpdate].totalCost);
 
+			$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
 			const rooms = generateRoomRentList(roomRentList);
 			$("#table-body").empty();
 			rooms.forEach(room=>{
@@ -476,8 +505,11 @@
 		}
 
 		const handleDeleteRentRoom = () => {
-			const indexDelete = roomRentList.findIndex((room => room.id === deletedRoomRentId));
+			const indexDelete = roomRentList.findIndex((room => parseInt(room.id) === deletedRoomRentId));
+			totalBillCost -= parseInt(roomRentList[indexDelete].totalCost);
 			roomRentList.splice(indexDelete, 1);
+			
+			$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
 			const rooms = generateRoomRentList(roomRentList);
 			$("#table-body").empty();
 			rooms.forEach(room=>{
@@ -489,11 +521,34 @@
 			document.getElementById("delete-rent-room-btn").setAttribute("data-dismiss", "modal");
 		}
 
+		const handleAddBill = () => {
+			const guestName = $("input[name='guestName']").val();
+			const guestAddress = $("input[name='guestAddress']").val();
+			if (guestName && guestAddress){
+				if (roomRentList.length > 0){
+					createAlert("success", "Thanh toán hóa đơn mới thành công!");
+				}
+				else{
+					createAlert("error", "Danh sách phòng thanh toán trống!");
+				}
+			}
+			else{
+				createAlert("error", "Bạn cần điền đủ thông tin vào các trường!");
+			}
+			
+		}
+
 		$(document).ready(() => {
+			if (roomRentId)
+			{
+				fetchData('get', {roomRentId}, '/bill/add/api', addTableSuccessCallback, errorCallback);
+			}
+
 			document.getElementById("add-room-rent-btn").addEventListener('click', handleAddRentRoom);
 			document.getElementById("update-room-rent-btn").addEventListener('click', handleUpdateRentRoom);
 			document.getElementById("delete-rent-room-btn").addEventListener('click', handleDeleteRentRoom);
-			
+			document.getElementById("add-bill-btn").addEventListener('click', handleAddBill);
+
 			$('#update-rent-room-modal').on('show.bs.modal', function (event) {
 				const button = $(event.relatedTarget);
 				const id = button.data('id');
