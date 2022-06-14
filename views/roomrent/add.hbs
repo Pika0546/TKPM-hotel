@@ -81,10 +81,10 @@
   <div class="my-search-row">
 		<div class="row" style="position: relative;">
 			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2" id="cur-room">Phòng: 101</label>
+        <label class="login2" id="cur-room">Phòng: </label>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Ngày thuê: 22/04/2022</label>
+        <label class="login2 pull-right pull-right-pro" id="time">Ngày thuê: </label>
       </div>
       <div class="add-product add-customer">
 			<a id="add-guest-a" href="" data-toggle="modal" data-target="#add-guest-modal" style="top: -3px;">Thêm khách</a>
@@ -537,6 +537,8 @@
 			});
 
 			document.getElementById("cur-room").innerText = "Phòng: " + room;
+			let time = new Date();
+			document.getElementById("time").innerText = `Ngày thuê: ${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear()}`;
 		})
 	</script>
 {{/section}}

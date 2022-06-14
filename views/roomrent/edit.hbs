@@ -84,7 +84,7 @@
         <label id="cur-room" class="login2">Phòng: 101</label>
       </div>
       <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro">Ngày thuê: 22/04/2022</label>
+        <label class="login2 pull-right pull-right-pro" id="time">Ngày thuê: 22/04/2022</label>
       </div>
       <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12">
             <div class="add-product add-customer">
@@ -120,7 +120,7 @@
 										<td>{{this.address}}</td>
 										<td>
 											<button data-id="{{this.id}}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+											<button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed button-del" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 							</tr>
             {{/each}}
@@ -322,10 +322,11 @@
     let guestType = {{{json guestType}}};
     //console.log("guest type: " + guestTypes);
     const roomrentId = {{{json roomrentId}}}
-		let guests = {{{json guests}}}
+	let guests = {{{json guests}}}
     let seletedGuest = null;
     let room = {{{json room}}}
-    //console.log("guests: " + guests);
+	let time = {{{json time}}}
+	time = time.substring(0, 10).split("-");
 
     const displayGuestType = (guestTypeId) => {
 			const guestTypeSelected = guestType.filter(type=>type.id === parseInt(guestTypeId));
@@ -398,12 +399,13 @@
 										<td>${item.address}</td>
 										<td>
 											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed button-del" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 									</tr>`)
 			})
 			createAlert("success", "Thêm khách thành công!");
 			resetInput();
+			addListenerForDeleteButton();
 			document.getElementById("add-guest-btn").setAttribute("data-dismiss", "modal");
 		}
     const handleAdda = () => {
@@ -416,6 +418,7 @@
 			}
 		}
     const handleUpdateGuest = () => {
+			
 			//lấy value từ mấy cái input trong cái form update
 			//gán vô 1 con guest
 			let id = seletedGuest.id;
@@ -451,10 +454,11 @@
 										<td>${item.address}</td>
 										<td>
 											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed button-del" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 									</tr>`)
 			})
+			addListenerForDeleteButton();
 			createAlert("success", "Cập nhật khách thành công!");
 			document.getElementById("update-guest-btn").setAttribute("data-dismiss", "modal");
 		}
@@ -462,7 +466,6 @@
     const handleDeleteGuest = () => {
 			//duyệt mảng guests, kiếm id trùng với seletedGuestId rồi xóa
 			guests = guests.filter((item) => item.id !== parseInt(seletedGuestId));//parseInt()
-
 			//update giao diện
 			$("#table-body").empty();
 			guests.forEach((item, index)=>{
@@ -474,10 +477,11 @@
 										<td>${item.address}</td>
 										<td>
 											<button data-id="${item.id}" data-toggle="modal" data-target="#update-guest-modal" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+											<button data-id="${item.id}" title="Xóa" class="pd-setting-ed button-del" data-toggle="modal" data-target="#delete-guest-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 										</td>
 									</tr>`)
 			})
+			addListenerForDeleteButton();
 			createAlert("success", "Xóa khách thành công!");
 		}
 
@@ -517,10 +521,25 @@
       createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
     }
 
+	const addListenerForDeleteButton = () => {
+		let btnAll = document.querySelectorAll(".button-del");
+		//console.log(btnAll);
+		for (let i = 0; i < btnAll.length; i++) {
+			btnAll[i].addEventListener("click", () => {
+				if(btnAll.length <=1 ){
+					createAlert("error", "Danh sách khách không được trống!");
+					btnAll[i].removeAttribute("data-target", "#delete-guest-modal");
+				}
+				else{
+					btnAll[i].setAttribute("data-target", "#delete-guest-modal");
+				}
+			})
+		}
+	}
+
     $(document).ready(()=>{
       //get message
       const message ={{{json message}}};
-			console.log("message " + message);
 			if(message.length > 0){
 				console.log("mesage " + message);
 				if(!message[0].success){
@@ -530,8 +549,9 @@
 				}
 			}
       //
+	  addListenerForDeleteButton();
       //add guest event
-			document.getElementById("add-guest-btn").addEventListener('click', handleAddGuest);
+		document.getElementById("add-guest-btn").addEventListener('click', handleAddGuest);
       document.getElementById("add-guest-a").addEventListener('click', handleAdda);
       document.getElementById("update-guest-btn").addEventListener('click', handleUpdateGuest);
       document.getElementById("delete-guest-btn").addEventListener('click', handleDeleteGuest);
@@ -539,22 +559,22 @@
 
       //
       $('#update-guest-modal').on('show.bs.modal', function (event) {
-				//get id
-				const button = $(event.relatedTarget) 
-				const id = button.data('id')
+		//get id
+		const button = $(event.relatedTarget) 
+		const id = button.data('id')
         console.log("id: " + id); 
-				seletedGuest = guests.filter(g=>g.id == parseInt(id))[0];
-				//get guest by id
-				//code here
-				//let guest = {};
-        console.log("seletedGuest: " + seletedGuest);
-				// fill data
-				const modal = $(this)
-				modal.find('#update-guest-name').val(seletedGuest.fullname);
-				modal.find("#update-type-select").val(seletedGuest.typeId);
-				modal.find('#update-guest-id').val(seletedGuest.identityNumber);
-				modal.find("#update-guest-address").val(seletedGuest.address);
-			})
+		seletedGuest = guests.filter(g=>g.id == parseInt(id))[0];
+		//get guest by id
+		//code here
+		//let guest = {};
+        //console.log("seletedGuest: " + seletedGuest);
+		// fill data
+		const modal = $(this)
+		modal.find('#update-guest-name').val(seletedGuest.fullname);
+		modal.find("#update-type-select").val(seletedGuest.typeId);
+		modal.find('#update-guest-id').val(seletedGuest.identityNumber);
+		modal.find("#update-guest-address").val(seletedGuest.address);
+	})
 
       $('#delete-guest-modal').on('show.bs.modal', function (event) {
 				//get id
@@ -564,6 +584,7 @@
 			});
 
       document.getElementById("cur-room").innerText = "Phòng: " + room.roomId;
+	  document.getElementById("time").innerText = `Ngày thuê: ${time[2]}/${time[1]}/${time[0]}`;
     })
 	</script>
 {{/section}}
