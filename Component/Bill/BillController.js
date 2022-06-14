@@ -111,6 +111,7 @@ class BillController{
                 const newBill = await BillService.createBill(newGuest.id);
                 for (let i = 0; i < roomRents.length; i++){
                     const roomrent = await BillService.updateBillOfRoomRent(roomRents[i].id, newBill.id);
+                    const room = await BillService.updateStatusOfVacancyRoom(roomRents[i].roomId);
                 }
                 req.flash('create-bill-message', {success: true, message: "Thanh toán hóa đơn mới thành công!"});
                 res.redirect(`/bill/${newBill.id}`);
