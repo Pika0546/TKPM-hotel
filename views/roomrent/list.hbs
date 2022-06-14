@@ -172,7 +172,7 @@
 					<tbody id="table-body">
 						{{#each roomrent}}
 							<tr>
-								<td>{{this.id}}</td>
+								<td>{{this.numorder}}</td>
 								<td>{{this.room.roomId}}</td>
 								<td>{{this.rentDate}}</td>
 								{{#if this.billId}}
@@ -185,7 +185,7 @@
 									{{#if this.billId}}
 										<a style="color: black;"><button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
 									{{else}}
-										<a href="/bill/add?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
+										<a href="/bill/add?room={{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
 									{{/if}}	
 								</td>
 							</tr>
@@ -350,7 +350,7 @@
 			return roomRentList.map(room=>{
 				return `
 					<tr>
-						<td>${room.id}</td>
+						<td>${room.numorder}</td>
 						<td>${room.room.roomId}</td>
 						<td>${room.rentDate}</td>
 						${room.billId ?
@@ -361,7 +361,7 @@
 							<a href="/rent/edit/${room.id}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 							${room.billId ?
 								`<a style="color: black;"><button data-id="${room.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>` : 
-								`<a href="/bill/add?room=${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
+								`<a href="/bill/add?room=${room.id}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
 							}
 						</td>
 					</tr>
@@ -390,7 +390,6 @@
 		}
 		function submitQuery(ele){
 			const data = {};
-			console.log("here")
 			data.room = $("input[name='roomId']").val();
 			data.rentDateFrom = $("input[name='start'").val();
 			data.rentDateTo = $("input[name='end'").val();

@@ -90,18 +90,18 @@
                             </div>
 
                             <div class="form-group">
-								<label>Họ tên:</label>
-                                <input name="fullname" type="text" class="form-control" value="{{user.fullname}}">
+								<label>Họ tên:<span style="color: #D80027;">*</span></label>
+                                <input required="" name="fullname" type="text" class="form-control" value="{{user.fullname}}">
                             </div>
 
 							<div class="form-group">
-								<label>CMND:</label>
-								<input name="identityNumber" type="text" class="form-control" value="{{user.identityNumber}}">
+								<label>CMND:<span style="color: #D80027;">*</span></label>
+								<input required="" name="identityNumber" type="text" class="form-control" value="{{user.identityNumber}}">
 							</div>
 							
 							<div class="form-group edit-ta-resize">
-								<label>Địa chỉ:</label>
-								<input name="address" type="text" class="form-control" value="{{user.address}}">
+								<label>Địa chỉ:<span style="color: #D80027;">*</span></label>
+								<input required="" name="address" type="text" class="form-control" value="{{user.address}}">
 							</div>
                             <div class="payment-adress">
                                 <button type="submit" onclick="" class="btn btn-primary waves-effect waves-light">Cập nhật</button>

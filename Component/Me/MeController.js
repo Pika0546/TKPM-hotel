@@ -21,17 +21,17 @@ class MeController{
         let isValid = true;
         if(!fullname){
             isValid= false;
-            req.flash("update-profile", {success: false, message: "Họ tên không hợp lệ"})
+            req.flash("update-profile", {success: false, message: "Họ tên không được bỏ trống"})
         }
 
         if(!identityNumber){
             isValid= false;
-            req.flash("update-profile", {success: false, message: "Số CMND/CCCD không hợp lệ"})
+            req.flash("update-profile", {success: false, message: "Số CMND/CCCD không được bỏ trống"})
         }
 
         if(!address){
             isValid= false;
-            req.flash("update-profile", {success: false, message: "Địa chỉ không hợp lệ"})
+            req.flash("update-profile", {success: false, message: "Địa chỉ không được bỏ trống"})
         }
 
         if(isValid){

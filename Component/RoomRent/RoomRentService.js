@@ -51,19 +51,35 @@ class RoomRentService{
         if (parseInt(status) === 1){
             return models.roomrent.count({
                 where:{
-                    ...(roomId && roomId.length && {roomId: {[Op.substring]:roomId}}),
                     ...(rentDateFrom && rentDateTo && rentDateFrom.length && rentDateTo.length && {createdAt: {[Op.between]: [rentDateFrom, rentDateTo]}}),
                     ...(status && status.length && {billId: {[Op.is]: null}}),
-                }
+                },
+                include: [
+                    {
+                        model: models.room,
+                        where:{
+                            ...(roomId && roomId.length && {roomId: {[Op.substring]:roomId}})
+                        },
+                        require: true
+                    },
+                ]
             });
         }
         else {
             return models.roomrent.count({
                 where:{
-                    ...(roomId && roomId.length && {roomId: {[Op.substring]:roomId}}),
                     ...(rentDateFrom && rentDateTo && rentDateFrom.length && rentDateTo.length && {createdAt: {[Op.between]: [rentDateFrom, rentDateTo]}}),
                     ...(status && status.length && {billId: {[Op.not]: null}}),
-                }
+                },
+                include: [
+                    {
+                        model: models.room,
+                        where:{
+                            ...(roomId && roomId.length && {roomId: {[Op.substring]:roomId}})
+                        },
+                        require: true
+                    },
+                ]
             });
         }
     }
