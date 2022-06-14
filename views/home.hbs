@@ -417,20 +417,13 @@
 			if(isNotEmpty){
 				renderRoomDensityChart(roomDensityData);
 			}
-			else{
-				$("#data-container-2").hide();
-				createAlert("info", "Không có dữ liệu")
-			}
+			
 			isNotEmpty = 0;
 			Object.keys(roomTypeData).forEach(key=>{
 				isNotEmpty += roomTypeData[key].value;
 			});
 			if(isNotEmpty){
 				renderRoomTypeChart(roomTypeData);
-			}
-			else{
-				$("#data-container-1").hide();
-				createAlert("info", "Không có dữ liệu")
 			}
 			
 			const currentYear = new Date().getFullYear();

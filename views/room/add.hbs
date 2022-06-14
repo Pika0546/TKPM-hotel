@@ -80,17 +80,18 @@
                     <div class="review-content-section">
                         <form id="add-room" method="post" action="/room/add" class="add-professors">
                             <div class="form-group">
-								<label>Phòng:</label>
+								<label>Phòng:<span style="color: #D80027;">*</span></label>
                                 <input required="" name="roomId" type="text" class="form-control" placeholder="Mã phòng">
                             </div>
                            
                             <div class="form-group">
-								<label>Loại phòng: </label>
+								<label>Loại phòng:<span style="color: #D80027;">*</span></label>
 								<select required="" onchange="changeType(this)" id="room-type-select" class="form-control" name="typeId">
 									{{#each roomTypes}}
 										<option value="{{this.id}}">{{this.typeName}}</option>
 									{{/each}}
 								</select>
+								<input type="text" name="foo" required="" class="form-control" style="display: none;">
 							</div>
 
 							<div class="form-group">
@@ -99,11 +100,11 @@
 							</div>
 							
 							<div class="form-group edit-ta-resize">
-								<label>Ghi chú:</label>
+								<label>Ghi chú:<span style="color: #D80027;">*</span></label>
 								<textarea required="" maxlength="255" name="note" class="form-control"></textarea>
 							</div>
                             <div class="payment-adress">
-                                <button type="button" onclick="validateRoom()" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
+                                <button type="submit" class="btn btn-primary waves-effect waves-light">Xác nhận</button>
                             </div>
                         </form>
                     </div>
@@ -212,11 +213,6 @@
 			createAlert("error", "Có lỗi xảy ra, vui lòng thử lại!")
 		}
 
-		function validateRoom(){
-			document.getElementById("add-room").submit();
-			{{!-- const roomId = $("input[name='roomId']").val();
-			fetchData('post', {roomId}, '/room/api/validate-room', successCallback, errorCallback) --}}
-		}
 		
 		$(document).ready(function(){
 			$("input[name='price']").val(roomTypes[0].price);
