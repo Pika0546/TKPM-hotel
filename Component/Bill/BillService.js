@@ -115,6 +115,41 @@ class BillService{
             ]
         })
     }
+
+    getRoomRentById = async (id) => {
+        return models.roomrent.findOne({
+            raw: true,
+            where:{
+                id: id
+            }
+        })
+    }
+
+    createGuest = async (guest) => {
+        return models.guest.create({
+            fullname: guest.fullname,
+            address: guest.address
+        });
+    }
+
+    createBill = async (guestId) => {
+        return models.bill.create({
+            guestId: guestId
+        });
+    }
+
+    updateBillOfRoomRent = async (roomRentId, billId) => {
+        return models.roomrent.update(
+            {
+                billId: billId
+            },
+            {
+                where: {
+                    id: roomRentId
+                }
+            }
+        )
+    }
 }
 
 module.exports = new BillService();

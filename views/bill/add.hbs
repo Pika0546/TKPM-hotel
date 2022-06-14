@@ -521,24 +521,50 @@
 			document.getElementById("delete-rent-room-btn").setAttribute("data-dismiss", "modal");
 		}
 
-		const handleAddBill = () => {
+		const handleAddBill = (e) => {
+			e.preventDefault();
 			const guestName = $("input[name='guestName']").val();
 			const guestAddress = $("input[name='guestAddress']").val();
-			if (guestName && guestAddress){
-				if (roomRentList.length > 0){
-					createAlert("success", "Thanh toán hóa đơn mới thành công!");
-				}
-				else{
-					createAlert("error", "Danh sách phòng thanh toán trống!");
-				}
-			}
-			else{
-				createAlert("error", "Bạn cần điền đủ thông tin vào các trường!");
-			}
 			
+			const addBillForm = document.createElement("form");
+			addBillForm.setAttribute("method", "post");
+			addBillForm.setAttribute("action", "add");
+
+			const guestNameEle = document.createElement("input");
+			guestNameEle.setAttribute("type", "text");
+			guestNameEle.setAttribute("name", "guestName");
+			guestNameEle.value = guestName;
+			addBillForm.append(guestNameEle);
+
+			const guestAddressEle = document.createElement("input");
+			guestAddressEle.setAttribute("type", "text");
+			guestAddressEle.setAttribute("name", "guestAddress");
+			guestAddressEle.value = guestAddress;
+			addBillForm.append(guestAddressEle);
+
+			const roomJson = JSON.stringify(roomRentList);
+			const roomEle = document.createElement("input");
+			roomEle.setAttribute("type", "text");
+			roomEle.setAttribute("name", "roomRentsJson");
+			roomEle.value = roomJson;
+			addBillForm.append(roomEle);
+
+			document.getElementsByTagName("body")[0].appendChild(addBillForm);
+			addBillForm.submit();
 		}
 
 		$(document).ready(() => {
+			const message = {{{json message}}};
+			//console.log("message " + message);
+			if(message.length > 0){
+				//console.log("mesage " + message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+			
 			if (roomRentId)
 			{
 				fetchData('get', {roomRentId}, '/bill/add/api', addTableSuccessCallback, errorCallback);

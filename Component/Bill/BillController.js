@@ -11,35 +11,41 @@ class BillController{
         res.render('bill/list')
     }
     getAddBill = async (req, res, next) => {
-        const roomRentId = req.query.room || null;
-        const roomRentList = await BillService.getRoomBeingRentList();
-        for (let i = 0; i < roomRentList.length; i++) {
-            let rentdate = new Date(roomRentList[i].createdAt);
-            let d = rentdate.getUTCDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
-            let m = (rentdate.getUTCMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
-            let y = rentdate.getUTCFullYear().toString();
-            roomRentList[i].rentdate = d + '/' + m + '/' + y;
-        }
-        let roomRentFirst = null;
-        if (roomRentList.length > 0) {
-            roomRentFirst = ObjectUtil.getObject(roomRentList[0]);
-            roomRentFirst.rentdate = roomRentList[0].rentdate;
-            const guestFirstList = await BillService.getGuestsByRoomRentId(roomRentFirst.id);
-            roomRentFirst.guests = guestFirstList.map((item) => ObjectUtil.getObject(item));
-            for (let i = 0; i < roomRentFirst.guests.length; i++) {
-                roomRentFirst.guests[i].numorder = i + 1;
+        try {
+            const roomRentId = req.query.room || null;
+            const roomRentList = await BillService.getRoomBeingRentList();
+            for (let i = 0; i < roomRentList.length; i++) {
+                let rentdate = new Date(roomRentList[i].createdAt);
+                let d = rentdate.getUTCDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+                let m = (rentdate.getUTCMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+                let y = rentdate.getUTCFullYear().toString();
+                roomRentList[i].rentdate = d + '/' + m + '/' + y;
             }
-            roomRentFirst.numRentDays = Math.ceil(DateUtil.convertMilisecondtoDay(Math.abs(new Date() - new Date(roomRentFirst.createdAt))));
-            const rule = await BillService.getRule();
-            roomRentFirst.totalCost = BillUtil.calculateRoomTotalCostInBill(roomRentFirst, ObjectUtil.convertRuleToObject(rule));
+            let roomRentFirst = null;
+            if (roomRentList.length > 0) {
+                roomRentFirst = ObjectUtil.getObject(roomRentList[0]);
+                roomRentFirst.rentdate = roomRentList[0].rentdate;
+                const guestFirstList = await BillService.getGuestsByRoomRentId(roomRentFirst.id);
+                roomRentFirst.guests = guestFirstList.map((item) => ObjectUtil.getObject(item));
+                for (let i = 0; i < roomRentFirst.guests.length; i++) {
+                    roomRentFirst.guests[i].numorder = i + 1;
+                }
+                roomRentFirst.numRentDays = Math.ceil(DateUtil.convertMilisecondtoDay(Math.abs(new Date() - new Date(roomRentFirst.createdAt))));
+                const rule = await BillService.getRule();
+                roomRentFirst.totalCost = BillUtil.calculateRoomTotalCostInBill(roomRentFirst, ObjectUtil.convertRuleToObject(rule));
+            }
+            res.render('bill/add', {
+                roomRentId,
+                roomRentList: roomRentList.map((item) => ObjectUtil.getObject(item)),
+                roomRentFirst,
+                message: req.flash('create-bill-message')
+            });
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
         }
-        res.render('bill/add', {
-            roomRentId,
-            roomRentList: roomRentList.map((item) => ObjectUtil.getObject(item)),
-            roomRentFirst,
-            message: req.flash('create-bill-message')
-        });
     }
+
     getAddModalBill = async (req, res, next) => {
         try {
             const roomRentId = parseInt(req.query.roomRentId) || null;
@@ -69,6 +75,52 @@ class BillController{
             res.status(500).json(error);
         }
     }
+
+    createBill = async (req, res, next) => {
+        try{
+            const guestName = req.body.guestName || null;
+            const guestAddress = req.body.guestAddress || null;
+            const roomRents = JSON.parse(req.body.roomRentsJson || null);
+            
+            if (!guestName || !guestAddress){
+				req.flash('create-bill-message', {success: false, message: "Bạn cần điền đủ thông tin vào các trường!"});
+                res.redirect("/bill/add");
+			}
+			else if (roomRents.length === 0){
+				req.flash('create-bill-message', {success: false, message: "Danh sách phòng thanh toán trống!"});
+                res.redirect("/bill/add");
+			}
+            else{
+                for (let i = 0; i < roomRents.length; i++)
+                {
+                    const roomrentDB = await BillService.getRoomRentById(roomRents[i].id);
+                    if (!roomrentDB) {
+                        req.flash('create-bill-message', {success: false, message: "Phòng thuê không tồn tại!"});
+                        res.redirect("/bill/add");
+                        return;
+                    }
+                    else if (roomrentDB.billId) {
+                        req.flash('create-bill-message', {success: false, message: "Phòng thuê đã được thanh toán!"});
+                        res.redirect("/bill/add");
+                        return;
+                    }
+                }
+
+                const guest = {fullname: guestName, address: guestAddress};
+                const newGuest = await BillService.createGuest(guest);
+                const newBill = await BillService.createBill(newGuest.id);
+                for (let i = 0; i < roomRents.length; i++){
+                    const roomrent = await BillService.updateBillOfRoomRent(roomRents[i].id, newBill.id);
+                }
+                req.flash('create-bill-message', {success: true, message: "Thanh toán hóa đơn mới thành công!"});
+                res.redirect(`/bill/${newBill.id}`);
+            }
+        } catch (error) {
+            console.log(error);
+            next(createError(500));
+        }
+    }
+
     getDetailBill = async (req, res, next) => {
         const {id: billId} = req.params;
         try {
