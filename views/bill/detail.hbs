@@ -211,6 +211,17 @@
 	<script src="/js/util/queryString.js"></script>
 	<script src="/js/util/alert.js"></script>
 	<script>
-		//
+		$(document).ready(()=>{
+			const message = {{{json message}}};
+			//console.log("message " + message);
+			if(message.length > 0){
+				//console.log("mesage " + message);
+				if(!message[0].success){
+					createAlert("error", message[0].message);
+				}else{
+					createAlert("success", message[0].message);
+				}
+			}
+		})
 	</script>
 {{/section}}
