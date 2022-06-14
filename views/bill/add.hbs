@@ -82,13 +82,13 @@
   <div class="my-search-row">
 		<div class="row" style="position: relative;">
 			<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2" style="padding-top: 10px;">Khách hàng/Cơ quan:</label>
+        <label class="login2" style="padding-top: 10px;">Khách hàng/Cơ quan:<span style="color: #D80027;">*</span></label>
       </div>
       <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
         <input type="text" name="guestName" required="" class="form-control" placeholder="Nhập tên khách hàng/cơ quan">
       </div>
       <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-        <label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Địa chỉ:</label>
+        <label class="login2 pull-right pull-right-pro" style="padding-top: 10px;">Địa chỉ:<span style="color: #D80027;">*</span></label>
       </div>
       <div class="col-lg-3 col-md-9 col-sm-9 col-xs-12">
         <input type="text" name="guestAddress" required="" class="form-control" placeholder="Nhập địa chỉ khách hàng/cơ quan">
@@ -526,6 +526,16 @@
 			const guestName = $("input[name='guestName']").val();
 			const guestAddress = $("input[name='guestAddress']").val();
 			
+			if (!guestName || !guestAddress){
+				createAlert("error", "Bạn cần điền đủ thông tin vào các trường!");
+				return;
+			}
+
+			if (roomRentList.length === 0){
+				createAlert("error", "Danh sách phòng thanh toán trống!");
+				return;
+			}
+
 			const addBillForm = document.createElement("form");
 			addBillForm.setAttribute("method", "post");
 			addBillForm.setAttribute("action", "add");
