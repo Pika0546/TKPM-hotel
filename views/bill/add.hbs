@@ -215,46 +215,60 @@
 							</select>
 						</div>
 
-						{{#with roomRentFirst}}
+						{{#if roomRentFirst}}
+							{{#with roomRentFirst}}
+								<div class="col-md-6 col-sm-12 col-xs-12">
+									<label for="#rent-date">Ngày thuê:</label>
+									<input type="text" id="rent-date" readonly="" class="form-control" value="{{rentdate}}">
+								</div>
+								<input style="display: none;" type="text" id="num-rent-days" readonly="" class="form-control" value="{{numRentDays}}">
+								<input style="display: none;" type="text" id="price" readonly="" class="form-control" value="{{room.roomtype.price}}">
+								<input style="display: none;" type="text" id="total-cost" readonly="" class="form-control" value="{{totalCost}}">
+							{{/with}}
+						{{else}}
 							<div class="col-md-6 col-sm-12 col-xs-12">
 								<label for="#rent-date">Ngày thuê:</label>
-								<input type="text" id="rent-date" readonly="" class="form-control" value="{{rentdate}}">
+								<input type="text" id="rent-date" readonly="" class="form-control" value="">
 							</div>
-							<input style="display: none;" type="text" id="num-rent-days" readonly="" class="form-control" value="{{numRentDays}}">
-							<input style="display: none;" type="text" id="price" readonly="" class="form-control" value="{{room.roomtype.price}}">
-							<input style="display: none;" type="text" id="total-cost" readonly="" class="form-control" value="{{totalCost}}">
-							<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
-								<div class="asset-inner" style="flex: 1 1 auto; overflow: hidden !important">
-									<table>
-										<thead style="min-height: 240px">
-											<tr>
-												<th>STT</th>
-												<th>Khách hàng</th>
-												<th>Loại khách</th>
-												<th>CMND</th>
-												<th>Địa chỉ</th>
-											</tr>
-											<tbody id="guest-table-body" style="padding-bottom: 100px !important">
-												{{#each guests}}
-													<tr>
-														<td>{{this.numorder}}</td>
-														<td>{{this.fullname}}</td>
-														<td>{{this.guesttype.typeName}}</td>
-														<td>{{this.identityNumber}}</td>
-														<td>{{this.address}}</td>
-													</tr>
-												{{/each}}
-											</tbody>
-										</thead>
-									</table>
-								</div>
+							<input style="display: none;" type="text" id="num-rent-days" readonly="" class="form-control" value="">
+							<input style="display: none;" type="text" id="price" readonly="" class="form-control" value="">
+							<input style="display: none;" type="text" id="total-cost" readonly="" class="form-control" value="">
+						{{/if}}
+						<div class="product-status-wrap" style="flex: 1 1 auto; display:flex; flex-direction:column;">
+							<div class="asset-inner" style="flex: 1 1 auto; overflow: hidden !important">
+								<table>
+									<thead style="min-height: 240px">
+										<tr>
+											<th>STT</th>
+											<th>Khách hàng</th>
+											<th>Loại khách</th>
+											<th>CMND</th>
+											<th>Địa chỉ</th>
+										</tr>
+										<tbody id="guest-table-body" style="padding-bottom: 100px !important">
+											{{#if roomRentFirst}}
+												{{#with roomRentFirst}}
+													{{#each guests}}
+														<tr>
+															<td>{{this.numorder}}</td>
+															<td>{{this.fullname}}</td>
+															<td>{{this.guesttype.typeName}}</td>
+															<td>{{this.identityNumber}}</td>
+															<td>{{this.address}}</td>
+														</tr>
+													{{/each}}
+												{{/with}}
+											{{/if}}
+										</tbody>
+									</thead>
+								</table>
+							</div>
 
-								<div class="modal-footer primary-md">
-									<button class="btn" style="background-color: #006df0; color:white" type="button" data-dismiss="modal">Hủy</button>
-									<button class="btn" style="background-color: #006df0; color:white" id="add-room-rent-btn" type="button">Xác nhận</button>
-								</div>
+							<div class="modal-footer primary-md">
+								<button class="btn" style="background-color: #006df0; color:white" type="button" data-dismiss="modal">Hủy</button>
+								<button class="btn" style="background-color: #006df0; color:white" id="add-room-rent-btn" type="button">Xác nhận</button>
 							</div>
-						{{/with}}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -444,38 +458,47 @@
 
 		const resetOption = ()=>{
 			const roomRentOptionUpdate = roomRentOption.filter(({ id: id1 }) => !roomRentList.some(({ id: id2 }) => parseInt(id2) === id1));
+			$("input[id='rent-date']").val("");
 			$("#add-room-id-select").empty();
-			roomRentOptionUpdate.forEach(room=>{
-				$("#add-room-id-select").append(`
-					<option id="room-option-${room.id}" value="${room.id}" data-roomid="${room.room.roomId}">${room.room.roomId}</option>
-				`);
-			});
-			const roomRentId = roomRentOptionUpdate[0].id;
-			fetchData('get', {roomRentId}, '/bill/add/api', addSuccessCallback, errorCallback);
+			$("#guest-table-body").empty();
+			if (roomRentOptionUpdate.length > 0){
+				roomRentOptionUpdate.forEach(room=>{
+					$("#add-room-id-select").append(`
+						<option id="room-option-${room.id}" value="${room.id}" data-roomid="${room.room.roomId}">${room.room.roomId}</option>
+					`);
+				});
+				const roomRentId = roomRentOptionUpdate[0].id;
+				fetchData('get', {roomRentId}, '/bill/add/api', addSuccessCallback, errorCallback);
+			}
 		}
 
 		const handleAddRentRoom = () => {
 			const id = $("select[id='add-room-id-select']").val();
-			const roomId = $("#room-option-" + id).data("roomid");
-			const rentdate = $("input[id='rent-date']").val();
-			const numRentDays = $("input[id='num-rent-days']").val();
-			const price = $("input[id='price']").val();
-			const totalCost = $("input[id='total-cost']").val();
-			const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
+			if (id){
+				const roomId = $("#room-option-" + id).data("roomid");
+				const rentdate = $("input[id='rent-date']").val();
+				const numRentDays = $("input[id='num-rent-days']").val();
+				const price = $("input[id='price']").val();
+				const totalCost = $("input[id='total-cost']").val();
+				const roomRent = {id, roomId, rentdate, numRentDays, price, totalCost};
 
-			roomRentList.push(roomRent);
-			totalBillCost += parseInt(roomRent.totalCost);
+				roomRentList.push(roomRent);
+				totalBillCost += parseInt(roomRent.totalCost);
 
-			$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
-			const rooms = generateRoomRentList(roomRentList);
-			$("#table-body").empty();
-			rooms.forEach(room=>{
-				$("#table-body").append(room);
-			});
+				$("input[name='totalBillCost'").val(numeral(totalBillCost).format('0,0') + " VND");
+				const rooms = generateRoomRentList(roomRentList);
+				$("#table-body").empty();
+				rooms.forEach(room=>{
+					$("#table-body").append(room);
+				});
 
-			createAlert("success", "Thêm phòng thuê thành công!");
-			resetOption();
-			document.getElementById("add-room-rent-btn").setAttribute("data-dismiss", "modal");
+				createAlert("success", "Thêm phòng thuê thành công!");
+				resetOption();
+				document.getElementById("add-room-rent-btn").setAttribute("data-dismiss", "modal");
+			}
+			else{
+				createAlert("error", "Không còn phòng thuê để thanh toán!");
+			}
 		}
 
 		const handleUpdateRentRoom = () => {

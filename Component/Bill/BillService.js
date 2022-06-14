@@ -150,6 +150,19 @@ class BillService{
             }
         )
     }
+
+    updateStatusOfVacancyRoom = async (roomId) => {
+        return models.room.update(
+            {
+                status: "Trống"
+            },
+            {
+                where: {
+                    roomId: roomId
+                }
+            }
+        )
+    }
 }
 
 module.exports = new BillService();
