@@ -148,7 +148,8 @@ class BillController{
                 bill.totalCost = totalBillCost;
                 res.render('bill/detail', {
                     bill: ObjectUtil.getObject(bill),
-                    roomList: roomList.map((item) => ObjectUtil.getObject(item))
+                    roomList: roomList.map((item) => ObjectUtil.getObject(item)),
+                    message: req.flash('create-bill-message')
                 });
             }
             else{
