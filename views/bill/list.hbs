@@ -87,8 +87,8 @@
 						id="search-input"
 						class="search-int form-control"
 						style="width:100%"
-						{{#if queryRoom}}
-							value="{{queryRoom}}"
+						{{#if queryBill}}
+							value="{{queryBill}}"
 						{{/if}}		
 					>
 					<button type="button" onclick="submitQuery(this)"><i class="fa fa-search"></i></button>
@@ -101,9 +101,27 @@
 			</div>
 			<div class="form-group data-custon-pick data-custom-mg col-lg-4 col-sm-8" id="data_5">
 				<div class="input-daterange input-group" id="datepicker">
-					<input type="text" class="form-control date-bill" name="start" value="05/14/2014">
+					<input 
+						{{!-- onchange="submitQuery(this)"  --}}
+						type="text" 
+						class="form-control date-bill" 
+						name="startDate" 
+						{{#if queryRentDateFrom}}
+							value="{{queryRentDateFrom}}"
+						{{else}}
+							value="01/01/1970"
+						{{/if}}>
 					<span class="input-group-addon">đến</span>
-					<input type="text" class="form-control date-bill" name="end" value="05/22/2014">
+					<input 
+						{{!-- onchange="submitQuery(this)"  --}}
+						type="text" 
+						class="form-control date-bill" 
+						name="endDate" 
+						{{#if queryRentDateTo}}
+							value="{{queryRentDateTo}}"
+						{{else}}
+							value="{{today}}"
+						{{/if}}>
 				</div>
 			</div>
 
@@ -112,9 +130,9 @@
 			</div>
 			<div class="form-group data-custon-pick data-custom-mg col-lg-4 col-sm-8" id="form-money">
 				<div class="input-daterange input-group" id="moneypicker">
-					<input type="text" class="form-control money-bill" name="start" value="100.000 VND">
+					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="start" value="0 VND">
 					<span class="input-group-addon">đến</span>
-					<input type="text" class="form-control money-bill" name="end" value="500.000 VND">
+					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="end" value="2.000.000 VND">
 				</div>
 			</div>
 			
@@ -136,41 +154,15 @@
 						</tr>
 					</thead>
 					<tbody id="table-body">
-						<tr>
-							<td>1</td>
-							<td>Công ty TNHH Catto</td>
-							<td>10/05/2022</td>
-							<td>10.000.000 VND</td>
-							<td><a href="/bill/detail" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>Công ty TNHH Catto</td>
-							<td>10/05/2022</td>
-							<td>10.000.000 VND</td>
-							<td><a href="/bill/detail" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>Công ty TNHH Catto</td>
-							<td>10/05/2022</td>
-							<td>10.000.000 VND</td>
-							<td><a href="/bill/detail" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>Công ty TNHH Catto</td>
-							<td>10/05/2022</td>
-							<td>10.000.000 VND</td>
-							<td><a href="/bill/detail" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>Công ty TNHH Catto</td>
-							<td>10/05/2022</td>
-							<td>10.000.000 VND</td>
-							<td><a href="/bill/detail" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
-						</tr>
+						{{#each bill}}
+							<tr>
+								<td>{{this.stt}}</td>
+								<td>{{this.guest.fullname}}</td>
+								<td>{{this.billDate}}</td>
+								<td>{{this.costVND}}</td>
+								<td><a href="/bill/detail/{{this.id}}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+							</tr>
+						{{/each}}
 					</tbody>
 				</table>
 			</div>
@@ -197,7 +189,7 @@
 			{{#if paginationArray}}
 				<form 	
 					method="get"
-					action="/room"
+					action="/bill"
 				>
 					<ul class="my-pagination" id="my-pagination">
 						<li class="my-page-item">
@@ -293,6 +285,10 @@
     <script src="/js/tab.js"></script>
     <!-- morrisjs JS
 		============================================ -->
+		<!-- datapicker JS
+		============================================ -->
+    <script src="js/datapicker/bootstrap-datepicker.js"></script>
+    <script src="js/datapicker/datepicker-active.js"></script>
     {{!-- <script src="/js/morrisjs/raphael-min.js"></script>
     <script src="/js/morrisjs/morris.js"></script>
     <script src="/js/morrisjs/morris-active.js"></script> --}}
@@ -323,6 +319,90 @@
 	<script src="/js/util/ajaxAPI.js"></script>
 	<script src="/js/util/queryString.js"></script>
 	<script>
+		function successCallback(data){
+			$("#my-pagination").empty();
+			if(data.paginationArray && data.paginationArray.length > 0){
+				const pageView = generatePager(data.paginationArray, data.prevPage, data.nextPage, "submitQuery(this)");
+				pageView.forEach(page=>{
+					$("#my-pagination").append(page);
+				});
+				{{!-- const paginationList = generatePagination(data.paginationArray);
+				$("#my-pagination").empty();
+				$("#my-pagination").append(`<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-prev" value="{{prevPage}}" type="radio" name="page"/>
+							<label for="page-prev"  class="my-page-button">Trang trước</label>
+						</li>`);
+				paginationList.forEach(page => {
+					$("#my-pagination").append(page);
+				})
+				$("#my-pagination").append(`<li class="my-page-item">
+							<input onchange="submitQuery(this)" style="display: none;" id="page-next" value="{{nextPage}}" type="radio" name="page"/>
+							<label for="page-next"  class="my-page-button">Trang sau</label>
+						</li>`) --}}
+			}
+			const billList = generateBill(data.bill);
+			$("#table-body").empty();
+			billList.forEach(bill=>{
+				$("#table-body").append(bill);
+			});
+		}
+		function generateBill(billList){
+			return billList.map(bill=>{
+				return `
+					<tr>
+						<td>${bill.stt}</td>
+						<td>${bill.guest.fullname}</td>
+						<td>${bill.billDate}</td>
+						<td>${bill.costVND}</td>
+						<td><a href="/bill/detail/${bill.id}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+					</tr>
+				`
+			})
+		}
+		function generatePagination(paginationArray){
+			return paginationArray.map(pagination => {
+				if(pagination.isCurrent){
+					return `<li class="my-page-item">
+									<input checked onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-${pagination.page}"  class="my-page-link my-current-page">{{this.page}}</label>
+								</li>`
+				}
+				else {return `<li class="my-page-item">
+									<input onchange="submitQuery(this)" style="display: none;" id="page-{{this.page}}" value="{{this.page}}" type="radio" name="page"/>
+									<label for="page-${this.page}"  class="my-page-link">{{this.page}}</label>
+								</li>`
+				}
+			})
+		}
+		function errorCallback(){
+			
+		}
+		function submitQuery(ele){
+			const data = {};
+			console.log("here")
+			data.guest = $("input[name='guestName']").val();
+			data.rentDateFrom = $("input[name='startDate'").val();
+			data.rentDateTo = $("input[name='endDate'").val();
+			data.valueFrom = $("input[name='start'").val();
+			data.valueTo = $("input[name='end'").val();
+			data.page = $("input[name='page']:checked").val(); 
+			page=data.page;
+			if(!data.page){
+				data.page = '1';
+			}
+			if(ele && (ele.notPage || ele.getAttribute("name") !== "page" )){
+				data.page = '1';
+			}
+			console.log(data);
+			const newRelativePathQuery = window.location.pathname + '?' + queryString(data);
+			history.pushState(null, '', newRelativePathQuery);
+			fetchData('get', data, '/bill/api', successCallback, errorCallback);
+		}
 		$('.form-control.date-bill').datepicker();
+		$('#datepicker').datepicker()
+				.on("changeDate", function(e) {
+					// `e` here contains the extra attributes
+					submitQuery({notPage: true})
+    		});
 	</script>
 {{/section}}

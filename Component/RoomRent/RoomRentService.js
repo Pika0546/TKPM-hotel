@@ -108,7 +108,12 @@ class RoomRentService{
     getGuetsByRoomRentId = async (id) => {
         return models.guest.findAll({
             raw: true,
-            where:{roomRentId:id}
+            where:{roomRentId:id},
+            include:[
+                {
+                    model: models.guesttype
+                }
+            ]
         })
     }
     getRoomByRoomRentId = async (id) => {
