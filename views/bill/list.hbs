@@ -130,9 +130,9 @@
 			</div>
 			<div class="form-group data-custon-pick data-custom-mg col-lg-4 col-sm-8" id="form-money">
 				<div class="input-daterange input-group" id="moneypicker">
-					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="start" value="100.000 VND">
+					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="start" value="0 VND">
 					<span class="input-group-addon">đến</span>
-					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="end" value="500.000 VND">
+					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="end" value="2.000.000 VND">
 				</div>
 			</div>
 			
@@ -159,7 +159,7 @@
 								<td>{{this.stt}}</td>
 								<td>{{this.guest.fullname}}</td>
 								<td>{{this.billDate}}</td>
-								<td>{{this.value}}</td>
+								<td>{{this.costVND}}</td>
 								<td><a href="/bill/detail/{{this.id}}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
 							</tr>
 						{{/each}}
@@ -353,7 +353,7 @@
 						<td>${bill.stt}</td>
 						<td>${bill.guest.fullname}</td>
 						<td>${bill.billDate}</td>
-						<td>${bill.value}</td>
+						<td>${bill.costVND}</td>
 						<td><a href="/bill/detail/${bill.id}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
 					</tr>
 				`
