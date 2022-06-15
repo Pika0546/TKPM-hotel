@@ -1,17 +1,10 @@
 const  { Op, QueryTypes, Sequelize } = require("sequelize");
 
-const { models } = require("../../models");
+const { models, sequelize } = require("../../models");
 const guest = require('../../models/guest');
 const BillUtil = require('../../utils/bill');
 const ObjectUtil = require('../../utils/object');
 const { getGuetsByRoomRentId } = require("../RoomRent/RoomRentService");
-
-const sequelize = new Sequelize('hotel_database', 'root', '12121212', {
-    host: 'localhost',
-    dialect: "mysql",
-    logging: true,
-    pool:{max:5, min:0, idle:10000}
-})
 
 class BillService{
     getAllBillList = async (guestName, rentDateFrom, rentDateTo, valueFrom, valueTo) => {
@@ -55,26 +48,22 @@ class BillService{
                   replacements: [billList[i].id],
                   type: QueryTypes.SELECT
                 }
-              );
-              //console.log("=======List roomrent======, billId ", billList[i].id);
-              for(let i=0; i<listRoomRent.length; i++){
-                  let guests = await getGuetsByRoomRentId(listRoomRent[i].roomrentId);
-                  for(let i=0; i<guests.length; i++){
-                      guests[i] = ObjectUtil.getObject(guests[i]);
-                  }
-                  listRoomRent[i].guests = guests;
-              }
+            );
+            for(let i=0; i<listRoomRent.length; i++){
+                let guests = await getGuetsByRoomRentId(listRoomRent[i].roomrentId);
+                for(let i=0; i<guests.length; i++){
+                    guests[i] = ObjectUtil.getObject(guests[i]);
+                }
+                listRoomRent[i].guests = guests;
+            }
             let totalCost = 0;
-            //console.log(listRoomRent.length);
             if(listRoomRent && listRoomRent.length){
                 for(let j=0; j<listRoomRent.length; j++){
                     totalCost+=BillUtil.calcRoomCost(listRoomRent[j], ruleObject);
-                    //console.log(roomrentList[j]);
                 }
             }
             billList[i].cost = totalCost;
             billList[i].costVND = BillUtil.numberToVnd(totalCost);
-            //console.log(billList[i]);
         }
         //
         if(!valueFrom && !valueTo){
@@ -82,11 +71,9 @@ class BillService{
         }
         valueFrom = BillUtil.vndToNumber(valueFrom) || 0;
         valueTo = BillUtil.vndToNumber(valueTo) || 0;
-        console.log(valueFrom);
-        console.log(valueTo);
 
         return billList.filter(function(bill){
-            return bill.cost>=valueFrom && bill.cost<=valueTo;
+            return bill.cost >=valueFrom && bill.cost<=valueTo;
         });
     }
 
@@ -111,6 +98,39 @@ class BillService{
         })
     }
 
+    getRule = async () => {
+        return models.rule.findAll({
+            raw: true
+        })
+    }
+
+    getRoomBeingRentList = async () => {
+        return models.roomrent.findAll({
+            raw: true,
+            where:{
+                billId:{
+                    [Op.is]: null
+                }
+            },
+            include: [
+                {
+                    model: models.room,
+                    attributes: ['id', 'roomId', 'typeId'],
+                    require: true,
+                    include: [
+                        {
+                            model: models.roomtype,
+                            attributes:['price'],
+                            require: true
+                        }
+                    ]
+                }
+            ],
+            order: [
+                [models.room, 'roomId', 'ASC']
+            ]
+        })
+    }
     getRoomRent = async (billId, roomId) => {//dk roomrent thanh toan toan roi
         return models.roomrent.findOne({
 
@@ -136,6 +156,31 @@ class BillService{
         })
     }
 
+    getRoomBeingRent = async (roomRentId) => {
+        return models.roomrent.findOne({
+            raw: true,
+            where:{
+                id: roomRentId
+            },
+            include: [
+                {
+                    model: models.room,
+                    attributes: ['id', 'roomId', 'typeId'],
+                    require: true,
+                    include: [
+                        {
+                            model: models.roomtype,
+                            attributes:['price'],
+                            require: true
+                        }
+                    ]
+                }
+            ],
+            order: [
+                [models.room, 'roomId', 'ASC']
+            ]
+        })
+    }
     getRule = async () => {
         return models.rule.findAll();
     }
@@ -158,6 +203,53 @@ class BillService{
         })
     }
 
+    getRoomRentById = async (id) => {
+        return models.roomrent.findOne({
+            raw: true,
+            where:{
+                id: id
+            }
+        })
+    }
+
+    createGuest = async (guest) => {
+        return models.guest.create({
+            fullname: guest.fullname,
+            address: guest.address
+        });
+    }
+
+    createBill = async (guestId) => {
+        return models.bill.create({
+            guestId: guestId
+        });
+    }
+
+    updateBillOfRoomRent = async (roomRentId, billId) => {
+        return models.roomrent.update(
+            {
+                billId: billId
+            },
+            {
+                where: {
+                    id: roomRentId
+                }
+            }
+        )
+    }
+
+    updateStatusOfVacancyRoom = async (roomId) => {
+        return models.room.update(
+            {
+                status: "Trống"
+            },
+            {
+                where: {
+                    roomId: roomId
+                }
+            }
+        )
+    }
     countAllBillVer2 = async (guestName, rentDateFrom, rentDateTo, valueFrom, valueTo) => {
         let billList = await models.bill.findAll({
             raw: true,
@@ -174,9 +266,10 @@ class BillService{
                     require: true
                 },
             ]
-        })
-        //billList = ObjectUtil.getObject(billList);
-        console.log(billList);
+        });
+
+        billList = billList.map(item => ObjectUtil.getObject(item)) ;
+
         let rule = await this.getRule();
         let ruleObject = BillUtil.ruleDBToObject(rule);
 
@@ -195,29 +288,25 @@ class BillService{
                 roomtype.price, roomrent.roomId`,
                 {
                     raw: true,
-                  replacements: [billList[i].id],
-                  type: QueryTypes.SELECT
+                    replacements: [billList[i].id],
+                    type: QueryTypes.SELECT
                 }
-              );
-              //console.log("=======List roomrent======, billId ", billList[i].id);
-              for(let i=0; i<listRoomRent.length; i++){
-                  let guests = await getGuetsByRoomRentId(listRoomRent[i].roomrentId);
-                  for(let i=0; i<guests.length; i++){
-                      guests[i] = ObjectUtil.getObject(guests[i]);
-                  }
-                  listRoomRent[i].guests = guests;
-              }
+            );
+            for(let i=0; i<listRoomRent.length; i++){
+                let guests = await getGuetsByRoomRentId(listRoomRent[i].roomrentId);
+                for(let i=0; i<guests.length; i++){
+                    guests[i] = ObjectUtil.getObject(guests[i]);
+                }
+                listRoomRent[i].guests = guests;
+            }
             let totalCost = 0;
-            //console.log(listRoomRent.length);
             if(listRoomRent && listRoomRent.length){
                 for(let j=0; j<listRoomRent.length; j++){
                     totalCost+=BillUtil.calcRoomCost(listRoomRent[j], ruleObject);
-                    //console.log(roomrentList[j]);
                 }
             }
             billList[i].cost = totalCost;
             billList[i].costVND = BillUtil.numberToVnd(totalCost);
-            //console.log(billList[i]);
         }
         //
         if(!valueFrom && !valueTo){
@@ -225,10 +314,6 @@ class BillService{
         }
         valueFrom = BillUtil.vndToNumber(valueFrom) || 0;
         valueTo = BillUtil.vndToNumber(valueTo) || 5000000;
-        console.log(valueFrom);
-        console.log(valueTo);
-
-        console.log(billList);
 
         billList = billList.filter(function(bill){
             return bill.cost>=valueFrom && bill.cost<=valueTo;

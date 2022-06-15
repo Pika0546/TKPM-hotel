@@ -44,6 +44,7 @@ class RoomRentController{
             let d = date.getUTCDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
             let m = (date.getUTCMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
             let y = date.getUTCFullYear().toString();
+            roomrent[i].numorder = i + 1 + ((currentPage - 1) * limit);
             roomrent[i].rentDate = d + '/' + m + '/' + y;
         }
         return {
