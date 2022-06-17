@@ -1,7 +1,7 @@
-const  { Op, QueryTypes, Sequelize } = require("sequelize");
+const  { Op, QueryTypes } = require("sequelize");
 
 const { models, sequelize } = require("../../models");
-const guest = require('../../models/guest');
+
 const BillUtil = require('../../utils/bill');
 const ObjectUtil = require('../../utils/object');
 const { getGuetsByRoomRentId } = require("../RoomRent/RoomRentService");
@@ -25,10 +25,11 @@ class BillService{
             ]
         })
     }
+
     getBillList = async (limit, page, guestName, rentDateFrom, rentDateTo, valueFrom, valueTo) => {
         let billList = await this.getBillListNoValue(limit, page, guestName, rentDateFrom, rentDateTo);
         let rule = await this.getRule();
-        let ruleObject = BillUtil.ruleDBToObject(rule);
+        let ruleObject = ObjectUtil.convertRuleToObject(rule);
 
         for(let  i=0; i<billList.length; i++){
             let listRoomRent = await sequelize.query(
@@ -98,6 +99,59 @@ class BillService{
         })
     }
 
+    getBillByBillId = async (billId) => {
+        return models.bill.findOne({
+            raw:true,
+            where:{
+                id: billId
+            },
+            include: [
+                {
+                    model: models.guest,
+                    attributes:['fullname', 'address'],
+                    require: true
+                }
+            ]
+        })
+    }
+
+    getRoomListByBillId = async (billId) => {
+        return models.roomrent.findAll({
+            raw: true,
+            where:{
+                billId: billId
+            },
+            include: [
+                {
+                    model: models.room,
+                    attributes:['id', 'roomId', 'typeId'],
+                    require: true,
+                    include: [
+                        {
+                            model: models.roomtype,
+                            require: true
+                        }
+                    ]
+                }
+            ]
+        })
+    }
+
+    getGuestsByRoomRentId = async (roomRentId) => {
+        return models.guest.findAll({
+            raw: true,
+            where:{
+                roomRentId: roomRentId
+            },
+            include: [
+                {
+                    model: models.guesttype,
+                    require: true
+                }
+            ]
+        })
+    }
+
     getRule = async () => {
         return models.rule.findAll({
             raw: true
@@ -131,6 +185,7 @@ class BillService{
             ]
         })
     }
+
     getRoomRent = async (billId, roomId) => {//dk roomrent thanh toan toan roi
         return models.roomrent.findOne({
 
@@ -180,9 +235,6 @@ class BillService{
                 [models.room, 'roomId', 'ASC']
             ]
         })
-    }
-    getRule = async () => {
-        return models.rule.findAll();
     }
 
     countAllBill = async (guestName, rentDateFrom, rentDateTo, valueFrom, valueTo) => {
@@ -250,6 +302,7 @@ class BillService{
             }
         )
     }
+
     countAllBillVer2 = async (guestName, rentDateFrom, rentDateTo, valueFrom, valueTo) => {
         let billList = await models.bill.findAll({
             raw: true,
@@ -271,7 +324,7 @@ class BillService{
         billList = billList.map(item => ObjectUtil.getObject(item)) ;
 
         let rule = await this.getRule();
-        let ruleObject = BillUtil.ruleDBToObject(rule);
+        let ruleObject = ObjectUtil.convertRuleToObject(rule);
 
         for(let  i=0; i<billList.length; i++){
             let listRoomRent = await sequelize.query(

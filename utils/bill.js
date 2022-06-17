@@ -1,4 +1,3 @@
-const ObjectUtil = require("./object");
 const DateUtil = require('./date');
 class BillUtil{
     calculateRoomCost = (roomRent, rule) => {
@@ -66,13 +65,7 @@ class BillUtil{
     numberToVnd = (number) => {
         return number.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
     }
-    ruleDBToObject = (rule) => {
-        let ruleObject = {};
-        for(let x=0; x<rule.length; x++){
-            ruleObject[rule[x].dataValues.key] = rule[x].dataValues.value;
-        }
-        return ruleObject;
-    }
+    
 }
 
 module.exports = new BillUtil();
