@@ -33,7 +33,6 @@ class BillController{
         currentPage = PageUtil.getCurrentPage(pageNumber, totalPage);
         const bill = await BillService.getBillList(limit, currentPage, guestName, rentDateStart, rentDateEnd, valueFrom, valueTo);
         totalBill = await BillService.countAllBillVer2(guestName, rentDateStart, rentDateEnd, valueFrom, valueTo);
-        console.log(totalBill);
         totalPage = Math.ceil(totalBill/limit);
         const paginationArray = PageUtil.getPaginationArray(currentPage, totalPage, maximumPagination);
         let billLength = Object.keys(bill).length;
@@ -197,6 +196,7 @@ class BillController{
         const {id: billId} = req.params;
         try {
             const bill = await BillService.getBillByBillId(billId);
+            // const bill = await BillService.findBillById(billId);
             const roomList = await BillService.getRoomListByBillId(billId);
             if(bill && roomList){
                 let returndate = new Date(bill.createdAt);

@@ -69,8 +69,8 @@ class BillService{
         if(!valueFrom && !valueTo){
             return billList;
         }
-        valueFrom = BillUtil.vndToNumber(valueFrom) || 0;
-        valueTo = BillUtil.vndToNumber(valueTo) || 0;
+        valueFrom = BillUtil.vndToNumber(valueFrom);
+        valueTo = BillUtil.vndToNumber(valueTo);
 
         return billList.filter(function(bill){
             return bill.cost >=valueFrom && bill.cost<=valueTo;
@@ -81,7 +81,7 @@ class BillService{
         return models.bill.findAll({
             raw: true,
             offset: (page-1)*limit,
-            limit: limit,
+            // limit: limit,
             where:{
                 ...(rentDateFrom && rentDateTo && {createdAt: {[Op.between]: [rentDateFrom, rentDateTo]}}),
                 //...(valueFrom && valueTo && {value: {[Op.between]: [valueFrom, valueTo]}})

@@ -130,9 +130,27 @@
 			</div>
 			<div class="form-group data-custon-pick data-custom-mg col-lg-4 col-sm-8" id="form-money">
 				<div class="input-daterange input-group" id="moneypicker">
-					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="start" value="0 VND">
+					<input 
+					onblur="submitQuery(this)" 
+					type="text" 
+					class="form-control money-bill" 
+					name="start" 
+					{{#if queryValueFrom}}
+						value="{{queryValueFrom}}"
+					{{else}}
+						value="0 VND"
+					{{/if}}>
 					<span class="input-group-addon">đến</span>
-					<input onchange="submitQuery(this)" type="text" class="form-control money-bill" name="end" value="2.000.000 VND">
+					<input 
+					onblur="submitQuery(this)" 
+					type="text" 
+					class="form-control money-bill" 
+					name="end" 
+					{{#if queryValueTo}}
+						value="{{queryValueTo}}"
+					{{else}}
+						value="50.000.000 VND"
+					{{/if}}>
 				</div>
 			</div>
 			
@@ -160,7 +178,7 @@
 								<td>{{this.guest.fullname}}</td>
 								<td>{{this.billDate}}</td>
 								<td>{{this.costVND}}</td>
-								<td><a href="/bill/detail/{{this.id}}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+								<td><a href="/bill/{{this.id}}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
 							</tr>
 						{{/each}}
 					</tbody>
@@ -354,7 +372,7 @@
 						<td>${bill.guest.fullname}</td>
 						<td>${bill.billDate}</td>
 						<td>${bill.costVND}</td>
-						<td><a href="/bill/detail/${bill.id}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
+						<td><a href="/bill/${bill.id}" style="color:inherit"><button data-toggle="tooltip" title="Chi tiết" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a></td>
 					</tr>
 				`
 			})
@@ -377,15 +395,45 @@
 		function errorCallback(){
 			
 		}
+		function numberToVnd(number){
+        	return number.toLocaleString('it-IT',
+			 {style : 'currency', currency : 'VND'});
+    	}
+		function valueInputToNumber(cost){
+			cost = cost.toUpperCase();
+			cost = cost.replaceAll("VND", "");
+			cost = cost.replaceAll(".", "");
+			cost = cost.replaceAll(" ", "");
+			return Number(cost);
+		}
 		function submitQuery(ele){
 			const data = {};
 			console.log("here")
 			data.guest = $("input[name='guestName']").val();
 			data.rentDateFrom = $("input[name='startDate'").val();
 			data.rentDateTo = $("input[name='endDate'").val();
-			data.valueFrom = $("input[name='start'").val();
+			data.valueFrom = $("input[name='start'").val() || "0 VND";
 			data.valueTo = $("input[name='end'").val();
 			data.page = $("input[name='page']:checked").val(); 
+			let valueToToNumber = valueInputToNumber(data.valueTo);
+			let valueFromToNumber = valueInputToNumber(data.valueFrom);
+			if(Number.isNaN(valueToToNumber) || valueToToNumber < 0 ||
+				Number.isNaN(valueFromToNumber) || valueFromToNumber < 0){
+					createAlert("error", "Trị giá không hợp lệ!");
+					return;
+			}
+
+			if(valueToToNumber < valueFromToNumber){
+				createAlert("error", "Trị giá không hợp lệ! From không được lớn hơn To!");
+				return;
+			}
+			
+			$("input[name='start'").val(numberToVnd(valueFromToNumber));
+			$("input[name='end'").val(numberToVnd(valueToToNumber));
+
+			data.valueFrom = $("input[name='start'").val() || "0 VND";
+			data.valueTo = $("input[name='end'").val();
+
 			page=data.page;
 			if(!data.page){
 				data.page = '1';
