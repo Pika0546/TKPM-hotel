@@ -106,9 +106,13 @@ class RoomRentController{
             const maximumGuest = await RuleService.getRuleByKey("maximumGuest");
             const guestType = await RoomRentService.getGuestTypeList();
             const roomrentId = parseInt(req.params.id);
+            const roomrent = await RoomRentService.findRoomRentById(roomrentId);
+            if(roomrent){
+                next(createError(404));
+                return;
+            }
             const room = await RoomRentService.getRoomByRoomRentId(roomrentId);
             const guests = await RoomRentService.getGuetsByRoomRentId(roomrentId);
-            const roomrent = await RoomRentService.findRoomRentById(roomrentId);
             for(let i=0; i<guests.length; i++){
                 for(let j=0; j <guestType.length; j++){
                     if(guests[i].typeId === guestType[j].id){
@@ -196,7 +200,7 @@ class RoomRentController{
             RoomService.updateRoomStatus(room.id, "Đang thuê");
 
             req.flash("edit-rent", {success: true, message: "Thêm phiếu thuê thành công!"})
-            res.redirect(`/rent/edit/${roomRent.id}`);
+            res.redirect(`/rent/${roomRent.id}`);
         } catch (error) {
             console.log(error);
             next(createError(500));

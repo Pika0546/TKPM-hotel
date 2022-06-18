@@ -41,13 +41,15 @@ class BillService{
                 INNER JOIN room ON room.id = roomrent.roomId
                 INNER JOIN roomtype ON room.typeId = roomtype.id
                 INNER JOIN guest ON guest.roomRentId = roomrent.id
-                WHERE bill.id = ? AND guest.deletedAt IS NULL
+                WHERE bill.id = ?
                 GROUP BY bill.id, roomrent.id, roomrent.createdAt, bill.createdAt,
                 roomtype.price, roomrent.roomId`,
                 {
                     raw: true,
                   replacements: [billList[i].id],
-                  type: QueryTypes.SELECT
+                  type: QueryTypes.SELECT,
+                  paranoid: false
+
                 }
             );
             for(let i=0; i<listRoomRent.length; i++){
@@ -93,7 +95,8 @@ class BillService{
                     where:{
                         ...(guestName && guestName.length && {fullname: {[Op.substring]:guestName}})
                     },
-                    require: true
+                    require: true,
+                    paranoid: false
                 },
             ]
         })
@@ -118,6 +121,7 @@ class BillService{
     getRoomListByBillId = async (billId) => {
         return models.roomrent.findAll({
             raw: true,
+            paranoid:false,
             where:{
                 billId: billId
             },
@@ -316,7 +320,8 @@ class BillService{
                     where:{
                         ...(guestName && guestName.length && {fullname: {[Op.substring]:guestName}})
                     },
-                    require: true
+                    require: true,
+                    paranoid: false
                 },
             ]
         });
@@ -336,13 +341,14 @@ class BillService{
                 INNER JOIN room ON room.id = roomrent.roomId
                 INNER JOIN roomtype ON room.typeId = roomtype.id
                 INNER JOIN guest ON guest.roomRentId = roomrent.id
-                WHERE bill.id = ? AND guest.deletedAt IS NULL
+                WHERE bill.id = ?
                 GROUP BY bill.id, roomrent.id, roomrent.createdAt, bill.createdAt,
                 roomtype.price, roomrent.roomId`,
                 {
                     raw: true,
                     replacements: [billList[i].id],
-                    type: QueryTypes.SELECT
+                    type: QueryTypes.SELECT,
+                    paranoid: false
                 }
             );
             for(let i=0; i<listRoomRent.length; i++){
