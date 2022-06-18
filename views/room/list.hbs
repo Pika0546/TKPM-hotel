@@ -160,9 +160,9 @@
 										<a href="/rent/add?room={{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
 										<button data-id="{{this.roomId}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 									{{else}}
-										<a href="/rent/edit/{{this.roomRentId}}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a>
+										<a href="/rent/{{this.roomRentId}}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a>
 									{{/isEmptyRoom}}
-									<a href="/room/edit/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+									<a href="/room/{{this.roomId}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 								</td>
 							</tr>
 						{{/each}}
@@ -328,10 +328,11 @@
 						<td>
 							${room.status === "Trống" ? 
 								`<a href="/rent/add?room=${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Thuê phòng" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>
-								<button data-id="${room.roomId}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>` : 
-								`<a href="/rent/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
+								<button data-id="${room.roomId}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>` 
+								: 
+								`<a href="/rent/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Tình trạng thuê" class="pd-setting-ed"><i class="fa fa-info-circle" aria-hidden="true"></i></button></a>`
 							}
-							<a href="/room/edit/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+							<a href="/room/${room.roomId}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 						</td>
 					</tr>
 				`

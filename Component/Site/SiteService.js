@@ -7,6 +7,7 @@ class SiteService{
     getRoomRentDetail = async (startDate, endDate) => {
         return models.roomrent.findAll({
             raw:true,
+            paranoid: false,
             include:[
                 {
                     model:models.room,

@@ -118,7 +118,7 @@ class RoomController{
             else{
                 const room = await RoomService.createRoom(roomId, typeId, note);
                 req.flash("edit-room-message", {success: true, message: "Thêm phòng thành công!"})
-                res.redirect(`/room/edit/${room.roomId}`);
+                res.redirect(`/room/${room.roomId}`);
             }
         } catch (error) {
             console.log(error);
@@ -134,12 +134,12 @@ class RoomController{
             const type = await RoomService.getRoomTypeById(typeId);
             if(room && type && note){
                 const newRoom = await RoomService.updateRoom(room.id, newRoomId, typeId, note);
-                res.redirect(`/room/edit/${newRoomId}`);
+                res.redirect(`/room/${newRoomId}`);
             }
             else{
                 console.log("Đầu vào không hợp lệ!");
                 req.flash("edit-room-message", "Đầu vào không hợp lệ!")
-                res.redirect("/room/edit/" + roomId);
+                res.redirect("/room/" + roomId);
             }
         } catch (error) {
             console.log(error);

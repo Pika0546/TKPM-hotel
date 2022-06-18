@@ -181,7 +181,7 @@
 									<td>Đang thuê</td>
 								{{/if}}
 								<td>
-									<a href="/rent/edit/{{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+									<a href="/rent/{{this.id}}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 									{{#if this.billId}}
 										<a style="color: black;"><button data-id="{{this.id}}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
 									{{else}}
@@ -358,7 +358,7 @@
 							`<td>Đang thuê</td>`
 						}
 						<td>
-							<a href="/rent/edit/${room.id}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+							<a href="/rent/${room.id}" style="color: black;"><button data-toggle="tooltip" title="Cập nhật" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
 							${room.billId ?
 								`<a style="color: black;"><button data-id="${room.id}" title="Xóa" class="pd-setting-ed" data-toggle="modal" data-target="#delete-rent-room-modal"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>` : 
 								`<a href="/bill/add?room=${room.id}" style="color: black;"><button data-toggle="tooltip" title="Thanh toán" class="pd-setting-ed"><i class="fa fa-check edu-checked-pro" aria-hidden="true"></i></button></a>`
